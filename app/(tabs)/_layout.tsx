@@ -39,6 +39,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="payment" color={color} />,
         }}
       />
+                  <Tabs.Screen
+        name="transactions"
+        options={{
+          title: 'Transactions',
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="history" color={color} />,
+        }}
+      />
             <Tabs.Screen
         name="profile"
         options={{
