@@ -1,17 +1,10 @@
+import PayslipModal from "@/components/Modals/PayslipModal";
 import EmployeesTable from "@/components/Tables/EmployeesTable";
 import { Employee } from "@/types/globals";
 import { calculate, formatNumber } from "@/utils/globals";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import {
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useImmer } from "use-immer";
 
@@ -52,9 +45,9 @@ const data = [
 
 const PayrollPage = () => {
   const [employees] = useImmer(data);
-  const [selectedEmployee, setSelectedEmployee] = useImmer<
-    Employee | undefined
-  >(undefined);
+  const [selectedEmployee, setSelectedEmployee] = useImmer<Employee | null>(
+    null
+  );
 
   const calculateTotals = () => {
     const total = { gross: 0, deductions: 0, net: 0 };
@@ -69,7 +62,9 @@ const PayrollPage = () => {
     return total;
   };
 
-  const handleSelect = (employee: Employee) => {
+  const totals = calculateTotals();
+
+  const handleEmployeeChange = (employee: Employee | null) => {
     setSelectedEmployee(employee);
   };
 
@@ -92,117 +87,30 @@ const PayrollPage = () => {
           <Text style={styles.summaryLabel}>Total Gross</Text>
           <Text
             style={styles.summaryValue}
-          >{`₱${formatNumber(calculateTotals().gross)}`}</Text>
+          >{`₱${formatNumber(totals.gross)}`}</Text>
         </View>
 
         <View>
           <Text style={styles.summaryLabel}>Total Deductions</Text>
           <Text
             style={styles.summaryValue}
-          >{`₱${formatNumber(calculateTotals().deductions)}`}</Text>
+          >{`₱${formatNumber(totals.deductions)}`}</Text>
         </View>
 
         <View>
           <Text style={styles.summaryLabel}>Total Net</Text>
           <Text
             style={styles.summaryValue}
-          >{`₱${formatNumber(calculateTotals().net)}`}</Text>
+          >{`₱${formatNumber(totals.net)}`}</Text>
         </View>
       </View>
 
-      <EmployeesTable employees={employees} onSelect={handleSelect} />
+      <EmployeesTable employees={employees} onPress={handleEmployeeChange} />
 
-      {selectedEmployee && (
-        <Modal
-          animationType="slide"
-          transparent
-          statusBarTranslucent
-          visible={!!selectedEmployee}
-          onRequestClose={() => setSelectedEmployee(undefined)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              {selectedEmployee && (
-                <ScrollView>
-                  <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>Payslip</Text>
-
-                    <Pressable onPress={() => setSelectedEmployee(undefined)}>
-                      <MaterialIcons name="close" size={24} />
-                    </Pressable>
-                  </View>
-
-                  <Text
-                    style={styles.label}
-                  >{`${selectedEmployee.first_name} ${selectedEmployee.last_name}`}</Text>
-                  <Text style={styles.subLabel}>
-                    {selectedEmployee.position}
-                  </Text>
-
-                  <View style={styles.line} />
-
-                  <View style={styles.detailRow}>
-                    <Text>Hours Worked</Text>
-                    <Text>{selectedEmployee.hours}</Text>
-                  </View>
-
-                  <View style={styles.detailRow}>
-                    <Text>Hourly Rate</Text>
-                    <Text>{`₱${formatNumber(selectedEmployee.rate)}`}</Text>
-                  </View>
-
-                  <View style={styles.line} />
-
-                  {(() => {
-                    const pay = calculate(selectedEmployee);
-                    return (
-                      <>
-                        <View style={styles.detailRow}>
-                          <Text>Gross Pay</Text>
-                          <Text>{`₱${formatNumber(pay.gross)}`}</Text>
-                        </View>
-
-                        <View style={styles.detailRow}>
-                          <Text>Tax (10%)</Text>
-                          <Text>{`₱${formatNumber(pay.tax)}`}</Text>
-                        </View>
-
-                        <View style={styles.detailRow}>
-                          <Text>SSS (3%)</Text>
-                          <Text>{`₱${formatNumber(pay.sss)}`}</Text>
-                        </View>
-
-                        <View style={styles.detailRow}>
-                          <Text>PhilHealth (2%)</Text>
-                          <Text>{`₱${formatNumber(pay.phil)}`}</Text>
-                        </View>
-
-                        <View style={styles.line} />
-
-                        <View style={styles.detailRowBold}>
-                          <Text>Net Pay</Text>
-                          <Text
-                            style={{ fontSize: 18 }}
-                          >{`₱${formatNumber(pay.net)}`}</Text>
-                        </View>
-
-                        <TouchableOpacity
-                          style={styles.primaryBtn}
-                          onPress={() => {}}
-                        >
-                          <Text style={styles.primaryBtnText}>
-                            Print / Export
-                          </Text>
-                        </TouchableOpacity>
-                      </>
-                    );
-                  })()}
-                </ScrollView>
-              )}
-            </View>
-          </View>
-        </Modal>
-      )}
+      <PayslipModal
+        employee={selectedEmployee}
+        onClose={handleEmployeeChange}
+      />
     </SafeAreaView>
   );
 };
@@ -247,46 +155,4 @@ const styles = StyleSheet.create({
   },
   summaryLabel: { color: "#666", fontSize: 12 },
   summaryValue: { fontSize: 16, fontWeight: "700", marginTop: 6 },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  modalContent: {
-    width: "100%",
-    maxHeight: "85%",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  modalTitle: { fontSize: 18, fontWeight: "800" },
-  label: { fontSize: 16, fontWeight: "700" },
-  subLabel: { color: "#666", marginBottom: 8 },
-  line: { height: 1, backgroundColor: "#f0f0f0", marginVertical: 10 },
-  detailRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 6,
-  },
-  detailRowBold: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 8,
-  },
-  primaryBtn: {
-    marginTop: 16,
-    backgroundColor: "#0f172a",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  primaryBtnText: { color: "#fff", fontWeight: "700" },
 });

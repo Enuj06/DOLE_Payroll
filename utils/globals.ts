@@ -1,10 +1,18 @@
 import { Employee } from "@/types/globals";
+import { format } from "date-fns";
 
 export const formatNumber = (number: string | number) => {
   return Number(number).toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+};
+
+export const formatDate = (
+  date: Date,
+  dateFormat: string = "MMMM dd, yyyy"
+) => {
+  return format(date, dateFormat);
 };
 
 export const calculate = (employee: Employee) => {

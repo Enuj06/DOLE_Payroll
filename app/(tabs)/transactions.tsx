@@ -1,72 +1,77 @@
-import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import {
-  FlatList,
-  Modal,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import TransactionModal from "@/components/Modals/TransactionModal";
+import TransactionsTable from "@/components/Tables/TransactionsTable";
+import { Transaction } from "@/types/globals";
+import { formatNumber } from "@/utils/globals";
+import { FontAwesome5 } from "@expo/vector-icons";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useImmer } from "use-immer";
 
-const SAMPLE_TRANSACTIONS = [
+const data = [
   {
-    id: "T-1001",
-    name: "Maria Santos",
-    date: "2025-10-30",
-    amount: 25000.0,
-    status: "Completed",
+    id: 1,
+    last_name: "Santos",
+    first_name: "Maria",
+    date: new Date("2025-10-30"),
+    amount: 25000,
     method: "Bank Transfer",
     details: "Monthly salary for October 2025",
+    status: "Completed",
   },
   {
-    id: "T-1002",
-    name: "Juan Dela Cruz",
-    date: "2025-10-30",
-    amount: 30000.0,
-    status: "Completed",
+    id: 2,
+    last_name: "Dela Cruz",
+    first_name: "Juan",
+    date: new Date("2025-10-30"),
+    amount: 30000,
     method: "GCash",
     details: "Monthly salary for October 2025",
+    status: "Completed",
   },
   {
-    id: "T-1003",
-    name: "Ana Reyes",
-    date: "2025-10-30",
-    amount: 20000.0,
-    status: "Pending",
+    id: 3,
+    last_name: "Reyes",
+    first_name: "Ana",
+    date: new Date("2025-10-30"),
+    amount: 20000,
     method: "Bank Transfer",
     details: "Monthly salary for October 2025",
+    status: "Pending",
   },
   {
-    id: "T-1004",
-    name: "Mark Tan",
-    date: "2025-10-30",
-    amount: 22000.0,
-    status: "Completed",
+    id: 4,
+    last_name: "Tan",
+    first_name: "Mark",
+    date: new Date("2025-10-30"),
+    amount: 22000,
     method: "Cash",
     details: "Monthly salary for October 2025",
+    status: "Completed",
   },
 ];
 
-function currency(n) {
-  return "₱" + Number(n).toFixed(2);
-}
-
 const TransactionsPage = () => {
-  const [transactions] = useState(SAMPLE_TRANSACTIONS);
-  const [selected, setSelected] = useState(null);
+  const [transactions] = useImmer(data);
+  const [selectedTransaction, setSelectedTransaction] =
+    useImmer<Transaction | null>(null);
 
-  const totals = transactions.reduce(
-    (acc, t) => {
-      acc.total += t.amount;
-      if (t.status === "Completed") acc.completed += t.amount;
-      return acc;
-    },
-    { total: 0, completed: 0 }
-  );
+  const calculateTotals = () => {
+    const totals = { total: 0, completed: 0 };
+
+    transactions.forEach((transaction) => {
+      totals.total = transaction.amount;
+      transaction.status === "Completed" && ++totals.completed;
+    });
+
+    return totals;
+  };
+
+  const totals = calculateTotals();
+
+  const handleTransactionChange = (transaction: Transaction | null) => {
+    setSelectedTransaction(transaction);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -78,112 +83,27 @@ const TransactionsPage = () => {
       <View style={styles.summaryCard}>
         <View>
           <Text style={styles.summaryLabel}>Total Payouts</Text>
-          <Text style={styles.summaryValue}>{currency(totals.total)}</Text>
+
+          <Text
+            style={styles.summaryValue}
+          >{`₱${formatNumber(totals.total)}`}</Text>
         </View>
+
         <View>
           <Text style={styles.summaryLabel}>Completed</Text>
-          <Text style={styles.summaryValue}>{currency(totals.completed)}</Text>
+          <Text style={styles.summaryValue}>{totals.completed}</Text>
         </View>
       </View>
 
-      <FlatList
-        data={transactions}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 80 }}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.row}
-            onPress={() => setSelected(item)}
-          >
-            <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.sub}>{item.date}</Text>
-            </View>
-            <View style={{ alignItems: "flex-end" }}>
-              <Text style={styles.amount}>{currency(item.amount)}</Text>
-              <Text
-                style={[
-                  styles.status,
-                  {
-                    color: item.status === "Completed" ? "#16a34a" : "#f59e0b",
-                  },
-                ]}
-              >
-                {item.status}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        )}
+      <TransactionsTable
+        transactions={transactions}
+        onPress={handleTransactionChange}
       />
 
-      {/* Transaction Details Modal */}
-      <Modal
-        visible={!!selected}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setSelected(null)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            {selected && (
-              <ScrollView>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Transaction Details</Text>
-                  <Pressable onPress={() => setSelected(null)}>
-                    <MaterialIcons name="close" size={24} />
-                  </Pressable>
-                </View>
-
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Transaction ID</Text>
-                  <Text style={styles.detailValue}>{selected.id}</Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Employee</Text>
-                  <Text style={styles.detailValue}>{selected.name}</Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Date</Text>
-                  <Text style={styles.detailValue}>{selected.date}</Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Amount</Text>
-                  <Text style={styles.detailValue}>
-                    {currency(selected.amount)}
-                  </Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Payment Method</Text>
-                  <Text style={styles.detailValue}>{selected.method}</Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text style={styles.detailLabel}>Status</Text>
-                  <Text
-                    style={[
-                      styles.detailValue,
-                      {
-                        color:
-                          selected.status === "Completed"
-                            ? "#16a34a"
-                            : "#f59e0b",
-                      },
-                    ]}
-                  >
-                    {selected.status}
-                  </Text>
-                </View>
-                <View style={styles.line} />
-                <Text style={styles.detailNote}>{selected.details}</Text>
-
-                <TouchableOpacity style={styles.primaryBtn}>
-                  <MaterialIcons name="print" size={20} color="#fff" />
-                  <Text style={styles.primaryText}>Export Receipt</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            )}
-          </View>
-        </View>
-      </Modal>
+      <TransactionModal
+        transaction={selectedTransaction}
+        onClose={handleTransactionChange}
+      />
     </SafeAreaView>
   );
 };
@@ -222,86 +142,5 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontWeight: "700",
     fontSize: 16,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
-    padding: 14,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  name: {
-    fontWeight: "700",
-    fontSize: 16,
-  },
-  sub: {
-    color: "#64748b",
-  },
-  amount: {
-    fontWeight: "700",
-  },
-  status: {
-    marginTop: 4,
-    fontWeight: "600",
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  modalContent: {
-    width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    maxHeight: "85%",
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-  },
-  detailRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 6,
-  },
-  detailLabel: {
-    color: "#475569",
-  },
-  detailValue: {
-    fontWeight: "700",
-    color: "#111827",
-  },
-  detailNote: {
-    color: "#334155",
-    marginTop: 8,
-    marginBottom: 20,
-  },
-  line: {
-    height: 1,
-    backgroundColor: "#e2e8f0",
-    marginVertical: 10,
-  },
-  primaryBtn: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#2563eb",
-    paddingVertical: 12,
-    borderRadius: 8,
-    gap: 6,
-  },
-  primaryText: {
-    color: "#fff",
-    fontWeight: "700",
   },
 });

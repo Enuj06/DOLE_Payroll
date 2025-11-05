@@ -14,10 +14,10 @@ import { useImmer } from "use-immer";
 
 type Props = {
   employees: Employee[];
-  onSelect: (employee: Employee) => void;
+  onPress: (employee: Employee | null) => void;
 };
 
-const EmployeesTable = ({ employees, onSelect }: Props) => {
+const EmployeesTable = ({ employees, onPress }: Props) => {
   const [searchQuery, setSearchQuery] = useImmer("");
 
   const sortedEmployees = useMemo(() => {
@@ -74,10 +74,7 @@ const EmployeesTable = ({ employees, onSelect }: Props) => {
           renderItem={({ item: employee }) => {
             const pay = calculate(employee);
             return (
-              <TouchableOpacity
-                style={styles.employeeRow}
-                onPress={() => onSelect(employee)}
-              >
+              <View style={styles.employeeRow}>
                 <View style={{ flex: 1 }}>
                   <Text
                     style={styles.empName}
@@ -92,12 +89,12 @@ const EmployeesTable = ({ employees, onSelect }: Props) => {
 
                   <TouchableOpacity
                     style={styles.viewBtn}
-                    onPress={() => onSelect(employee)}
+                    onPress={() => onPress(employee)}
                   >
                     <Text style={styles.viewBtnText}>Payslip</Text>
                   </TouchableOpacity>
                 </View>
-              </TouchableOpacity>
+              </View>
             );
           }}
         />
