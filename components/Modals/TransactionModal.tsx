@@ -2,14 +2,7 @@ import { Transaction } from "@/types/globals";
 import { formatDate, formatNumber } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import {
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   transaction: Transaction | null;
@@ -26,79 +19,77 @@ const TransactionModal = ({ transaction, onClose }: Props) => {
           transparent={true}
           onRequestClose={() => onClose(null)}
         >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
+          <View className="flex-1 bg-black/35 items-center justify-center p-5">
+            <View className="w-full bg-white rounded-xl p-4 max-h-[85%]">
               {transaction && (
                 <ScrollView>
-                  <View style={styles.modalHeader}>
-                    <Text style={styles.modalTitle}>Transaction Details</Text>
+                  <View className="flex-row justify-between items-center mb-2.5">
+                    <Text className="font-extrabold text-xl">
+                      Transaction Details
+                    </Text>
 
                     <TouchableOpacity onPress={() => onClose(null)}>
                       <MaterialIcons name="close" size={24} />
                     </TouchableOpacity>
                   </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Transaction ID</Text>
+                  <View className="flex-row justify-between my-2">
+                    <Text className="text-[#475569]">Transaction ID</Text>
 
-                    <Text style={styles.detailValue}>{transaction.id}</Text>
+                    <Text className="text-[#111827] font-bold">
+                      {transaction.id}
+                    </Text>
                   </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Employee</Text>
+                  <View className="flex-row justify-between my-2">
+                    <Text className="text-[#475569]">Employee</Text>
 
-                    <Text
-                      style={styles.detailValue}
-                    >{`${transaction.first_name} ${transaction.last_name}`}</Text>
+                    <Text className="text-[#111827] font-bold">{`${transaction.first_name} ${transaction.last_name}`}</Text>
                   </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Date</Text>
+                  <View className="flex-row justify-between my-2">
+                    <Text className="text-[#475569]">Date</Text>
 
-                    <Text style={styles.detailValue}>
+                    <Text className="text-[#111827] font-bold">
                       {formatDate(transaction.date)}
                     </Text>
                   </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Amount</Text>
+                  <View className="flex-row justify-between my-2">
+                    <Text className="text-[#475569]">Amount</Text>
 
-                    <Text style={styles.detailValue}>
+                    <Text className="text-[#111827] font-bold">
                       {`₱${formatNumber(transaction.amount)}`}
                     </Text>
                   </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Payment Method</Text>
+                  <View className="flex-row justify-between my-2">
+                    <Text className="text-[#475569]">Payment Method</Text>
 
-                    <Text style={styles.detailValue}>{transaction.method}</Text>
+                    <Text className="text-[#111827] font-bold">
+                      {transaction.method}
+                    </Text>
                   </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>Status</Text>
+                  <View className="flex-row justify-between my-2">
+                    <Text className="text-[#475569]">Status</Text>
 
                     <Text
-                      style={[
-                        styles.detailValue,
-                        {
-                          color:
-                            transaction.status === "Completed"
-                              ? "#16a34a"
-                              : "#f59e0b",
-                        },
-                      ]}
+                      className={`font-bold ${transaction.status === "Completed" ? "text-[#16a34a]" : "text-[#f59e0b]"}`}
                     >
                       {transaction.status}
                     </Text>
                   </View>
 
-                  <View style={styles.line} />
+                  <View className="h-0.5 my-2.5 bg-[#e2e8f0]" />
 
-                  <Text style={styles.detailNote}>{transaction.details}</Text>
+                  <Text className="text-[#334155] mt-2 mb-5">
+                    {transaction.details}
+                  </Text>
 
-                  <TouchableOpacity style={styles.primaryBtn}>
+                  <TouchableOpacity className="flex-row items-center justify-center bg-[#2563eb] py-3.5 gap-1.5 rounded-lg">
                     <MaterialIcons name="print" size={20} color="#fff" />
-                    <Text style={styles.primaryText}>Export Receipt</Text>
+                    <Text className="font-bold text-white">Export Receipt</Text>
                   </TouchableOpacity>
                 </ScrollView>
               )}
@@ -111,65 +102,3 @@ const TransactionModal = ({ transaction, onClose }: Props) => {
 };
 
 export default TransactionModal;
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  modalContent: {
-    width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-    maxHeight: "85%",
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-  },
-  detailRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 6,
-  },
-  detailLabel: {
-    color: "#475569",
-  },
-  detailValue: {
-    fontWeight: "700",
-    color: "#111827",
-  },
-  detailNote: {
-    color: "#334155",
-    marginTop: 8,
-    marginBottom: 20,
-  },
-  line: {
-    height: 1,
-    backgroundColor: "#e2e8f0",
-    marginVertical: 10,
-  },
-  primaryBtn: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#2563eb",
-    paddingVertical: 12,
-    borderRadius: 8,
-    gap: 6,
-  },
-  primaryText: {
-    color: "#fff",
-    fontWeight: "700",
-  },
-});

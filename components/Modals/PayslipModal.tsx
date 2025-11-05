@@ -2,14 +2,7 @@ import { Employee } from "@/types/globals";
 import { calculate, formatNumber } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import {
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
   employee: Employee | null;
@@ -27,78 +20,74 @@ const PayslipModal = ({ employee, onClose }: Props) => {
           visible={!!employee}
           onRequestClose={() => onClose(null)}
         >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
+          <View className="flex-1 bg-black/35 justify-center items-center p-4">
+            <View className="w-full max-h-[85%] bg-white rounded-xl p-4">
               <ScrollView>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Payslip</Text>
+                <View className="flex-row justify-between items-center mb-2">
+                  <Text className="font-extrabold text-xl">Payslip</Text>
 
                   <TouchableOpacity onPress={() => onClose(null)}>
                     <MaterialIcons name="close" size={24} />
                   </TouchableOpacity>
                 </View>
 
-                <View>
-                  <Text
-                    style={styles.label}
-                  >{`${employee.first_name} ${employee.last_name}`}</Text>
+                <View className="gap-1.5">
+                  <Text className="font-bold text-lg">{`${employee.first_name} ${employee.last_name}`}</Text>
 
-                  <Text style={styles.subLabel}>{employee.position}</Text>
+                  <Text className="text-[#666]">{employee.position}</Text>
                 </View>
 
-                <View style={styles.line} />
+                <View className="h-0.5 bg-[#f0f0f0] my-2.5" />
 
-                <View style={styles.detailRow}>
+                <View className="flex-row justify-between py-1.5">
                   <Text>Hours Worked</Text>
                   <Text>{employee.hours}</Text>
                 </View>
 
-                <View style={styles.detailRow}>
+                <View className="flex-row justify-between py-1.5">
                   <Text>Hourly Rate</Text>
                   <Text>{`₱${formatNumber(employee.rate)}`}</Text>
                 </View>
 
-                <View style={styles.line} />
+                <View className="h-0.5 bg-[#f0f0f0] my-2.5" />
 
                 {(() => {
                   const pay = calculate(employee);
                   return (
                     <>
-                      <View style={styles.detailRow}>
+                      <View className="flex-row justify-between py-1.5">
                         <Text>Gross Pay</Text>
                         <Text>{`₱${formatNumber(pay.gross)}`}</Text>
                       </View>
 
-                      <View style={styles.detailRow}>
+                      <View className="flex-row justify-between py-1.5">
                         <Text>Tax (10%)</Text>
                         <Text>{`₱${formatNumber(pay.tax)}`}</Text>
                       </View>
 
-                      <View style={styles.detailRow}>
+                      <View className="flex-row justify-between py-1.5">
                         <Text>SSS (3%)</Text>
                         <Text>{`₱${formatNumber(pay.sss)}`}</Text>
                       </View>
 
-                      <View style={styles.detailRow}>
+                      <View className="flex-row justify-between py-1.5">
                         <Text>PhilHealth (2%)</Text>
                         <Text>{`₱${formatNumber(pay.phil)}`}</Text>
                       </View>
 
-                      <View style={styles.line} />
+                      <View className="h-0.5 bg-[#f0f0f0] my-2.5" />
 
-                      <View style={styles.detailRowBold}>
+                      <View className="flex-row justify-between py-2">
                         <Text>Net Pay</Text>
 
-                        <Text
-                          style={{ fontSize: 18 }}
-                        >{`₱${formatNumber(pay.net)}`}</Text>
+                        <Text className="text-xl">{`₱${formatNumber(pay.net)}`}</Text>
                       </View>
 
                       <TouchableOpacity
-                        style={styles.primaryBtn}
+                        className="mt-4 bg-[#0f172a] py-3 rounded-lg items-center"
                         onPress={() => {}}
                       >
-                        <Text style={styles.primaryBtnText}>
+                        <Text className="text-white font-bold">
                           Print / Export
                         </Text>
                       </TouchableOpacity>
@@ -115,48 +104,3 @@ const PayslipModal = ({ employee, onClose }: Props) => {
 };
 
 export default PayslipModal;
-
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 16,
-  },
-  modalContent: {
-    width: "100%",
-    maxHeight: "85%",
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    padding: 16,
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  modalTitle: { fontSize: 18, fontWeight: "800" },
-  label: { fontSize: 16, fontWeight: "700" },
-  subLabel: { color: "#666", marginBottom: 8 },
-  line: { height: 1, backgroundColor: "#f0f0f0", marginVertical: 10 },
-  detailRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 6,
-  },
-  detailRowBold: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 8,
-  },
-  primaryBtn: {
-    marginTop: 16,
-    backgroundColor: "#0f172a",
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  primaryBtnText: { color: "#fff", fontWeight: "700" },
-});
