@@ -4,7 +4,7 @@ import { Employee } from "@/types/globals";
 import { calculate, formatNumber } from "@/utils/globals";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useImmer } from "use-immer";
 
@@ -69,39 +69,39 @@ const PayrollPage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4 items-center">
+      <View className="w-full flex-row justify-between items-center mb-3 mt-5">
+        <View className="flex-row items-center">
           <FontAwesome5 name="file-invoice" size={22} />
-          <Text style={styles.title}> Payroll Dashboard</Text>
+          <Text className="text-xl font-bold ml-2"> Payroll Dashboard</Text>
         </View>
 
-        <TouchableOpacity style={styles.iconBtn} onPress={() => {}}>
+        <TouchableOpacity
+          className="flex-row items-center gap-1 p-2"
+          onPress={() => {}}
+        >
           <MaterialIcons name="download" size={20} />
-          <Text style={styles.iconText}>Export</Text>
+          <Text className="ml-1.5 font-semibold">Export</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={styles.summaryCard}>
+      <View className="w-full flex-row p-3 bg-white rounded-xl justify-between mb-3">
         <View>
-          <Text style={styles.summaryLabel}>Total Gross</Text>
-          <Text
-            style={styles.summaryValue}
-          >{`₱${formatNumber(totals.gross)}`}</Text>
+          <Text className="text-[#666] text-sm">Total Gross</Text>
+
+          <Text className="text-lg font-bold mt-1.5">{`₱${formatNumber(totals.gross)}`}</Text>
         </View>
 
         <View>
-          <Text style={styles.summaryLabel}>Total Deductions</Text>
-          <Text
-            style={styles.summaryValue}
-          >{`₱${formatNumber(totals.deductions)}`}</Text>
+          <Text className="text-[#666] text-sm">Total Deductions</Text>
+
+          <Text className="text-lg font-bold mt-1.5">{`₱${formatNumber(totals.deductions)}`}</Text>
         </View>
 
         <View>
-          <Text style={styles.summaryLabel}>Total Net</Text>
-          <Text
-            style={styles.summaryValue}
-          >{`₱${formatNumber(totals.net)}`}</Text>
+          <Text className="text-[#666] text-sm">Total Net</Text>
+
+          <Text className="text-lg font-bold mt-1.5">{`₱${formatNumber(totals.net)}`}</Text>
         </View>
       </View>
 
@@ -116,43 +116,3 @@ const PayrollPage = () => {
 };
 
 export default PayrollPage;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f5f7fb",
-    alignItems: "center",
-    padding: 12,
-  },
-  header: {
-    width: "100%",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 12,
-    marginTop: 20,
-  },
-  title: { fontSize: 18, fontWeight: "700", marginLeft: 8 },
-  iconBtn: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    padding: 8,
-  },
-  iconText: { marginLeft: 6, fontWeight: "600" },
-  summaryCard: {
-    width: "100%",
-    padding: 12,
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  summaryLabel: { color: "#666", fontSize: 12 },
-  summaryValue: { fontSize: 16, fontWeight: "700", marginTop: 6 },
-});

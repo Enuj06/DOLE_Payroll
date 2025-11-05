@@ -38,10 +38,13 @@ const PayslipModal = ({ employee, onClose }: Props) => {
                   </TouchableOpacity>
                 </View>
 
-                <Text
-                  style={styles.label}
-                >{`${employee.first_name} ${employee.last_name}`}</Text>
-                <Text style={styles.subLabel}>{employee.position}</Text>
+                <View>
+                  <Text
+                    style={styles.label}
+                  >{`${employee.first_name} ${employee.last_name}`}</Text>
+
+                  <Text style={styles.subLabel}>{employee.position}</Text>
+                </View>
 
                 <View style={styles.line} />
 
@@ -85,6 +88,7 @@ const PayslipModal = ({ employee, onClose }: Props) => {
 
                       <View style={styles.detailRowBold}>
                         <Text>Net Pay</Text>
+
                         <Text
                           style={{ fontSize: 18 }}
                         >{`₱${formatNumber(pay.net)}`}</Text>

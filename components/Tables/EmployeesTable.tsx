@@ -79,6 +79,7 @@ const EmployeesTable = ({ employees, onPress }: Props) => {
                   <Text
                     style={styles.empName}
                   >{`${employee.first_name} ${employee.last_name}`}</Text>
+
                   <Text style={styles.empPosition}>{employee.position}</Text>
                 </View>
 
