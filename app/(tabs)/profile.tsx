@@ -40,14 +40,17 @@ const ProfilePage = () => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Personal Information</Text>
+
           <View style={styles.infoRow}>
             <MaterialIcons name="email" size={20} color="#555" />
             <Text style={styles.infoText}>{user.email}</Text>
           </View>
+
           <View style={styles.infoRow}>
             <MaterialIcons name="phone" size={20} color="#555" />
             <Text style={styles.infoText}>{user.phone}</Text>
           </View>
+
           <View style={styles.infoRow}>
             <MaterialIcons name="home" size={20} color="#555" />
             <Text style={styles.infoText}>{user.address}</Text>
@@ -56,10 +59,12 @@ const ProfilePage = () => {
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Employment Details</Text>
+
           <View style={styles.infoRow}>
             <MaterialIcons name="date-range" size={20} color="#555" />
             <Text style={styles.infoText}>Date Hired: {user.dateHired}</Text>
           </View>
+
           <View style={styles.infoRow}>
             <MaterialIcons name="payments" size={20} color="#555" />
             <Text style={styles.infoText}>Salary: {user.salary}</Text>

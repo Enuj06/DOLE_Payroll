@@ -1,84 +1,77 @@
+import EmployeesTable from "@/components/Tables/EmployeesTable";
+import { Employee } from "@/types/globals";
+import { calculate, formatNumber } from "@/utils/globals";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React from "react";
 import {
-  FlatList,
   Modal,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useImmer } from "use-immer";
 
-const SAMPLE_EMPLOYEES = [
+const data = [
   {
-    id: "1",
-    name: "Maria Santos",
+    id: 1,
+    last_name: "Santos",
+    first_name: "Maria",
     position: "Cashier",
-    hoursWorked: 160,
-    hourlyRate: 120,
+    rate: 120,
+    hours: 160,
   },
   {
-    id: "2",
-    name: "Juan Dela Cruz",
+    id: 2,
+    last_name: "Dela Cruz",
+    first_name: "Juan",
     position: "Store Manager",
-    hoursWorked: 168,
-    hourlyRate: 200,
+    rate: 200,
+    hours: 168,
   },
   {
-    id: "3",
-    name: "Ana Reyes",
+    id: 3,
+    last_name: "Reyes",
+    first_name: "Ana",
     position: "Stock Associate",
-    hoursWorked: 150,
-    hourlyRate: 100,
+    rate: 100,
+    hours: 150,
   },
   {
-    id: "4",
-    name: "Mark Tan",
+    id: 4,
+    last_name: "Tan",
+    first_name: "Mark",
     position: "Delivery",
-    hoursWorked: 140,
-    hourlyRate: 110,
+    rate: 110,
+    hours: 140,
   },
 ];
 
-function currency(n) {
-  return "₱" + Number(n).toFixed(2);
-}
-
-function calculatePayroll(emp) {
-  const gross = emp.hoursWorked * emp.hourlyRate;
-  const tax = gross * 0.1;
-  const sss = gross * 0.03;
-  const phil = gross * 0.02;
-  const totalDeductions = tax + sss + phil;
-  const net = gross - totalDeductions;
-  return { gross, tax, sss, phil, totalDeductions, net };
-}
-
 const PayrollPage = () => {
-  const [employees] = useState(SAMPLE_EMPLOYEES);
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(null);
+  const [employees] = useImmer(data);
+  const [selectedEmployee, setSelectedEmployee] = useImmer<
+    Employee | undefined
+  >(undefined);
 
-  const filtered = employees.filter(
-    (e) =>
-      e.name.toLowerCase().includes(query.toLowerCase()) ||
-      e.position.toLowerCase().includes(query.toLowerCase())
-  );
+  const calculateTotals = () => {
+    const total = { gross: 0, deductions: 0, net: 0 };
 
-  const totals = employees.reduce(
-    (acc, emp) => {
-      const p = calculatePayroll(emp);
-      acc.gross += p.gross;
-      acc.deductions += p.totalDeductions;
-      acc.net += p.net;
-      return acc;
-    },
-    { gross: 0, deductions: 0, net: 0 }
-  );
+    employees.forEach((employee) => {
+      const pay = calculate(employee);
+      total.gross += pay.gross;
+      total.deductions += pay.deductions;
+      total.net += pay.net;
+    });
+
+    return total;
+  };
+
+  const handleSelect = (employee: Employee) => {
+    setSelectedEmployee(employee);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -87,6 +80,7 @@ const PayrollPage = () => {
           <FontAwesome5 name="file-invoice" size={22} />
           <Text style={styles.title}> Payroll Dashboard</Text>
         </View>
+
         <TouchableOpacity style={styles.iconBtn} onPress={() => {}}>
           <MaterialIcons name="download" size={20} />
           <Text style={styles.iconText}>Export</Text>
@@ -96,145 +90,119 @@ const PayrollPage = () => {
       <View style={styles.summaryCard}>
         <View>
           <Text style={styles.summaryLabel}>Total Gross</Text>
-          <Text style={styles.summaryValue}>{currency(totals.gross)}</Text>
+          <Text
+            style={styles.summaryValue}
+          >{`₱${formatNumber(calculateTotals().gross)}`}</Text>
         </View>
+
         <View>
           <Text style={styles.summaryLabel}>Total Deductions</Text>
-          <Text style={styles.summaryValue}>{currency(totals.deductions)}</Text>
+          <Text
+            style={styles.summaryValue}
+          >{`₱${formatNumber(calculateTotals().deductions)}`}</Text>
         </View>
+
         <View>
           <Text style={styles.summaryLabel}>Total Net</Text>
-          <Text style={styles.summaryValue}>{currency(totals.net)}</Text>
+          <Text
+            style={styles.summaryValue}
+          >{`₱${formatNumber(calculateTotals().net)}`}</Text>
         </View>
       </View>
 
-      <View style={styles.searchRow}>
-        <View style={styles.searchBox}>
-          <MaterialIcons name="search" size={18} />
-          <TextInput
-            placeholder="Search name or position"
-            style={styles.searchInput}
-            value={query}
-            onChangeText={setQuery}
-          />
-        </View>
-        <TouchableOpacity style={styles.filterBtn} onPress={() => setQuery("")}>
-          <Text style={{ fontWeight: "600" }}>Clear</Text>
-        </TouchableOpacity>
-      </View>
+      <EmployeesTable employees={employees} onSelect={handleSelect} />
 
-      <View style={{ flex: 1, width: "100%" }}>
-        <FlatList
-          data={filtered}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingBottom: 40 }}
-          renderItem={({ item }) => {
-            const p = calculatePayroll(item);
-            return (
-              <TouchableOpacity
-                style={styles.employeeRow}
-                onPress={() => setSelected(item)}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text style={styles.empName}>{item.name}</Text>
-                  <Text style={styles.empPosition}>{item.position}</Text>
-                </View>
-                <View style={styles.rowRight}>
-                  <Text style={styles.small}>{currency(p.net)}</Text>
-                  <TouchableOpacity
-                    style={styles.viewBtn}
-                    onPress={() => setSelected(item)}
-                  >
-                    <Text style={styles.viewBtnText}>Payslip</Text>
-                  </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
-            );
-          }}
-        />
-      </View>
+      {selectedEmployee && (
+        <Modal
+          animationType="slide"
+          transparent
+          statusBarTranslucent
+          visible={!!selectedEmployee}
+          onRequestClose={() => setSelectedEmployee(undefined)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {selectedEmployee && (
+                <ScrollView>
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Payslip</Text>
 
-      {/* Payslip Modal */}
-      <Modal
-        visible={!!selected}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setSelected(null)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            {selected && (
-              <ScrollView>
-                <View style={styles.modalHeader}>
-                  <Text style={styles.modalTitle}>Payslip</Text>
-                  <Pressable onPress={() => setSelected(null)}>
-                    <MaterialIcons name="close" size={24} />
-                  </Pressable>
-                </View>
+                    <Pressable onPress={() => setSelectedEmployee(undefined)}>
+                      <MaterialIcons name="close" size={24} />
+                    </Pressable>
+                  </View>
 
-                <Text style={styles.label}>{selected.name}</Text>
-                <Text style={styles.subLabel}>{selected.position}</Text>
+                  <Text
+                    style={styles.label}
+                  >{`${selectedEmployee.first_name} ${selectedEmployee.last_name}`}</Text>
+                  <Text style={styles.subLabel}>
+                    {selectedEmployee.position}
+                  </Text>
 
-                <View style={styles.line} />
+                  <View style={styles.line} />
 
-                <View style={styles.detailRow}>
-                  <Text>Hours Worked</Text>
-                  <Text>{selected.hoursWorked}</Text>
-                </View>
-                <View style={styles.detailRow}>
-                  <Text>Hourly Rate</Text>
-                  <Text>{currency(selected.hourlyRate)}</Text>
-                </View>
+                  <View style={styles.detailRow}>
+                    <Text>Hours Worked</Text>
+                    <Text>{selectedEmployee.hours}</Text>
+                  </View>
 
-                <View style={styles.line} />
+                  <View style={styles.detailRow}>
+                    <Text>Hourly Rate</Text>
+                    <Text>{`₱${formatNumber(selectedEmployee.rate)}`}</Text>
+                  </View>
 
-                {(() => {
-                  const p = calculatePayroll(selected);
-                  return (
-                    <>
-                      <View style={styles.detailRow}>
-                        <Text>Gross Pay</Text>
-                        <Text>{currency(p.gross)}</Text>
-                      </View>
+                  <View style={styles.line} />
 
-                      <View style={styles.detailRow}>
-                        <Text>Tax (10%)</Text>
-                        <Text>{currency(p.tax)}</Text>
-                      </View>
+                  {(() => {
+                    const pay = calculate(selectedEmployee);
+                    return (
+                      <>
+                        <View style={styles.detailRow}>
+                          <Text>Gross Pay</Text>
+                          <Text>{`₱${formatNumber(pay.gross)}`}</Text>
+                        </View>
 
-                      <View style={styles.detailRow}>
-                        <Text>SSS (3%)</Text>
-                        <Text>{currency(p.sss)}</Text>
-                      </View>
+                        <View style={styles.detailRow}>
+                          <Text>Tax (10%)</Text>
+                          <Text>{`₱${formatNumber(pay.tax)}`}</Text>
+                        </View>
 
-                      <View style={styles.detailRow}>
-                        <Text>PhilHealth (2%)</Text>
-                        <Text>{currency(p.phil)}</Text>
-                      </View>
+                        <View style={styles.detailRow}>
+                          <Text>SSS (3%)</Text>
+                          <Text>{`₱${formatNumber(pay.sss)}`}</Text>
+                        </View>
 
-                      <View style={styles.line} />
+                        <View style={styles.detailRow}>
+                          <Text>PhilHealth (2%)</Text>
+                          <Text>{`₱${formatNumber(pay.phil)}`}</Text>
+                        </View>
 
-                      <View style={styles.detailRowBold}>
-                        <Text>Net Pay</Text>
-                        <Text style={{ fontSize: 18 }}>{currency(p.net)}</Text>
-                      </View>
+                        <View style={styles.line} />
 
-                      <TouchableOpacity
-                        style={styles.primaryBtn}
-                        onPress={() => {}}
-                      >
-                        <Text style={styles.primaryBtnText}>
-                          Print / Export
-                        </Text>
-                      </TouchableOpacity>
-                    </>
-                  );
-                })()}
-              </ScrollView>
-            )}
+                        <View style={styles.detailRowBold}>
+                          <Text>Net Pay</Text>
+                          <Text
+                            style={{ fontSize: 18 }}
+                          >{`₱${formatNumber(pay.net)}`}</Text>
+                        </View>
+
+                        <TouchableOpacity
+                          style={styles.primaryBtn}
+                          onPress={() => {}}
+                        >
+                          <Text style={styles.primaryBtnText}>
+                            Print / Export
+                          </Text>
+                        </TouchableOpacity>
+                      </>
+                    );
+                  })()}
+                </ScrollView>
+              )}
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      )}
     </SafeAreaView>
   );
 };
@@ -264,7 +232,6 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   iconText: { marginLeft: 6, fontWeight: "600" },
-
   summaryCard: {
     width: "100%",
     padding: 12,
@@ -280,54 +247,6 @@ const styles = StyleSheet.create({
   },
   summaryLabel: { color: "#666", fontSize: 12 },
   summaryValue: { fontSize: 16, fontWeight: "700", marginTop: 6 },
-
-  searchRow: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 8,
-    borderRadius: 8,
-    flex: 1,
-  },
-  searchInput: { marginLeft: 8, flex: 1 },
-  filterBtn: {
-    marginLeft: 8,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-  },
-
-  employeeRow: {
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 10,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.04,
-    elevation: 1,
-  },
-  empName: { fontWeight: "700", fontSize: 16 },
-  empPosition: { color: "#666", marginTop: 4 },
-  rowRight: { alignItems: "flex-end" },
-  small: { color: "#333", fontWeight: "600" },
-  viewBtn: {
-    marginTop: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    backgroundColor: "#eef2ff",
-    borderRadius: 6,
-  },
-  viewBtnText: { fontWeight: "700" },
-
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.35)",
