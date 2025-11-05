@@ -19,7 +19,7 @@ const TransactionsTable = ({ transactions, onPress }: Props) => {
           className="flex-row justify-between bg-white p-3.5 mb-2.5 rounded-xl"
           onPress={() => onPress(transaction)}
         >
-          <View style={{ flex: 1 }}>
+          <View className="flex-1">
             <Text className="font-bold text-lg">{`${transaction.first_name} ${transaction.last_name}`}</Text>
 
             <Text className="text-[#64748b]">
@@ -27,7 +27,7 @@ const TransactionsTable = ({ transactions, onPress }: Props) => {
             </Text>
           </View>
 
-          <View style={{ alignItems: "flex-end" }}>
+          <View className="items-end">
             <Text className="font-bold">{`₱${formatNumber(transaction.amount)}`}</Text>
 
             <Text

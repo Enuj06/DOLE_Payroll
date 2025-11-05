@@ -60,11 +60,11 @@ const EmployeesTable = ({ employees, onPress }: Props) => {
           className="p-2.5 bg-white rounded-lg"
           onPress={() => setSearchQuery("")}
         >
-          <Text style={{ fontWeight: "600" }}>Clear</Text>
+          <Text className="font-semibold">Clear</Text>
         </TouchableOpacity>
       </View>
 
-      <View style={{ flex: 1 }}>
+      <View className="flex-1">
         <FlatList
           data={filteredEmployees}
           keyExtractor={(employee) => `${employee.id}`}
