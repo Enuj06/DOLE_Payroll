@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, ScrollView, Pressable } from 'react-native';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
-// Static Transactions Page for Payroll Application (React Native + Expo)
-// Displays salary payout records and transaction details.
 
 const SAMPLE_TRANSACTIONS = [
   {
@@ -107,7 +105,6 @@ export default function TransactionPage() {
         )}
       />
 
-      {/* Transaction Details Modal */}
       <Modal
         visible={!!selected}
         animationType="slide"
