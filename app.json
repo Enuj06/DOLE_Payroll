@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "dole-payroll",
+    "name": "DOLEPayroll",
     "slug": "dole-payroll",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -21,6 +21,7 @@
       "package": "com.juneb.dolepayroll"
     },
     "web": {
+      "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
