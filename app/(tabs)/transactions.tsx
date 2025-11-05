@@ -4,7 +4,7 @@ import { Transaction } from "@/types/globals";
 import { formatNumber } from "@/utils/globals";
 import { FontAwesome5 } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useImmer } from "use-immer";
 
@@ -74,24 +74,22 @@ const TransactionsPage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
+    <SafeAreaView className="flex-1 bg-[#f1f5f9] p-5">
+      <View className="flex-row items-center my-5 gap-2.5">
         <FontAwesome5 name="receipt" size={22} color="#1e293b" />
-        <Text style={styles.headerTitle}> Payroll Transactions</Text>
+        <Text className="font-bold text-xl"> Payroll Transactions</Text>
       </View>
 
-      <View style={styles.summaryCard}>
+      <View className="flex-row justify-between bg-white p-3 rounded-xl mb-3">
         <View>
-          <Text style={styles.summaryLabel}>Total Payouts</Text>
+          <Text className="text-sm text-[##6b7280]">Total Payouts</Text>
 
-          <Text
-            style={styles.summaryValue}
-          >{`₱${formatNumber(totals.total)}`}</Text>
+          <Text className="font-bold text-lg">{`₱${formatNumber(totals.total)}`}</Text>
         </View>
 
         <View>
-          <Text style={styles.summaryLabel}>Completed</Text>
-          <Text style={styles.summaryValue}>{totals.completed}</Text>
+          <Text className="text-sm text-[##6b7280]">Completed</Text>
+          <Text className="font-bold text-lg">{totals.completed}</Text>
         </View>
       </View>
 
@@ -109,38 +107,3 @@ const TransactionsPage = () => {
 };
 
 export default TransactionsPage;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f1f5f9",
-    padding: 16,
-  },
-  header: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-    marginTop: 22,
-  },
-  headerTitle: {
-    fontSize: 20,
-    fontWeight: "700",
-    marginLeft: 8,
-  },
-  summaryCard: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 12,
-  },
-  summaryLabel: {
-    color: "#6b7280",
-    fontSize: 12,
-  },
-  summaryValue: {
-    fontWeight: "700",
-    fontSize: 16,
-  },
-});
