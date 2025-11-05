@@ -4,7 +4,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useMemo } from "react";
 import {
   FlatList,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
@@ -46,20 +45,19 @@ const EmployeesTable = ({ employees, onPress }: Props) => {
 
   return (
     <View>
-      <View style={styles.searchRow}>
-        <View style={styles.searchBox}>
+      <View className="w-full flex-row items-center mb-3 gap-2">
+        <View className="flex-row items-center bg-white p-2 rounded-lg flex-1 gap-2">
           <MaterialIcons name="search" size={18} />
 
           <TextInput
             placeholder="Search name or position"
-            style={styles.searchInput}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
         </View>
 
         <TouchableOpacity
-          style={styles.filterBtn}
+          className="p-2.5 bg-white rounded-lg"
           onPress={() => setSearchQuery("")}
         >
           <Text style={{ fontWeight: "600" }}>Clear</Text>
@@ -74,25 +72,21 @@ const EmployeesTable = ({ employees, onPress }: Props) => {
           renderItem={({ item: employee }) => {
             const pay = calculate(employee);
             return (
-              <View style={styles.employeeRow}>
-                <View style={{ flex: 1 }}>
-                  <Text
-                    style={styles.empName}
-                  >{`${employee.first_name} ${employee.last_name}`}</Text>
+              <View className="bg-white p-3 rounded-xl mb-2.5 w-full flex-row items-center justify-between">
+                <View className="gap-1">
+                  <Text className="text-lg font-bold">{`${employee.first_name} ${employee.last_name}`}</Text>
 
-                  <Text style={styles.empPosition}>{employee.position}</Text>
+                  <Text className="text-[#666]">{employee.position}</Text>
                 </View>
 
-                <View style={styles.rowRight}>
-                  <Text
-                    style={styles.small}
-                  >{`₱${formatNumber(pay.net)}`}</Text>
+                <View>
+                  <Text className="text-[#333] font-semibold">{`₱${formatNumber(pay.net)}`}</Text>
 
                   <TouchableOpacity
-                    style={styles.viewBtn}
+                    className="mt-2 py-1.5 px-2.5 rounded-md bg-[#eef2ff] items-center"
                     onPress={() => onPress(employee)}
                   >
-                    <Text style={styles.viewBtnText}>Payslip</Text>
+                    <Text className="font-bold">Payslip</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -105,51 +99,3 @@ const EmployeesTable = ({ employees, onPress }: Props) => {
 };
 
 export default EmployeesTable;
-
-const styles = StyleSheet.create({
-  searchRow: {
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 12,
-  },
-  searchBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 8,
-    borderRadius: 8,
-    flex: 1,
-  },
-  searchInput: { marginLeft: 8, flex: 1 },
-  filterBtn: {
-    marginLeft: 8,
-    padding: 10,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-  },
-  employeeRow: {
-    backgroundColor: "#fff",
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 10,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.04,
-    elevation: 1,
-  },
-  empName: { fontWeight: "700", fontSize: 16 },
-  empPosition: { color: "#666", marginTop: 4 },
-  rowRight: { alignItems: "flex-end" },
-  small: { color: "#333", fontWeight: "600" },
-  viewBtn: {
-    marginTop: 8,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    backgroundColor: "#eef2ff",
-    borderRadius: 6,
-  },
-  viewBtnText: { fontWeight: "700" },
-});
