@@ -4,16 +4,13 @@ import {
   FlatList,
   Modal,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-
-// Static Transactions Page for Payroll Application (React Native + Expo)
-// Displays salary payout records and transaction details.
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const SAMPLE_TRANSACTIONS = [
   {
