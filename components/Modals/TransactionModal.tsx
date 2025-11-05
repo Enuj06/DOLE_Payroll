@@ -4,7 +4,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import {
   Modal,
-  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -34,9 +33,9 @@ const TransactionModal = ({ transaction, onClose }: Props) => {
                   <View style={styles.modalHeader}>
                     <Text style={styles.modalTitle}>Transaction Details</Text>
 
-                    <Pressable onPress={() => onClose(null)}>
+                    <TouchableOpacity onPress={() => onClose(null)}>
                       <MaterialIcons name="close" size={24} />
-                    </Pressable>
+                    </TouchableOpacity>
                   </View>
 
                   <View style={styles.detailRow}>
