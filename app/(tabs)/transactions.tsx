@@ -1,61 +1,71 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, FlatList, Modal, ScrollView, Pressable } from 'react-native';
-import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 // Static Transactions Page for Payroll Application (React Native + Expo)
 // Displays salary payout records and transaction details.
 
 const SAMPLE_TRANSACTIONS = [
   {
-    id: 'T-1001',
-    name: 'Maria Santos',
-    date: '2025-10-30',
+    id: "T-1001",
+    name: "Maria Santos",
+    date: "2025-10-30",
     amount: 25000.0,
-    status: 'Completed',
-    method: 'Bank Transfer',
-    details: 'Monthly salary for October 2025',
+    status: "Completed",
+    method: "Bank Transfer",
+    details: "Monthly salary for October 2025",
   },
   {
-    id: 'T-1002',
-    name: 'Juan Dela Cruz',
-    date: '2025-10-30',
+    id: "T-1002",
+    name: "Juan Dela Cruz",
+    date: "2025-10-30",
     amount: 30000.0,
-    status: 'Completed',
-    method: 'GCash',
-    details: 'Monthly salary for October 2025',
+    status: "Completed",
+    method: "GCash",
+    details: "Monthly salary for October 2025",
   },
   {
-    id: 'T-1003',
-    name: 'Ana Reyes',
-    date: '2025-10-30',
+    id: "T-1003",
+    name: "Ana Reyes",
+    date: "2025-10-30",
     amount: 20000.0,
-    status: 'Pending',
-    method: 'Bank Transfer',
-    details: 'Monthly salary for October 2025',
+    status: "Pending",
+    method: "Bank Transfer",
+    details: "Monthly salary for October 2025",
   },
   {
-    id: 'T-1004',
-    name: 'Mark Tan',
-    date: '2025-10-30',
+    id: "T-1004",
+    name: "Mark Tan",
+    date: "2025-10-30",
     amount: 22000.0,
-    status: 'Completed',
-    method: 'Cash',
-    details: 'Monthly salary for October 2025',
+    status: "Completed",
+    method: "Cash",
+    details: "Monthly salary for October 2025",
   },
 ];
 
 function currency(n) {
-  return '₱' + Number(n).toFixed(2);
+  return "₱" + Number(n).toFixed(2);
 }
 
-export default function TransactionPage() {
+const TransactionsPage = () => {
   const [transactions] = useState(SAMPLE_TRANSACTIONS);
   const [selected, setSelected] = useState(null);
 
   const totals = transactions.reduce(
     (acc, t) => {
       acc.total += t.amount;
-      if (t.status === 'Completed') acc.completed += t.amount;
+      if (t.status === "Completed") acc.completed += t.amount;
       return acc;
     },
     { total: 0, completed: 0 }
@@ -92,12 +102,14 @@ export default function TransactionPage() {
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.sub}>{item.date}</Text>
             </View>
-            <View style={{ alignItems: 'flex-end' }}>
+            <View style={{ alignItems: "flex-end" }}>
               <Text style={styles.amount}>{currency(item.amount)}</Text>
               <Text
                 style={[
                   styles.status,
-                  { color: item.status === 'Completed' ? '#16a34a' : '#f59e0b' },
+                  {
+                    color: item.status === "Completed" ? "#16a34a" : "#f59e0b",
+                  },
                 ]}
               >
                 {item.status}
@@ -139,7 +151,9 @@ export default function TransactionPage() {
                 </View>
                 <View style={styles.detailRow}>
                   <Text style={styles.detailLabel}>Amount</Text>
-                  <Text style={styles.detailValue}>{currency(selected.amount)}</Text>
+                  <Text style={styles.detailValue}>
+                    {currency(selected.amount)}
+                  </Text>
                 </View>
                 <View style={styles.detailRow}>
                   <Text style={styles.detailLabel}>Payment Method</Text>
@@ -150,7 +164,12 @@ export default function TransactionPage() {
                   <Text
                     style={[
                       styles.detailValue,
-                      { color: selected.status === 'Completed' ? '#16a34a' : '#f59e0b' },
+                      {
+                        color:
+                          selected.status === "Completed"
+                            ? "#16a34a"
+                            : "#f59e0b",
+                      },
                     ]}
                   >
                     {selected.status}
@@ -170,120 +189,122 @@ export default function TransactionPage() {
       </Modal>
     </SafeAreaView>
   );
-}
+};
+
+export default TransactionsPage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: "#f1f5f9",
     padding: 16,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
     marginTop: 22,
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     marginLeft: 8,
   },
   summaryCard: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
     padding: 12,
     borderRadius: 10,
     marginBottom: 12,
   },
   summaryLabel: {
-    color: '#6b7280',
+    color: "#6b7280",
     fontSize: 12,
   },
   summaryValue: {
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 16,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
     padding: 14,
     borderRadius: 10,
     marginBottom: 10,
   },
   name: {
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 16,
   },
   sub: {
-    color: '#64748b',
+    color: "#64748b",
   },
   amount: {
-    fontWeight: '700',
+    fontWeight: "700",
   },
   status: {
     marginTop: 4,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.35)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0,0,0,0.35)",
+    justifyContent: "center",
+    alignItems: "center",
     padding: 16,
   },
   modalContent: {
-    width: '100%',
-    backgroundColor: '#fff',
+    width: "100%",
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 16,
-    maxHeight: '85%',
+    maxHeight: "85%",
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 10,
   },
   modalTitle: {
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: "800",
   },
   detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginVertical: 6,
   },
   detailLabel: {
-    color: '#475569',
+    color: "#475569",
   },
   detailValue: {
-    fontWeight: '700',
-    color: '#111827',
+    fontWeight: "700",
+    color: "#111827",
   },
   detailNote: {
-    color: '#334155',
+    color: "#334155",
     marginTop: 8,
     marginBottom: 20,
   },
   line: {
     height: 1,
-    backgroundColor: '#e2e8f0',
+    backgroundColor: "#e2e8f0",
     marginVertical: 10,
   },
   primaryBtn: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2563eb',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#2563eb",
     paddingVertical: 12,
     borderRadius: 8,
     gap: 6,
   },
   primaryText: {
-    color: '#fff',
-    fontWeight: '700',
+    color: "#fff",
+    fontWeight: "700",
   },
 });

@@ -1,18 +1,26 @@
-import React from 'react';
-import { SafeAreaView, View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-export default function App() {
+const ProfilePage = () => {
   const user = {
-    name: 'Maria Santos',
-    position: 'Cashier',
-    email: 'maria.santos@example.com',
-    phone: '+63 912 345 6789',
-    address: '123 Main St, Calapan City, Oriental Mindoro',
-    avatar: 'https://i.pravatar.cc/150?img=5',
-    department: 'Sales Department',
-    dateHired: 'March 15, 2022',
-    salary: '₱25,000.00',
+    name: "Maria Santos",
+    position: "Cashier",
+    email: "maria.santos@example.com",
+    phone: "+63 912 345 6789",
+    address: "123 Main St, Calapan City, Oriental Mindoro",
+    avatar: "https://i.pravatar.cc/150?img=5",
+    department: "Sales Department",
+    dateHired: "March 15, 2022",
+    salary: "₱25,000.00",
   };
 
   return (
@@ -70,31 +78,33 @@ export default function App() {
       </ScrollView>
     </SafeAreaView>
   );
-}
+};
+
+export default ProfilePage;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8fafc',
+    backgroundColor: "#f8fafc",
     padding: 16,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
   headerTitle: {
     fontSize: 20,
-    fontWeight: '700',
+    fontWeight: "700",
     marginLeft: 8,
   },
   profileCard: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 20,
     marginBottom: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
@@ -107,59 +117,59 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 20,
-    fontWeight: '700',
-    color: '#0f172a',
+    fontWeight: "700",
+    color: "#0f172a",
   },
   position: {
-    color: '#475569',
+    color: "#475569",
     marginTop: 4,
   },
   department: {
-    color: '#94a3b8',
+    color: "#94a3b8",
     marginTop: 4,
     fontSize: 13,
   },
   section: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
   },
   sectionTitle: {
-    fontWeight: '700',
+    fontWeight: "700",
     fontSize: 16,
     marginBottom: 10,
-    color: '#1e293b',
+    color: "#1e293b",
   },
   infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
   },
   infoText: {
     marginLeft: 10,
-    color: '#334155',
+    color: "#334155",
   },
   editBtn: {
-    backgroundColor: '#2563eb',
+    backgroundColor: "#2563eb",
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 6,
     marginBottom: 10,
   },
-  editText: { color: '#fff', fontWeight: '700' },
+  editText: { color: "#fff", fontWeight: "700" },
   logoutBtn: {
-    backgroundColor: '#ef4444',
+    backgroundColor: "#ef4444",
     paddingVertical: 12,
     borderRadius: 8,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'center',
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
     gap: 6,
     marginBottom: 40,
   },
-  logoutText: { color: '#fff', fontWeight: '700' },
+  logoutText: { color: "#fff", fontWeight: "700" },
 });
