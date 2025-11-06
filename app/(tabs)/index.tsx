@@ -7,6 +7,7 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useImmer } from "use-immer";
+import { useRouter } from "expo-router";
 
 const data = [
   {
@@ -68,6 +69,8 @@ const PayrollPage = () => {
     setSelectedEmployee(employee);
   };
 
+  const router = useRouter();
+
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4 items-center">
       <View className="w-full flex-row justify-between items-center mb-3 mt-5">
@@ -82,6 +85,13 @@ const PayrollPage = () => {
         >
           <MaterialIcons name="download" size={20} />
           <Text className="ml-1.5 font-semibold">Export</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="flex-row items-center gap-1 p-2"
+          onPress={() => router.push("/settings")}
+        >
+          <MaterialIcons name="settings" size={20} />
         </TouchableOpacity>
       </View>
 
