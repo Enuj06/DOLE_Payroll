@@ -30,6 +30,15 @@ const Layout = () => {
           ),
         }}
       />
+            <Tabs.Screen
+        name="attendance"
+        options={{
+          title: "Timesheets",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="browse-gallery" color={color} />
+          ),
+        }}
+      />
 
       <Tabs.Screen
         name="profile"
@@ -40,7 +49,20 @@ const Layout = () => {
           ),
         }}
       />
+
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="settings" color={color} />
+          ),
+        }}
+      />
     </Tabs>
+    
+
+    
   );
 };
 
