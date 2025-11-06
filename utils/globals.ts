@@ -1,5 +1,12 @@
+import * as schema from "@/db/schema";
 import { Employee } from "@/types/globals";
 import { format } from "date-fns";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import { useSQLiteContext as SQLiteContext } from "expo-sqlite";
+
+export const getDb = () => {
+  return drizzle(SQLiteContext(), { schema });
+};
 
 export const formatNumber = (number: string | number) => {
   return Number(number).toLocaleString("en-US", {
