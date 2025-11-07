@@ -5,9 +5,12 @@ export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
   $client: SQLiteDatabase;
 };
 
-export type Position = {
+export type EmployeeDb = {
   id: number;
-  name: string;
+  last_name: string;
+  first_name: string;
+  middle_initial: string;
+  position: string;
   rate: number;
 };
 
