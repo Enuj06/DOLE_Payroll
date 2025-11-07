@@ -1,3 +1,16 @@
+import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
+import { SQLiteDatabase } from "expo-sqlite";
+
+export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
+  $client: SQLiteDatabase;
+};
+
+export type Position = {
+  id: number;
+  name: string;
+  rate: number;
+};
+
 export type Employee = {
   id: number;
   last_name: string;
