@@ -77,6 +77,10 @@ const PayrollPage = () => {
         <Text>Employees</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity onPress={() => router.navigate("/attendances" as Href)}>
+        <Text>Attendances</Text>
+      </TouchableOpacity>
+
       <View className="w-full flex-row justify-between items-center mb-3 mt-5">
         <View className="flex-row items-center">
           <FontAwesome5 name="file-invoice" size={22} />
