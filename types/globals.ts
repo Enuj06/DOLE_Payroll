@@ -7,6 +7,7 @@ export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
 
 export type EmployeeDb = {
   id: number;
+  employee_id: string;
   last_name: string;
   first_name: string;
   middle_initial: string;

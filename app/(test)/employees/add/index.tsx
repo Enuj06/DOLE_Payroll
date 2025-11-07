@@ -1,9 +1,10 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
-import { employees } from "@/db/schema";
+import * as models from "@/db/schema";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
 import { getDb } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { desc } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -24,7 +25,19 @@ const AddPage = () => {
 
   const onSubmit = async (values: Values) => {
     try {
-      await db.insert(employees).values(values);
+      const employees = await db
+        .select()
+        .from(models.employees)
+        .orderBy(desc(models.employees.id))
+        .limit(1);
+
+      let employee_id = 0;
+      if (employees.length > 0) employee_id = Number(employees[0].employee_id);
+
+      await db.insert(models.employees).values({
+        ...values,
+        employee_id: `${++employee_id}`.padStart(8, "0"),
+      });
       router.navigate("/employees" as Href);
     } catch (error) {
       console.error(error);

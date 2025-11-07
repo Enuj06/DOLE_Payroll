@@ -1,0 +1,1 @@
+ALTER TABLE `employees` ADD `employee_id` text NOT NULL;

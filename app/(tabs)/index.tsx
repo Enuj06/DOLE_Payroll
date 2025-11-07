@@ -73,7 +73,7 @@ const PayrollPage = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4 items-center">
-      <TouchableOpacity onPress={() => router.push("/employees" as Href)}>
+      <TouchableOpacity onPress={() => router.navigate("/employees" as Href)}>
         <Text>Employees</Text>
       </TouchableOpacity>
 
