@@ -93,7 +93,7 @@ const PayrollPage = () => {
 
         <TouchableOpacity
           className="flex-row items-center gap-1 p-2"
-          onPress={() => router.push("/settings")}
+          onPress={() => router.navigate("/settings")}
         >
           <MaterialIcons name="settings" size={20} />
         </TouchableOpacity>

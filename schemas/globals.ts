@@ -16,6 +16,7 @@ export const employee = Yup.object().shape({
       }
     )
     .label("Middle Initial"),
+  position: Yup.string().trim().required().label("Position"),
   rate: Yup.number()
     .typeError("Rate must be a number")
     .required()

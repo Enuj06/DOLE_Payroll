@@ -1,26 +1,67 @@
-import useFetch from "@/hooks/employees/useFetch";
+import DeleteAlert from "@/components/DeleteAlert";
+import useDelete from "@/hooks/employees/useDelete";
+import useFetchAll from "@/hooks/employees/useFetchAll";
 import { getDb } from "@/utils/globals";
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import { Text, TouchableOpacity } from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const EmployeesPage = () => {
+const IndexPage = () => {
   const db = getDb();
   const router = useRouter();
 
-  const { employees } = useFetch(db);
-  console.log(employees);
+  const { employees, refetch } = useFetchAll(db);
+  const { handleDelete } = useDelete(db, refetch);
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-      <Text>Employees</Text>
+      <View className="gap-2">
+        <Text>Employees</Text>
 
-      <TouchableOpacity onPress={() => router.push("employees/add" as Href)}>
-        <Text>Add</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => router.navigate("employees/add" as Href)}
+        >
+          <Text>Add</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View className="mt-4">
+        <FlatList
+          data={employees}
+          keyExtractor={(employee) => `${employee.id}`}
+          renderItem={({ item: employee }) => (
+            <View className="flex-row gap-4">
+              <View>
+                <Text>{`${employee.last_name}, ${employee.first_name} ${employee.middle_initial}.`}</Text>
+              </View>
+
+              <View className="flex-row gap-4">
+                <TouchableOpacity
+                  onPress={() =>
+                    router.navigate({
+                      pathname: "/employees/edit/[id]",
+                      params: { id: employee.id },
+                    })
+                  }
+                >
+                  <Text>Edit</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    DeleteAlert(employee.id, "Employee", handleDelete);
+                  }}
+                >
+                  <Text>Delete</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };
 
-export default EmployeesPage;
+export default IndexPage;

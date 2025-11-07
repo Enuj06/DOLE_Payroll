@@ -1,18 +1,26 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
+import Loader from "@/components/Loader";
 import { employees } from "@/db/schema";
+import useFetch from "@/hooks/employees/useFetch";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
 import { getDb } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Href, useRouter } from "expo-router";
+import { eq } from "drizzle-orm";
+import { Href, useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const AddPage = () => {
+const EditPage = () => {
+  const { id } = useLocalSearchParams();
+
   const db = getDb();
   const router = useRouter();
+
+  const { employee } = useFetch(db, Number(id));
+  console.log(employee);
 
   const {
     control,
@@ -23,17 +31,26 @@ const AddPage = () => {
   });
 
   const onSubmit = async (values: Values) => {
-    try {
-      await db.insert(employees).values(values);
-      router.navigate("/employees" as Href);
-    } catch (error) {
-      console.error(error);
+    if (employee) {
+      try {
+        await db
+          .update(employees)
+          .set(values)
+          .where(eq(employees.id, employee.id));
+        router.navigate("/employees" as Href);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
+  if (!employee) {
+    return <Loader />;
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-      <Text>Add Employee</Text>
+      <Text>Edit Employee</Text>
 
       <View className="my-4">
         <View>
@@ -43,6 +60,7 @@ const AddPage = () => {
             <Controller
               control={control}
               name="last_name"
+              defaultValue={employee.last_name}
               render={({ field: { value, onChange, onBlur } }) => (
                 <>
                   <TextInput
@@ -64,6 +82,7 @@ const AddPage = () => {
             <Controller
               control={control}
               name="first_name"
+              defaultValue={employee.first_name}
               render={({ field: { value, onChange, onBlur } }) => (
                 <>
                   <TextInput
@@ -85,6 +104,7 @@ const AddPage = () => {
             <Controller
               control={control}
               name="middle_initial"
+              defaultValue={employee.middle_initial}
               render={({ field: { value, onChange, onBlur } }) => (
                 <>
                   <TextInput
@@ -106,6 +126,7 @@ const AddPage = () => {
             <Controller
               control={control}
               name="position"
+              defaultValue={employee.position}
               render={({ field: { value, onChange, onBlur } }) => (
                 <>
                   <TextInput
@@ -127,6 +148,7 @@ const AddPage = () => {
             <Controller
               control={control}
               name="rate"
+              defaultValue={employee.rate}
               render={({ field: { value, onChange, onBlur } }) => (
                 <>
                   <TextInput
@@ -146,7 +168,7 @@ const AddPage = () => {
 
         <View className="mt-4 flex-row gap-4">
           <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-            <Text>Add</Text>
+            <Text>Update</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.back()}>
@@ -158,4 +180,4 @@ const AddPage = () => {
   );
 };
 
-export default AddPage;
+export default EditPage;

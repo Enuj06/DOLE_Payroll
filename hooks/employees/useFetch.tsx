@@ -1,26 +1,27 @@
+import { employees } from "@/db/schema";
 import { Db, EmployeeDb } from "@/types/globals";
-import { useCallback, useEffect } from "react";
-import { useImmer } from "use-immer";
+import { eq } from "drizzle-orm";
+import { useCallback, useEffect, useState } from "react";
 
-const useFetch = (db: Db) => {
-  const [employees, setEmployees] = useImmer<EmployeeDb[] | undefined>(
-    undefined
-  );
+const useFetch = (db: Db, id: number) => {
+  const [employee, setEmployee] = useState<EmployeeDb | undefined>(undefined);
 
   const handleFetch = useCallback(async () => {
     try {
-      const employees = await db.query.employees.findMany();
-      setEmployees(employees);
+      const employee = await db.query.employees.findFirst({
+        where: eq(employees.id, id),
+      });
+      setEmployee(employee);
     } catch (error) {
       console.error(error);
     }
-  }, [setEmployees]);
+  }, [setEmployee]);
 
   useEffect(() => {
     handleFetch();
   }, [handleFetch]);
 
-  return { employees, refetch: handleFetch };
+  return { employee, refetch: handleFetch };
 };
 
 export default useFetch;
