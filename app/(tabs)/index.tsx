@@ -3,11 +3,11 @@ import EmployeesTable from "@/components/Tables/EmployeesTable";
 import { Employee } from "@/types/globals";
 import { calculate, formatNumber } from "@/utils/globals";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useImmer } from "use-immer";
-import { useRouter } from "expo-router";
 
 const data = [
   {

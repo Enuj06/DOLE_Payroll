@@ -30,7 +30,7 @@ const Layout = () => {
           ),
         }}
       />
-            <Tabs.Screen
+      <Tabs.Screen
         name="attendance"
         options={{
           title: "Timesheets",
@@ -59,10 +59,17 @@ const Layout = () => {
           ),
         }}
       />
-    </Tabs>
-    
 
-    
+      <Tabs.Screen
+        name="test/test"
+        options={{
+          title: "Test",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="star" color={color} />
+          ),
+        }}
+      />
+    </Tabs>
   );
 };
 
