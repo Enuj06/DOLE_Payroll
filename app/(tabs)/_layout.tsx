@@ -59,16 +59,6 @@ const Layout = () => {
           ),
         }}
       />
-
-      <Tabs.Screen
-        name="test/test"
-        options={{
-          title: "Test",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="star" color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 };

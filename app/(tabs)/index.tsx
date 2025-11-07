@@ -3,7 +3,7 @@ import EmployeesTable from "@/components/Tables/EmployeesTable";
 import { Employee } from "@/types/globals";
 import { calculate, formatNumber } from "@/utils/globals";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -73,6 +73,10 @@ const PayrollPage = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4 items-center">
+      <TouchableOpacity onPress={() => router.push("/positions" as Href)}>
+        <Text>Positions</Text>
+      </TouchableOpacity>
+
       <View className="w-full flex-row justify-between items-center mb-3 mt-5">
         <View className="flex-row items-center">
           <FontAwesome5 name="file-invoice" size={22} />
