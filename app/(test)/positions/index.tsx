@@ -10,7 +10,6 @@ const PositionsPage = () => {
   const router = useRouter();
 
   const { positions } = useFetch(db);
-
   console.log(positions);
 
   return (

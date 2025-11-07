@@ -2,7 +2,7 @@ import { Db, Position } from "@/types/globals";
 import { useCallback, useEffect } from "react";
 import { useImmer } from "use-immer";
 
-const useFetch = (db: Db) => {
+const useFetchEstablishments = (db: Db) => {
   const [positions, setPositions] = useImmer<Position[] | undefined>(undefined);
 
   const handleFetch = useCallback(async () => {
@@ -12,7 +12,7 @@ const useFetch = (db: Db) => {
     } catch (error) {
       console.error(error);
     }
-  }, [setPositions]);
+  }, [db, setPositions]);
 
   useEffect(() => {
     handleFetch();
@@ -21,4 +21,4 @@ const useFetch = (db: Db) => {
   return { positions, refetch: handleFetch };
 };
 
-export default useFetch;
+export default useFetchEstablishments;
