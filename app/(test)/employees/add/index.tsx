@@ -49,7 +49,7 @@ const AddPage = () => {
       <Text>Add Employee</Text>
 
       <View className="my-4">
-        <View>
+        <View className="gap-4">
           <View>
             <Label name="Last Name" />
 

@@ -8,6 +8,19 @@ export const getDb = () => {
   return drizzle(SQLiteContext(), { schema });
 };
 
+export const getDate = (dateTime: Date) => {
+  return dateTime.toISOString().split("T")[0];
+};
+
+export const getTime = (dateTime: Date) => {
+  const time = dateTime.toLocaleTimeString("en-US", {
+    timeZone: "Asia/Shanghai",
+    hour12: false,
+  });
+  const components = time.split(":");
+  return `${components[0]}:${components[1]}`;
+};
+
 export const formatNumber = (number: string | number) => {
   return Number(number).toLocaleString("en-US", {
     minimumFractionDigits: 2,

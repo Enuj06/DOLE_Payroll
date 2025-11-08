@@ -15,6 +15,19 @@ export type EmployeeDb = {
   rate: number;
 };
 
+export type Attendance = {
+  id: number;
+  date: string;
+  am_in: string | null;
+  am_out: string | null;
+  pm_in: string | null;
+  pm_out: string | null;
+  ot_in: string | null;
+  ot_out: string | null;
+  employee_id?: number;
+  employee?: EmployeeDb;
+};
+
 export type Employee = {
   id: number;
   last_name: string;
