@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, ScrollView, Switch, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { Picker } from '@react-native-picker/picker';
 
 const Settings = () => {
   const [region, setRegion] = useState("NCR");
@@ -32,14 +33,34 @@ const Settings = () => {
             Regional Wage Order
           </Text>
 
+
           <View className="mb-3">
             <Text className="text-gray-600 mb-1">Region</Text>
-            <TextInput
-              value={region}
-              onChangeText={setRegion}
-              className="border border-gray-300 rounded-xl p-2"
-              placeholder="e.g., NCR"
-            />
+            <View className="border border-gray-300 rounded-l overflow-hidden">
+              <Picker
+                selectedValue={region}
+                onValueChange={(value) => setRegion(value)}
+                dropdownIconColor="#374151"
+              >
+                <Picker.Item label="NCR" value="NCR" />
+                <Picker.Item label="CAR" value="CAR" />
+                <Picker.Item label="Region I - Ilocos" value="Region I" />
+                <Picker.Item label="Region II - Cagayan Valley" value="Region II" />
+                <Picker.Item label="Region III - Central Luzon" value="Region III" />
+                <Picker.Item label="Region IV-A - CALABARZON" value="Region IV-A" />
+                <Picker.Item label="Region IV-B - MIMAROPA" value="Region IV-B" />
+                <Picker.Item label="Region V - Bicol" value="Region V" />
+                <Picker.Item label="Region VI - Western Visayas" value="Region VI" />
+                <Picker.Item label="Region VII - Central Visayas" value="Region VII" />
+                <Picker.Item label="Region VIII - Eastern Visayas" value="Region VIII" />
+                <Picker.Item label="Region IX - Zamboanga Peninsula" value="Region IX" />
+                <Picker.Item label="Region X - Northern Mindanao" value="Region X" />
+                <Picker.Item label="Region XI - Davao" value="Region XI" />
+                <Picker.Item label="Region XII - SOCCSKSARGEN" value="Region XII" />
+                <Picker.Item label="Region XIII - CARAGA" value="Region XIII" />
+                <Picker.Item label="BARMM" value="BARMM" />
+              </Picker>
+            </View>
           </View>
 
           <View>
