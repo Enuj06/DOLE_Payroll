@@ -20,7 +20,6 @@ const EditPage = () => {
   const router = useRouter();
 
   const { employee } = useFetch(db, Number(id));
-  console.log(employee);
 
   const {
     control,
