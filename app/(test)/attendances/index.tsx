@@ -40,7 +40,7 @@ const IndexPage = () => {
                 <TouchableOpacity
                   onPress={() =>
                     router.navigate({
-                      pathname: "/employees/edit/[id]",
+                      pathname: "/attendances/edit/[id]",
                       params: { id: attendance.id },
                     })
                   }
