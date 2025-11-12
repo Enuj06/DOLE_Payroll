@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, ScrollView, Switch, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
-import { Picker } from '@react-native-picker/picker';
+import { Picker } from "@react-native-picker/picker";
+import React, { useState } from "react";
+import {
+  ScrollView,
+  Switch,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Settings = () => {
   const [region, setRegion] = useState("NCR");
@@ -25,14 +32,13 @@ const Settings = () => {
     <SafeAreaView className="flex-1 bg-gray-50 p-4">
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text className="text-2xl font-bold text-gray-800 mb-4">
-           Wage Policy Settings
+          Wage Policy Settings
         </Text>
 
         <View className="bg-white rounded-2xl p-4 mb-5 shadow">
           <Text className="text-lg font-semibold text-gray-700 mb-3">
             Regional Wage Order
           </Text>
-
 
           <View className="mb-3">
             <Text className="text-gray-600 mb-1">Region</Text>
@@ -45,18 +51,48 @@ const Settings = () => {
                 <Picker.Item label="NCR" value="NCR" />
                 <Picker.Item label="CAR" value="CAR" />
                 <Picker.Item label="Region I - Ilocos" value="Region I" />
-                <Picker.Item label="Region II - Cagayan Valley" value="Region II" />
-                <Picker.Item label="Region III - Central Luzon" value="Region III" />
-                <Picker.Item label="Region IV-A - CALABARZON" value="Region IV-A" />
-                <Picker.Item label="Region IV-B - MIMAROPA" value="Region IV-B" />
+                <Picker.Item
+                  label="Region II - Cagayan Valley"
+                  value="Region II"
+                />
+                <Picker.Item
+                  label="Region III - Central Luzon"
+                  value="Region III"
+                />
+                <Picker.Item
+                  label="Region IV-A - CALABARZON"
+                  value="Region IV-A"
+                />
+                <Picker.Item
+                  label="Region IV-B - MIMAROPA"
+                  value="Region IV-B"
+                />
                 <Picker.Item label="Region V - Bicol" value="Region V" />
-                <Picker.Item label="Region VI - Western Visayas" value="Region VI" />
-                <Picker.Item label="Region VII - Central Visayas" value="Region VII" />
-                <Picker.Item label="Region VIII - Eastern Visayas" value="Region VIII" />
-                <Picker.Item label="Region IX - Zamboanga Peninsula" value="Region IX" />
-                <Picker.Item label="Region X - Northern Mindanao" value="Region X" />
+                <Picker.Item
+                  label="Region VI - Western Visayas"
+                  value="Region VI"
+                />
+                <Picker.Item
+                  label="Region VII - Central Visayas"
+                  value="Region VII"
+                />
+                <Picker.Item
+                  label="Region VIII - Eastern Visayas"
+                  value="Region VIII"
+                />
+                <Picker.Item
+                  label="Region IX - Zamboanga Peninsula"
+                  value="Region IX"
+                />
+                <Picker.Item
+                  label="Region X - Northern Mindanao"
+                  value="Region X"
+                />
                 <Picker.Item label="Region XI - Davao" value="Region XI" />
-                <Picker.Item label="Region XII - SOCCSKSARGEN" value="Region XII" />
+                <Picker.Item
+                  label="Region XII - SOCCSKSARGEN"
+                  value="Region XII"
+                />
                 <Picker.Item label="Region XIII - CARAGA" value="Region XIII" />
                 <Picker.Item label="BARMM" value="BARMM" />
               </Picker>
@@ -81,7 +117,9 @@ const Settings = () => {
           </Text>
 
           <View className="mb-3">
-            <Text className="text-gray-600 mb-1">Regular Work Hours (per day)</Text>
+            <Text className="text-gray-600 mb-1">
+              Regular Work Hours (per day)
+            </Text>
             <TextInput
               value={regularHours}
               onChangeText={setRegularHours}
@@ -107,7 +145,9 @@ const Settings = () => {
           </Text>
 
           <View className="mb-3">
-            <Text className="text-gray-600 mb-1">Overtime Pay (% of hourly rate)</Text>
+            <Text className="text-gray-600 mb-1">
+              Overtime Pay (% of hourly rate)
+            </Text>
             <TextInput
               value={otRate}
               onChangeText={setOtRate}
@@ -117,7 +157,9 @@ const Settings = () => {
           </View>
 
           <View className="mb-3">
-            <Text className="text-gray-600 mb-1">Night Differential (% extra pay)</Text>
+            <Text className="text-gray-600 mb-1">
+              Night Differential (% extra pay)
+            </Text>
             <TextInput
               value={nightDiffRate}
               onChangeText={setNightDiffRate}
@@ -127,7 +169,9 @@ const Settings = () => {
           </View>
 
           <View className="mb-3">
-            <Text className="text-gray-600 mb-1">Rest Day Pay (% extra pay)</Text>
+            <Text className="text-gray-600 mb-1">
+              Rest Day Pay (% extra pay)
+            </Text>
             <TextInput
               value={restDayRate}
               onChangeText={setRestDayRate}
@@ -137,7 +181,9 @@ const Settings = () => {
           </View>
 
           <View>
-            <Text className="text-gray-600 mb-1">Regular Holiday Pay (% extra pay)</Text>
+            <Text className="text-gray-600 mb-1">
+              Regular Holiday Pay (% extra pay)
+            </Text>
             <TextInput
               value={holidayRate}
               onChangeText={setHolidayRate}
@@ -163,7 +209,9 @@ const Settings = () => {
           </View>
 
           <View className="mb-3">
-            <Text className="text-gray-600 mb-1">PhilHealth Contribution (%)</Text>
+            <Text className="text-gray-600 mb-1">
+              PhilHealth Contribution (%)
+            </Text>
             <TextInput
               value={philHealthRate}
               onChangeText={setPhilHealthRate}
@@ -173,7 +221,9 @@ const Settings = () => {
           </View>
 
           <View>
-            <Text className="text-gray-600 mb-1">Pag-IBIG Contribution (%)</Text>
+            <Text className="text-gray-600 mb-1">
+              Pag-IBIG Contribution (%)
+            </Text>
             <TextInput
               value={pagibigRate}
               onChangeText={setPagibigRate}
@@ -184,10 +234,14 @@ const Settings = () => {
         </View>
 
         <View className="bg-white rounded-2xl p-4 shadow">
-          <Text className="text-lg font-semibold text-gray-700 mb-3">System Preferences</Text>
+          <Text className="text-lg font-semibold text-gray-700 mb-3">
+            System Preferences
+          </Text>
 
           <View className="flex-row justify-between items-center mb-3">
-            <Text className="text-gray-600">Enable Wage Policy Notifications</Text>
+            <Text className="text-gray-600">
+              Enable Wage Policy Notifications
+            </Text>
             <Switch value={showNotif} onValueChange={setShowNotif} />
           </View>
         </View>
