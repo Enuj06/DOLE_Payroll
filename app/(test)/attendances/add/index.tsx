@@ -1,6 +1,6 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
-import Select from "@/components/Select";
+import NewSelect from "@/components/NewSelect";
 import { attendances } from "@/db/schema";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { attendance as schema, Attendance as Values } from "@/schemas/globals";
@@ -277,13 +277,19 @@ const AddPage = () => {
                 name="employee_id"
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
-                    <Select
+                    <NewSelect
+                      value={`${value}`}
+                      options={getOptions()}
+                      onChange={onChange}
+                    />
+
+                    {/* <Select
                       value={`${value}`}
                       options={getOptions()}
                       placeholder="Select Employee"
                       onChange={onChange}
                       onBlur={onBlur}
-                    />
+                    /> */}
                   </>
                 )}
               />
