@@ -6,13 +6,14 @@ import { getDb } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { desc } from "drizzle-orm";
 import { Href, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AddPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const {

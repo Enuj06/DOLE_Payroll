@@ -2,10 +2,10 @@ import * as schema from "@/db/schema";
 import { Employee } from "@/types/globals";
 import { format } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { useSQLiteContext as SQLiteContext } from "expo-sqlite";
+import { SQLiteDatabase } from "expo-sqlite";
 
-export const getDb = () => {
-  return drizzle(SQLiteContext(), { schema });
+export const getDb = (sqlDb: SQLiteDatabase) => {
+  return drizzle(sqlDb, { schema });
 };
 
 export const getDate = (dateTime: Date) => {

@@ -3,6 +3,7 @@ import useDelete from "@/hooks/employees/useDelete";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { getDb } from "@/utils/globals";
 import { Href, useFocusEffect, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import React, { useCallback } from "react";
 import {
   BackHandler,
@@ -14,7 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const IndexPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const { employees, refetch } = useFetchAll(db);

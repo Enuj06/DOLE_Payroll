@@ -8,6 +8,7 @@ import { getDb } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { Href, useLocalSearchParams, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -16,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const EditPage = () => {
   const { id } = useLocalSearchParams();
 
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const { employee } = useFetch(db, Number(id));

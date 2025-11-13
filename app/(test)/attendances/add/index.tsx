@@ -9,6 +9,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Href, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -16,7 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useImmer } from "use-immer";
 
 const AddPage = () => {
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const [modalVisibility, setModalVisibility] = useImmer({

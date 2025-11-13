@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eq } from "drizzle-orm";
 import { Href, useLocalSearchParams, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -21,7 +22,7 @@ import { useImmer } from "use-immer";
 const EditPage = () => {
   const { id } = useLocalSearchParams();
 
-  const db = getDb();
+  const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const [modalVisibility, setModalVisibility] = useImmer({

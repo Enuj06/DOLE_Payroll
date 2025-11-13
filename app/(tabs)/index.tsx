@@ -1,9 +1,11 @@
 import PayslipModal from "@/components/Modals/PayslipModal";
 import EmployeesTable from "@/components/Tables/EmployeesTable";
+import useFetchAll from "@/hooks/employees/useFetchAll";
 import { Employee } from "@/types/globals";
-import { calculate, formatNumber } from "@/utils/globals";
+import { calculate, formatNumber, getDb } from "@/utils/globals";
 import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { Href, useRouter } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -45,10 +47,16 @@ const data = [
 ];
 
 const PayrollPage = () => {
+  const db = getDb(useSQLiteContext());
+
   const [employees] = useImmer(data);
   const [selectedEmployee, setSelectedEmployee] = useImmer<Employee | null>(
     null
   );
+
+  const { employees: test } = useFetchAll(db);
+
+  console.log(test);
 
   const calculateTotals = () => {
     const total = { gross: 0, deductions: 0, net: 0 };
