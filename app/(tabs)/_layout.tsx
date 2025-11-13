@@ -14,9 +14,39 @@ const Layout = () => {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Index",
+          title: "Payroll",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="star" color={color} />
+            <MaterialIcons size={28} name="attach-money" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="attendance"
+        options={{
+          title: "Attendance",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="calendar-month" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="employees"
+        options={{
+          title: "Employees",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="person" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons size={28} name="settings" color={color} />
           ),
         }}
       />
