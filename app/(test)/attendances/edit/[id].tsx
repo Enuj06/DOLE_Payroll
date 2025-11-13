@@ -311,15 +311,12 @@ const EditPage = () => {
                 name="employee_id"
                 defaultValue={attendance.employee_id}
                 render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <Select
-                      value={`${value}`}
-                      options={getOptions()}
-                      placeholder="Select Employee"
-                      onChange={onChange}
-                      onBlur={onBlur}
-                    />
-                  </>
+                  <Select
+                    value={`${value}`}
+                    options={getOptions()}
+                    placeholder="Select Employee"
+                    onChange={onChange}
+                  />
                 )}
               />
 
