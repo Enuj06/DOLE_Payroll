@@ -2,9 +2,15 @@ import DeleteAlert from "@/components/DeleteAlert";
 import useDelete from "@/hooks/attendances/useDelete";
 import useFetchAll from "@/hooks/attendances/useFetchAll";
 import { getDate, getDb } from "@/utils/globals";
-import { Href, useRouter } from "expo-router";
-import React from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Href, useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback } from "react";
+import {
+  BackHandler,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const IndexPage = () => {
@@ -13,6 +19,22 @@ const IndexPage = () => {
 
   const { attendances, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
+
+  useFocusEffect(
+    useCallback(() => {
+      const handleBackPress = () => {
+        router.navigate("/");
+        return true;
+      };
+
+      const backhandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        handleBackPress
+      );
+
+      return () => backhandler.remove();
+    }, [router])
+  );
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
