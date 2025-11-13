@@ -14,48 +14,9 @@ const Layout = () => {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Payroll",
+          title: "Index",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="payment" color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="transactions"
-        options={{
-          title: "Transactions",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="history" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="attendance"
-        options={{
-          title: "Timesheets",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="browse-gallery" color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="person" color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="settings" color={color} />
+            <MaterialIcons size={28} name="star" color={color} />
           ),
         }}
       />
