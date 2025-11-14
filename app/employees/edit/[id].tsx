@@ -7,7 +7,7 @@ import { employee as schema, Employee as Values } from "@/schemas/globals";
 import { getDb } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
-import { Href, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -37,7 +37,7 @@ const EditPage = () => {
           .update(employees)
           .set(values)
           .where(eq(employees.id, employee.id));
-        router.navigate("/employees" as Href);
+        router.navigate("/employees");
       } catch (error) {
         console.error(error);
       }

@@ -14,7 +14,7 @@ export type Employee = {
   position: string;
   rate: number;
   schedule_id: number | null;
-  schedule: Schedule | null;
+  schedule?: Schedule | null;
 };
 
 export type Schedule = {
@@ -23,6 +23,7 @@ export type Schedule = {
   am_out: string;
   pm_in: string;
   pm_out: string;
+  employees?: Employee[];
 };
 
 export type Attendance = {
@@ -35,7 +36,7 @@ export type Attendance = {
   ot_in: string | null;
   ot_out: string | null;
   employee_id: number;
-  employee: Employee;
+  employee?: Employee;
 };
 
 export type Transaction = {

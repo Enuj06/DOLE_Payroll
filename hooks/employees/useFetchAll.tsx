@@ -6,7 +6,9 @@ const useFetchAll = (db: Db) => {
 
   const handleFetch = useCallback(async () => {
     try {
-      const employees = await db.query.employees.findMany();
+      const employees = await db.query.employees.findMany({
+        with: { schedule: true },
+      });
       setEmployees(employees);
     } catch (error) {
       console.error(error);

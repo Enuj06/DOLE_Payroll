@@ -2,7 +2,7 @@ import DeleteAlert from "@/components/DeleteAlert";
 import useDelete from "@/hooks/employees/useDelete";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { getDb } from "@/utils/globals";
-import { ExternalPathString, Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -19,9 +19,7 @@ const EmployeesPage = () => {
       <View className="gap-2">
         <Text>Employees</Text>
 
-        <TouchableOpacity
-          onPress={() => router.navigate("/employees/add" as Href)}
-        >
+        <TouchableOpacity onPress={() => router.navigate("/employees/add")}>
           <Text>Add</Text>
         </TouchableOpacity>
       </View>
@@ -40,7 +38,7 @@ const EmployeesPage = () => {
                 <TouchableOpacity
                   onPress={() =>
                     router.navigate({
-                      pathname: "/employees/edit/[id]" as ExternalPathString,
+                      pathname: "/employees/edit/[id]",
                       params: { id: employee.id },
                     })
                   }

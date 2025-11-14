@@ -2,7 +2,7 @@ import DeleteAlert from "@/components/DeleteAlert";
 import useDelete from "@/hooks/attendances/useDelete";
 import useFetchAll from "@/hooks/attendances/useFetchAll";
 import { getDate, getDb } from "@/utils/globals";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -20,9 +20,7 @@ const AttendancesPage = () => {
       <View className="gap-2">
         <Text>Attendances</Text>
 
-        <TouchableOpacity
-          onPress={() => router.navigate("attendances/add" as Href)}
-        >
+        <TouchableOpacity onPress={() => router.navigate("/attendances/add")}>
           <Text>Add</Text>
         </TouchableOpacity>
       </View>
