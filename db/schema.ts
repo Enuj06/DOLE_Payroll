@@ -1,6 +1,20 @@
 import { relations } from "drizzle-orm";
 import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
+export const attendances = sqliteTable("attendances", {
+  id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+  date: text("date").notNull(),
+  am_in: text("am_in"),
+  am_out: text("am_out"),
+  pm_in: text("pm_in"),
+  pm_out: text("pm_out"),
+  ot_in: text("ot_in"),
+  ot_out: text("ot_out"),
+  employee_id: integer("employee_id")
+    .notNull()
+    .references(() => employees.id),
+});
+
 export const employees = sqliteTable("employees", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   employee_id: text("employee_id").notNull(),
@@ -20,19 +34,21 @@ export const schedules = sqliteTable("schedules", {
   pm_out: text("pm_out").notNull(),
 });
 
-export const attendances = sqliteTable("attendances", {
+export const advances = sqliteTable("advances", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   date: text("date").notNull(),
-  am_in: text("am_in"),
-  am_out: text("am_out"),
-  pm_in: text("pm_in"),
-  pm_out: text("pm_out"),
-  ot_in: text("ot_in"),
-  ot_out: text("ot_out"),
-  employee_id: integer("employee_id")
-    .notNull()
-    .references(() => employees.id),
+  amount: real("amount").notNull(),
+  employee_id: integer()
+    .references(() => employees.id)
+    .notNull(),
 });
+
+export const attendancesRelation = relations(attendances, ({ one }) => ({
+  employee: one(employees, {
+    fields: [attendances.employee_id],
+    references: [employees.id],
+  }),
+}));
 
 export const employeesRelation = relations(employees, ({ one, many }) => ({
   schedule: one(schedules, {
@@ -40,15 +56,16 @@ export const employeesRelation = relations(employees, ({ one, many }) => ({
     references: [schedules.id],
   }),
   attendances: many(attendances),
+  advances: many(advances),
 }));
 
 export const schedulesRelation = relations(schedules, ({ many }) => ({
   employees: many(employees),
 }));
 
-export const attendancesRelation = relations(attendances, ({ one }) => ({
+export const advancesRelation = relations(advances, ({ one }) => ({
   employee: one(employees, {
-    fields: [attendances.employee_id],
+    fields: [advances.employee_id],
     references: [employees.id],
   }),
 }));

@@ -7,6 +7,7 @@ import m0002 from './0002_handy_doorman.sql';
 import m0003 from './0003_dear_dorian_gray.sql';
 import m0004 from './0004_plain_harrier.sql';
 import m0005 from './0005_slimy_mole_man.sql';
+import m0006 from './0006_orange_korg.sql';
 
   export default {
     journal,
@@ -16,7 +17,8 @@ m0001,
 m0002,
 m0003,
 m0004,
-m0005
+m0005,
+m0006
     }
   }
   
