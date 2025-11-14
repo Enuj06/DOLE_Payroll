@@ -5,7 +5,7 @@ export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
   $client: SQLiteDatabase;
 };
 
-export type EmployeeDb = {
+export type Employee = {
   id: number;
   employee_id: string;
   last_name: string;
@@ -13,6 +13,16 @@ export type EmployeeDb = {
   middle_initial: string;
   position: string;
   rate: number;
+  schedule_id: number | null;
+  schedule: Schedule | null;
+};
+
+export type Schedule = {
+  id: number;
+  am_in: string;
+  am_out: string;
+  pm_in: string;
+  pm_out: string;
 };
 
 export type Attendance = {
@@ -24,17 +34,8 @@ export type Attendance = {
   pm_out: string | null;
   ot_in: string | null;
   ot_out: string | null;
-  employee_id?: number;
-  employee?: EmployeeDb;
-};
-
-export type Employee = {
-  id: number;
-  last_name: string;
-  first_name: string;
-  position: string;
-  rate: number;
-  hours: number;
+  employee_id: number;
+  employee: Employee;
 };
 
 export type Transaction = {

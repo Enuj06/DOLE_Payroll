@@ -1,5 +1,4 @@
 import * as schema from "@/db/schema";
-import { Employee } from "@/types/globals";
 import { format } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
@@ -33,14 +32,4 @@ export const formatDate = (
   dateFormat: string = "MMMM dd, yyyy"
 ) => {
   return format(date, dateFormat);
-};
-
-export const calculate = (employee: Employee) => {
-  const gross = employee.rate * employee.hours;
-  const tax = gross * 0.1;
-  const sss = gross * 0.03;
-  const phil = gross * 0.02;
-  const deductions = tax + sss + phil;
-  const net = gross - deductions;
-  return { gross, tax, sss, phil, deductions, net };
 };

@@ -1,10 +1,8 @@
-import { Db, EmployeeDb } from "@/types/globals";
+import { Db, Employee } from "@/types/globals";
 import { useCallback, useEffect, useState } from "react";
 
 const useFetchAll = (db: Db) => {
-  const [employees, setEmployees] = useState<EmployeeDb[] | undefined>(
-    undefined
-  );
+  const [employees, setEmployees] = useState<Employee[] | undefined>(undefined);
 
   const handleFetch = useCallback(async () => {
     try {

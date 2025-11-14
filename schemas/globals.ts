@@ -21,9 +21,34 @@ export const employee = Yup.object().shape({
     .typeError("Rate must be a number")
     .required()
     .label("Rate"),
+  schedule_id: Yup.number()
+    .typeError("Schedule ID must be a number")
+    .required()
+    .label("Schedule"),
 });
 
 export type Employee = Yup.InferType<typeof employee>;
+
+export const schedule = Yup.object().shape({
+  am_in: Yup.date()
+    .typeError("AM In must be a valid date")
+    .required()
+    .label("AM In"),
+  am_out: Yup.date()
+    .typeError("AM Out must be a valid date")
+    .required()
+    .label("AM Out"),
+  pm_in: Yup.date()
+    .typeError("PM In must be a valid date")
+    .required()
+    .label("PM In"),
+  pm_out: Yup.date()
+    .typeError("PM Out must be a valid date")
+    .required()
+    .label("PM Out"),
+});
+
+export type Schedule = Yup.InferType<typeof schedule>;
 
 export const attendance = Yup.object().shape({
   date: Yup.date()
