@@ -181,12 +181,14 @@ const AddPage = () => {
               control={control}
               name="schedule_id"
               render={({ field: { value, onChange, onBlur } }) => (
-                <Select
-                  value={`${value}`}
-                  options={getOptions()}
-                  placeholder="Select Schedule"
-                  onChange={onChange}
-                />
+                <>
+                  <Select
+                    value={`${value}`}
+                    options={getOptions()}
+                    placeholder="Select Schedule"
+                    onChange={onChange}
+                  />
+                </>
               )}
             />
 

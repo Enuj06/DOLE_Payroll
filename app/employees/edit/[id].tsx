@@ -189,12 +189,14 @@ const EditPage = () => {
               name="schedule_id"
               defaultValue={employee.schedule_id ? employee.schedule_id : -1}
               render={({ field: { value, onChange, onBlur } }) => (
-                <Select
-                  value={`${-1}`}
-                  options={getOptions()}
-                  placeholder="Select Schedule"
-                  onChange={onChange}
-                />
+                <>
+                  <Select
+                    value={`${-1}`}
+                    options={getOptions()}
+                    placeholder="Select Schedule"
+                    onChange={onChange}
+                  />
+                </>
               )}
             />
 
