@@ -16,13 +16,13 @@ const Layout = () => {
         options={{
           title: "Payroll",
           tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="attach-money" color={color} />
+            <MaterialIcons size={28} name="receipt" color={color} />
           ),
         }}
       />
 
       <Tabs.Screen
-        name="attendance"
+        name="attendances"
         options={{
           title: "Attendance",
           tabBarIcon: ({ color }) => (

@@ -1,26 +1,27 @@
 import DeleteAlert from "@/components/DeleteAlert";
-import useDelete from "@/hooks/employees/useDelete";
-import useFetchAll from "@/hooks/employees/useFetchAll";
-import { getDb } from "@/utils/globals";
-import { ExternalPathString, Href, useRouter } from "expo-router";
+import useDelete from "@/hooks/attendances/useDelete";
+import useFetchAll from "@/hooks/attendances/useFetchAll";
+import { getDate, getDb } from "@/utils/globals";
+import { Href, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
+import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const EmployeesPage = () => {
+const AttendancesPage = () => {
   const db = getDb(useSQLiteContext());
   const router = useRouter();
 
-  const { employees, refetch } = useFetchAll(db);
+  const { attendances, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
       <View className="gap-2">
-        <Text>Employees</Text>
+        <Text>Attendances</Text>
 
         <TouchableOpacity
-          onPress={() => router.navigate("/employees/add" as Href)}
+          onPress={() => router.navigate("attendances/add" as Href)}
         >
           <Text>Add</Text>
         </TouchableOpacity>
@@ -28,20 +29,20 @@ const EmployeesPage = () => {
 
       <View className="mt-4">
         <FlatList
-          data={employees}
-          keyExtractor={(employee) => `${employee.id}`}
-          renderItem={({ item: employee }) => (
+          data={attendances}
+          keyExtractor={(attendance) => `${attendance.id}`}
+          renderItem={({ item: attendance }) => (
             <View className="flex-row gap-4">
               <View>
-                <Text>{`${employee.last_name}, ${employee.first_name} ${employee.middle_initial}.`}</Text>
+                <Text>{getDate(new Date(attendance.date))}</Text>
               </View>
 
               <View className="flex-row gap-4">
                 <TouchableOpacity
                   onPress={() =>
                     router.navigate({
-                      pathname: "/employees/edit/[id]" as ExternalPathString,
-                      params: { id: employee.id },
+                      pathname: "/attendances/edit/[id]",
+                      params: { id: attendance.id },
                     })
                   }
                 >
@@ -50,7 +51,7 @@ const EmployeesPage = () => {
 
                 <TouchableOpacity
                   onPress={() => {
-                    DeleteAlert(employee.id, "Employee", handleDelete);
+                    DeleteAlert(attendance.id, "Attendance", handleDelete);
                   }}
                 >
                   <Text>Delete</Text>
@@ -64,4 +65,4 @@ const EmployeesPage = () => {
   );
 };
 
-export default EmployeesPage;
+export default AttendancesPage;
