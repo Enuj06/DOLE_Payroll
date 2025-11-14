@@ -1,10 +1,12 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
 import Loader from "@/components/Loader";
+import Select from "@/components/Select";
 import { employees } from "@/db/schema";
 import useFetch from "@/hooks/employees/useFetch";
+import useFetchAll from "@/hooks/schedules/useFetchAll";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
-import { getDb } from "@/utils/globals";
+import { getDb, getTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -21,6 +23,20 @@ const EditPage = () => {
   const router = useRouter();
 
   const { employee } = useFetch(db, Number(id));
+  const { schedules } = useFetchAll(db);
+
+  const getOptions = () => {
+    const options: { label: string; value: string }[] = [];
+    if (schedules) {
+      schedules.forEach((schedule) => {
+        options.push({
+          label: `${getTime(new Date(schedule.am_in))}-${getTime(new Date(schedule.am_out))} ${getTime(new Date(schedule.pm_in))}-${getTime(new Date(schedule.pm_out))}`,
+          value: `${schedule.id}`,
+        });
+      });
+    }
+    return options;
+  };
 
   const {
     control,
@@ -163,6 +179,26 @@ const EditPage = () => {
             />
 
             <ErrorMessage error={errors.rate} />
+          </View>
+
+          <View>
+            <Label name="Schedule" />
+
+            <Controller
+              control={control}
+              name="schedule_id"
+              defaultValue={employee.schedule_id ? employee.schedule_id : -1}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <Select
+                  value={`${-1}`}
+                  options={getOptions()}
+                  placeholder="Select Schedule"
+                  onChange={onChange}
+                />
+              )}
+            />
+
+            <ErrorMessage error={errors.schedule_id} />
           </View>
         </View>
 

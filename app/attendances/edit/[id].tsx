@@ -11,7 +11,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { eq } from "drizzle-orm";
-import { Href, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -78,7 +78,7 @@ const EditPage = () => {
             ot_out: values.ot_out ? values.ot_out.toISOString() : null,
           })
           .where(eq(attendances.id, attendance.id));
-        router.navigate("/attendances" as Href);
+        router.navigate("/attendances");
       } catch (error) {
         console.error(error);
       }

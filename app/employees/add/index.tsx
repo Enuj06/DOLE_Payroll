@@ -1,8 +1,10 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
+import Select from "@/components/Select";
 import * as models from "@/db/schema";
+import useFetchAll from "@/hooks/schedules/useFetchAll";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
-import { getDb } from "@/utils/globals";
+import { getDb, getTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { desc } from "drizzle-orm";
 import { useRouter } from "expo-router";
@@ -15,6 +17,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const AddPage = () => {
   const db = getDb(useSQLiteContext());
   const router = useRouter();
+
+  const { schedules } = useFetchAll(db);
+
+  const getOptions = () => {
+    const options: { label: string; value: string }[] = [];
+    if (schedules) {
+      schedules.forEach((schedule) => {
+        options.push({
+          label: `${getTime(new Date(schedule.am_in))}-${getTime(new Date(schedule.am_out))} ${getTime(new Date(schedule.pm_in))}-${getTime(new Date(schedule.pm_out))}`,
+          value: `${schedule.id}`,
+        });
+      });
+    }
+    return options;
+  };
 
   const {
     control,
@@ -155,6 +172,25 @@ const AddPage = () => {
             />
 
             <ErrorMessage error={errors.rate} />
+          </View>
+
+          <View>
+            <Label name="Schedule" />
+
+            <Controller
+              control={control}
+              name="schedule_id"
+              render={({ field: { value, onChange, onBlur } }) => (
+                <Select
+                  value={`${value}`}
+                  options={getOptions()}
+                  placeholder="Select Schedule"
+                  onChange={onChange}
+                />
+              )}
+            />
+
+            <ErrorMessage error={errors.schedule_id} />
           </View>
         </View>
 
