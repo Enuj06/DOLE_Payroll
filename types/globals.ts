@@ -28,6 +28,7 @@ export type Employee = {
   rate: number;
   schedule_id: number | null;
   schedule?: Schedule | null;
+  attendances?: Attendance[];
   advances?: Advance[];
 };
 
