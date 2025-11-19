@@ -30,6 +30,7 @@ const RootLayout = () => {
           <Stack.Screen name="employees" options={{ headerShown: false }} />
           <Stack.Screen name="schedules" options={{ headerShown: false }} />
           <Stack.Screen name="advances" options={{ headerShown: false }} />
+          <Stack.Screen name="test" options={{ headerShown: false }} />
         </Stack>
       </SQLiteProvider>
     </Suspense>
