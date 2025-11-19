@@ -62,9 +62,9 @@ const Layout = () => {
       />
 
       <Tabs.Screen
-        name="table-test"
+        name="test"
         options={{
-          title: "Table",
+          title: "Test",
           tabBarIcon: ({ color }) => (
             <MaterialIcons size={28} name="question-mark" color={color} />
           ),

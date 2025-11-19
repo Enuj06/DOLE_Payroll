@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Column } from "@/types/globals";
 import {
   FlatList,
   ScrollView,
@@ -7,77 +7,89 @@ import {
   View,
 } from "react-native";
 
-const Table = ({ data }) => {
-  const rowStyle =
-    "w-[6.5rem] px-4 py-2 text-sm text-center text-[#3C492C] h-[2.7rem] border-[0.0625rem] border-[#F0F0F0]";
-  const columns = [
-    "Name",
-    "Sales",
-    "Revenue",
-    "Cost",
-    "Profit",
-    "Inventory",
-    "Rating",
-    "Category",
-    "Supplier",
-    "Margin",
-  ];
-  const [tableData, setTableData] = useState([]);
+type Props<T> = {
+  columns: Column<T>[];
+  rows: T[];
+};
 
-  useEffect(() => {
-    setTableData(data);
-  }, [data]);
+export default function Table<T extends { id: number | string }>({
+  columns,
+  rows,
+}: Props<T>) {
+  type TableHeaderProps<T> = {
+    columns: Column<T>[];
+  };
 
-  const renderColumns = (columns: string[]) => {
+  function TableHeader<T>({ columns }: TableHeaderProps<T>) {
     return (
       <View className="flex-row items-center">
-        {columns.map((column, index) => (
-          <TouchableOpacity
-            key={index}
-            className="items-center justify-center border-[#D9D9D9] py-2 px-3 w-[6.5rem] border-[0.0625rem]"
-          >
-            <View className="flex-row">
-              <Text className="font-semibold text-sm">{column}</Text>
-            </View>
-          </TouchableOpacity>
+        {columns.map((column) => (
+          <TableColumn key={column.key} column={column} />
         ))}
       </View>
     );
+  }
+
+  type TableColumnProps<T> = {
+    column: Column<T>;
   };
 
-  const renderRow = (item: any) => {
+  function TableColumn<T>({ column }: TableColumnProps<T>) {
+    const widthStyle = `w-[${column.width}rem]`;
+    return (
+      <TouchableOpacity
+        className={`items-center justify-center border-[#D9D9D9] py-2 px-3 border-[0.0625rem] ${widthStyle}`}
+      >
+        <View className="flex-row">
+          <Text className="font-semibold text-sm">{column.header}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  type TableRowProps<T> = {
+    columns: Column<T>[];
+    row: T;
+  };
+
+  function TableRow<T>({ columns, row }: TableRowProps<T>) {
     return (
       <View className="flex-row">
-        <Text className={rowStyle}>{item.name}</Text>
-        <Text className={rowStyle}>{item.sales}</Text>
-        <Text className={rowStyle}>{item.revenue}</Text>
-        <Text className={rowStyle}>{item.cost}</Text>
-        <Text className={rowStyle}>{item.profit}</Text>
-        <Text className={rowStyle}>{item.inventory}</Text>
-        <Text className={rowStyle}>{item.rating}</Text>
-        <Text className={rowStyle}>{item.category}</Text>
-        <Text className={rowStyle}>{item.supplier}</Text>
-        <Text className={rowStyle}>{item.margin}</Text>
+        {columns.map((column) => (
+          <TableCell key={column.key} column={column} row={row} />
+        ))}
       </View>
     );
+  }
+
+  type TableCellProps<T> = {
+    column: Column<T>;
+    row: T;
   };
 
+  function TableCell<T>({ column, row }: TableCellProps<T>) {
+    const widthStyle = `w-[${column.width}rem]`;
+    return (
+      <Text
+        className={`px-4 py-2 text-sm text-center text-[#3C492C] h-[2.7rem] border-[0.0625rem] border-[#F0F0F0] ${widthStyle}`}
+      >
+        {column.render ? column.render(row) : `${row[column.key as keyof T]}`}
+      </Text>
+    );
+  }
+
   return (
-    <View className="bg-white w-full p-4">
-      <View className="flex-row">
-        <ScrollView horizontal>
-          <FlatList
-            data={tableData}
-            keyExtractor={(_, index) => index + ""}
-            ListHeaderComponent={renderColumns(columns)}
-            renderItem={({ item }) => {
-              return renderRow(item);
-            }}
-          />
-        </ScrollView>
-      </View>
+    <View>
+      <ScrollView horizontal>
+        <FlatList
+          data={rows}
+          keyExtractor={(row) => `${row.id}`}
+          ListHeaderComponent={<TableHeader columns={columns} />}
+          renderItem={({ item: row }) => (
+            <TableRow columns={columns} row={row} />
+          )}
+        />
+      </ScrollView>
     </View>
   );
-};
-
-export default Table;
+}
