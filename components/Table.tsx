@@ -12,15 +12,15 @@ type Props<T> = {
   rows: T[];
 };
 
-export default function Table<T extends { id: number | string }>({
+const Table = <T extends { id: number | string }>({
   columns,
   rows,
-}: Props<T>) {
+}: Props<T>) => {
   type TableHeaderProps<T> = {
     columns: Column<T>[];
   };
 
-  function TableHeader<T>({ columns }: TableHeaderProps<T>) {
+  const TableHeader = <T,>({ columns }: TableHeaderProps<T>) => {
     return (
       <View className="flex-row items-center">
         {columns.map((column) => (
@@ -28,13 +28,13 @@ export default function Table<T extends { id: number | string }>({
         ))}
       </View>
     );
-  }
+  };
 
   type TableColumnProps<T> = {
     column: Column<T>;
   };
 
-  function TableColumn<T>({ column }: TableColumnProps<T>) {
+  const TableColumn = <T,>({ column }: TableColumnProps<T>) => {
     const widthStyle = `w-[${column.width}rem]`;
     return (
       <TouchableOpacity
@@ -45,14 +45,14 @@ export default function Table<T extends { id: number | string }>({
         </View>
       </TouchableOpacity>
     );
-  }
+  };
 
   type TableRowProps<T> = {
     columns: Column<T>[];
     row: T;
   };
 
-  function TableRow<T>({ columns, row }: TableRowProps<T>) {
+  const TableRow = <T,>({ columns, row }: TableRowProps<T>) => {
     return (
       <View className="flex-row">
         {columns.map((column) => (
@@ -60,14 +60,14 @@ export default function Table<T extends { id: number | string }>({
         ))}
       </View>
     );
-  }
+  };
 
   type TableCellProps<T> = {
     column: Column<T>;
     row: T;
   };
 
-  function TableCell<T>({ column, row }: TableCellProps<T>) {
+  const TableCell = <T,>({ column, row }: TableCellProps<T>) => {
     const widthStyle = `w-[${column.width}rem]`;
     return (
       <Text
@@ -76,7 +76,7 @@ export default function Table<T extends { id: number | string }>({
         {column.render ? column.render(row) : `${row[column.key as keyof T]}`}
       </Text>
     );
-  }
+  };
 
   return (
     <View>
@@ -92,4 +92,6 @@ export default function Table<T extends { id: number | string }>({
       </ScrollView>
     </View>
   );
-}
+};
+
+export default Table;
