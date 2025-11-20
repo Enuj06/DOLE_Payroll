@@ -50,13 +50,13 @@ const AttendancesPage = () => {
       header: "AM IN",
       width: 5,
       render: (row: Attendance) => {
-        if (row.am_in && row.employee && row.employee.schedule) {
+        if (row.employee && row.employee.schedule && row.am_in) {
           const difference = getTimeDifference(
-            row.am_in,
-            row.employee.schedule.am_in
+            row.employee.schedule.am_in,
+            row.am_in
           );
 
-          const color = difference > 0 ? "red" : "#3C492C";
+          const color = difference < 0 ? "red" : "#3C492C";
 
           return (
             <Text
@@ -72,13 +72,13 @@ const AttendancesPage = () => {
       header: "AM OUT",
       width: 5,
       render: (row: Attendance) => {
-        if (row.am_out && row.employee && row.employee.schedule) {
+        if (row.employee && row.employee.schedule && row.am_out) {
           const difference = getTimeDifference(
-            row.am_out,
-            row.employee.schedule.am_out
+            row.employee.schedule.am_out,
+            row.am_out
           );
 
-          const color = difference < 0 ? "red" : "#3C492C";
+          const color = difference > 0 ? "red" : "#3C492C";
 
           return (
             <Text
@@ -94,7 +94,7 @@ const AttendancesPage = () => {
       header: "Total Time",
       width: 6,
       render: (row: Attendance) => {
-        if (row.am_in && row.am_out && row.employee && row.employee.schedule) {
+        if (row.employee && row.employee.schedule && row.am_in && row.am_out) {
           const difference = getTotalTime(
             row.employee.schedule.am_in,
             row.employee.schedule.am_out,
@@ -114,13 +114,13 @@ const AttendancesPage = () => {
       header: "PM IN",
       width: 5,
       render: (row: Attendance) => {
-        if (row.pm_in && row.employee && row.employee.schedule) {
+        if (row.employee && row.employee.schedule && row.pm_in) {
           const difference = getTimeDifference(
-            row.pm_in,
-            row.employee.schedule.pm_in
+            row.employee.schedule.pm_in,
+            row.pm_in
           );
 
-          const color = difference > 0 ? "red" : "#3C492C";
+          const color = difference < 0 ? "red" : "#3C492C";
 
           return (
             <Text
@@ -136,13 +136,13 @@ const AttendancesPage = () => {
       header: "PM OUT",
       width: 5,
       render: (row: Attendance) => {
-        if (row.pm_out && row.employee && row.employee.schedule) {
+        if (row.employee && row.employee.schedule && row.pm_out) {
           const difference = getTimeDifference(
-            row.pm_out,
-            row.employee.schedule.pm_out
+            row.employee.schedule.pm_out,
+            row.pm_out
           );
 
-          const color = difference < 0 ? "red" : "#3C492C";
+          const color = difference > 0 ? "red" : "#3C492C";
 
           return (
             <Text
@@ -158,7 +158,7 @@ const AttendancesPage = () => {
       header: "Total Time",
       width: 6,
       render: (row: Attendance) => {
-        if (row.pm_in && row.pm_out && row.employee && row.employee.schedule) {
+        if (row.employee && row.employee.schedule && row.pm_in && row.pm_out) {
           const difference = getTotalTime(
             row.employee.schedule.pm_in,
             row.employee.schedule.pm_out,
