@@ -1,6 +1,8 @@
+import Loader from "@/components/Loader";
+import Table from "@/components/Table";
 import useFetchAll from "@/hooks/employees/useFetchAll";
-import { Attendance } from "@/types/globals";
-import { getDb } from "@/utils/globals";
+import { Attendance, Employee } from "@/types/globals";
+import { formatNumber, getDb } from "@/utils/globals";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
@@ -41,13 +43,46 @@ const PayrollPage = () => {
     }
   }, [employees]);
 
-  console.log(filteredEmployees);
+  const columns = [
+    {
+      key: "employee_id",
+      header: "Employee ID",
+      width: 6,
+      render: (row: Employee) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${`${row.employee_id}`}`}</Text>
+      ),
+    },
+    {
+      key: "name",
+      header: "Name",
+      width: 9,
+      render: (row: Employee) => (
+        <Text className="text-sm text-center text-[#3C492C]">
+          {`${row.last_name}, ${row.first_name} ${row.middle_initial}.`}`
+        </Text>
+      ),
+    },
+    {
+      key: "rate",
+      header: "Rate",
+      width: 7,
+      render: (row: Employee) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.rate)}`}</Text>
+      ),
+    },
+  ];
+
+  if (!employees || !filteredEmployees) {
+    return <Loader />;
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
       <Text>Payroll</Text>
 
-      <View className="mt-4"></View>
+      <View className="mt-4">
+        <Table columns={columns} rows={filteredEmployees} />
+      </View>
     </SafeAreaView>
   );
 };

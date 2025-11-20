@@ -4,7 +4,7 @@ import Table from "@/components/Table";
 import useDelete from "@/hooks/employees/useDelete";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { Employee } from "@/types/globals";
-import { getDb, getTime } from "@/utils/globals";
+import { formatNumber, getDb, getTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -41,6 +41,14 @@ const EmployeesPage = () => {
       key: "position",
       header: "Position",
       width: 6,
+    },
+    {
+      key: "rate",
+      header: "Rate",
+      width: 7,
+      render: (row: Employee) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.rate)}`}</Text>
+      ),
     },
     {
       key: "schedule",
