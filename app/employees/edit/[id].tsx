@@ -25,6 +25,8 @@ const EditPage = () => {
   const { employee } = useFetch(db, Number(id));
   const { schedules } = useFetchAll(db);
 
+  console.log(employee);
+
   const getOptions = () => {
     const options: { label: string; value: string }[] = [];
     if (schedules) {
@@ -191,7 +193,7 @@ const EditPage = () => {
               render={({ field: { value, onChange, onBlur } }) => (
                 <>
                   <Select
-                    value={`${-1}`}
+                    value={`${value}`}
                     options={getOptions()}
                     placeholder="Select Schedule"
                     onChange={onChange}
