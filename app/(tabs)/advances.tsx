@@ -1,10 +1,13 @@
 import DeleteAlert from "@/components/DeleteAlert";
+import Table from "@/components/Table";
 import useDelete from "@/hooks/advances/useDelete";
 import useFetchAll from "@/hooks/advances/useFetchAll";
-import { getDate, getDb } from "@/utils/globals";
+import { Advance } from "@/types/globals";
+import { formatDate, formatNumber, getDb } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AdvancesPage = () => {
@@ -13,6 +16,68 @@ const AdvancesPage = () => {
 
   const { advances, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
+
+  const columns = [
+    {
+      key: "employee_id",
+      header: "Employee ID",
+      width: 6,
+      render: (row: Advance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.employee ? `${row.employee.employee_id}` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "name",
+      header: "Name",
+      width: 9,
+      render: (row: Advance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.employee ? `${row.employee.last_name}, ${row.employee.first_name} ${row.employee.middle_initial}.` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "amount",
+      header: "Amount",
+      width: 7,
+      render: (row: Advance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.amount)}`}</Text>
+      ),
+    },
+    {
+      key: "date",
+      header: "Date",
+      width: 9,
+      render: (row: Advance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(new Date(row.date))}`}</Text>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      width: 9,
+      render: (row: Advance) => (
+        <View className="flex-row gap-4 justify-center">
+          <TouchableOpacity
+            onPress={() =>
+              router.navigate({
+                pathname: "/advances/edit/[id]",
+                params: { id: row.id },
+              })
+            }
+          >
+            <MaterialIcons name="edit" size={20} color="#2196F3" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              DeleteAlert(row.id, "Cash Advance", handleDelete);
+            }}
+          >
+            <MaterialIcons name="delete" size={20} color="#E53935" />
+          </TouchableOpacity>
+        </View>
+      ),
+    },
+  ];
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
@@ -25,38 +90,7 @@ const AdvancesPage = () => {
       </View>
 
       <View className="mt-4">
-        <FlatList
-          data={advances}
-          keyExtractor={(advance) => `${advance.id}`}
-          renderItem={({ item: advance }) => (
-            <View className="flex-row gap-4">
-              <View>
-                <Text>{getDate(new Date(advance.date))}</Text>
-              </View>
-
-              <View className="flex-row gap-4">
-                <TouchableOpacity
-                  onPress={() =>
-                    router.navigate({
-                      pathname: "/advances/edit/[id]",
-                      params: { id: advance.id },
-                    })
-                  }
-                >
-                  <Text>Edit</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    DeleteAlert(advance.id, "Cash Advance", handleDelete);
-                  }}
-                >
-                  <Text>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
+        <Table columns={columns} rows={advances || []} />
       </View>
     </SafeAreaView>
   );

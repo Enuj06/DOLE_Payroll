@@ -1,11 +1,5 @@
 import { Column } from "@/types/globals";
-import {
-  FlatList,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 
 type Props<T> = {
   columns: Column<T>[];
@@ -36,14 +30,12 @@ const Table = <T extends { id: number | string }>({
 
   const TableColumn = <T,>({ column }: TableColumnProps<T>) => {
     return (
-      <TouchableOpacity
+      <View
         className={`items-center justify-center border-[#D9D9D9] py-2 px-3 border-[0.0625rem]`}
         style={{ width: column.width * 16 }}
       >
-        <View className="flex-row">
-          <Text className="font-semibold text-sm">{column.header}</Text>
-        </View>
-      </TouchableOpacity>
+        <Text className="font-semibold text-sm">{column.header}</Text>
+      </View>
     );
   };
 
@@ -69,12 +61,16 @@ const Table = <T extends { id: number | string }>({
 
   const TableCell = <T,>({ column, row }: TableCellProps<T>) => {
     return (
-      <Text
-        className={`px-4 py-2 text-sm text-center text-[#3C492C] h-[2.7rem] border-[0.0625rem] border-[#F0F0F0]`}
+      <View
+        className="px-4 py-2 justify-center h-[2.7rem] border-[0.0625rem] border-[#F0F0F0]"
         style={{ width: column.width * 16 }}
       >
-        {column.render ? column.render(row) : `${row[column.key as keyof T]}`}
-      </Text>
+        {column.render ? (
+          column.render(row)
+        ) : (
+          <Text className="text-sm text-center text-[#3C492C]">{`${row[column.key as keyof T]}`}</Text>
+        )}
+      </View>
     );
   };
 

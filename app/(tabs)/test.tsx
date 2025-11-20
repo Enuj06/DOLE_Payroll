@@ -1,5 +1,5 @@
 import Table from "@/components/Table";
-import React from "react";
+import { Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Test = () => {
@@ -22,7 +22,9 @@ const Test = () => {
       key: "test",
       header: "Test",
       width: 7,
-      render: (row: Product) => `${row.name.split(" ")[1]}-${row.sales}`,
+      render: (row: Product) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.name.split(" ")[1]}-${row.sales}`}</Text>
+      ),
     },
     {
       key: "name",
