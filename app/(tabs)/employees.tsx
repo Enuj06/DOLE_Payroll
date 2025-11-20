@@ -69,7 +69,7 @@ const EmployeesPage = () => {
 
           <TouchableOpacity
             onPress={() => {
-              DeleteAlert(row.id, "Edit", handleDelete);
+              DeleteAlert(row.id, "Employee", handleDelete);
             }}
           >
             <MaterialIcons name="delete" size={20} color="#E53935" />

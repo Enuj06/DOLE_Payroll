@@ -1,11 +1,15 @@
 import DeleteAlert from "@/components/DeleteAlert";
+import Loader from "@/components/Loader";
+import Table from "@/components/Table";
 import useDelete from "@/hooks/attendances/useDelete";
 import useFetchAll from "@/hooks/attendances/useFetchAll";
-import { getDate, getDb } from "@/utils/globals";
+import { Attendance } from "@/types/globals";
+import { formatDate, getDb, getTime } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const AttendancesPage = () => {
@@ -14,6 +18,98 @@ const AttendancesPage = () => {
 
   const { attendances, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
+
+  const columns = [
+    {
+      key: "employee_id",
+      header: "Employee ID",
+      width: 6,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.employee ? `${row.employee.employee_id}` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "name",
+      header: "Name",
+      width: 9,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">
+          {`${row.employee ? `${row.employee.last_name}, ${row.employee.first_name} ${row.employee.middle_initial}.` : ""}`}
+        </Text>
+      ),
+    },
+    {
+      key: "am_in",
+      header: "AM IN",
+      width: 5,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.am_in ? `${getTime(new Date(row.am_in))}` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "am_out",
+      header: "AM OUT",
+      width: 5,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.am_out ? `${getTime(new Date(row.am_out))}` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "pm_in",
+      header: "PM IN",
+      width: 5,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_in ? `${getTime(new Date(row.pm_in))}` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "pm_out",
+      header: "PM OUT",
+      width: 5,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_out ? `${getTime(new Date(row.pm_out))}` : ""}`}</Text>
+      ),
+    },
+    {
+      key: "date",
+      header: "Date",
+      width: 9,
+      render: (row: Attendance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(new Date(row.date))}`}</Text>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      width: 9,
+      render: (row: Attendance) => (
+        <View className="flex-row gap-4 justify-center">
+          <TouchableOpacity
+            onPress={() =>
+              router.navigate({
+                pathname: "/attendances/edit/[id]",
+                params: { id: row.id },
+              })
+            }
+          >
+            <MaterialIcons name="edit" size={20} color="#2196F3" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              DeleteAlert(row.id, "Attendance", handleDelete);
+            }}
+          >
+            <MaterialIcons name="delete" size={20} color="#E53935" />
+          </TouchableOpacity>
+        </View>
+      ),
+    },
+  ];
+
+  if (!attendances) {
+    return <Loader />;
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
@@ -26,38 +122,7 @@ const AttendancesPage = () => {
       </View>
 
       <View className="mt-4">
-        <FlatList
-          data={attendances}
-          keyExtractor={(attendance) => `${attendance.id}`}
-          renderItem={({ item: attendance }) => (
-            <View className="flex-row gap-4">
-              <View>
-                <Text>{getDate(new Date(attendance.date))}</Text>
-              </View>
-
-              <View className="flex-row gap-4">
-                <TouchableOpacity
-                  onPress={() =>
-                    router.navigate({
-                      pathname: "/attendances/edit/[id]",
-                      params: { id: attendance.id },
-                    })
-                  }
-                >
-                  <Text>Edit</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    DeleteAlert(attendance.id, "Attendance", handleDelete);
-                  }}
-                >
-                  <Text>Delete</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
+        <Table columns={columns} rows={attendances} />
       </View>
     </SafeAreaView>
   );
