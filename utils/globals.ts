@@ -39,14 +39,21 @@ export const formatDate = (
   return format(formattedDate, dateFormat);
 };
 
-export const getTimeDifference = (date1: string, date2: string) => {
+export const getTimeDifference = (
+  date1: Date | string,
+  date2: Date | string
+) => {
   const today = new Date();
-  const date1Set = set(new Date(date1), {
+
+  const formattedDate1 = typeof date1 === "string" ? new Date(date1) : date1;
+  const date1Set = set(formattedDate1, {
     year: today.getFullYear(),
     month: today.getMonth(),
     date: today.getDate(),
   });
-  const date2Set = set(new Date(date2), {
+
+  const formattedDate2 = typeof date2 === "string" ? new Date(date2) : date2;
+  const date2Set = set(formattedDate2, {
     year: today.getFullYear(),
     month: today.getMonth(),
     date: today.getDate(),
@@ -54,4 +61,38 @@ export const getTimeDifference = (date1: string, date2: string) => {
 
   const seconds = differenceInSeconds(date1Set, date2Set);
   return seconds / 60 / 60;
+};
+
+export const getTotalTime = (
+  scheduleIn: string,
+  scheduleOut: string,
+  timeIn: string,
+  timeOut: string
+) => {
+  const dateScheduleIn = new Date(scheduleIn);
+  const dateScheduleOut = new Date(scheduleOut);
+  let dateTimeIn = new Date(timeIn);
+  let dateTimeOut = new Date(timeOut);
+
+  const inDifference = getTimeDifference(dateTimeIn, dateScheduleIn);
+
+  if (inDifference < 0) {
+    dateTimeIn = set(dateTimeIn, {
+      hours: dateScheduleIn.getHours(),
+      minutes: dateScheduleIn.getMinutes(),
+      seconds: dateScheduleIn.getSeconds(),
+    });
+  }
+
+  const outDifference = getTimeDifference(dateTimeOut, dateScheduleOut);
+
+  if (outDifference > 0) {
+    dateTimeOut = set(dateTimeOut, {
+      hours: dateScheduleOut.getHours(),
+      minutes: dateScheduleOut.getMinutes(),
+      seconds: dateScheduleOut.getSeconds(),
+    });
+  }
+
+  return getTimeDifference(dateTimeOut, dateTimeIn);
 };

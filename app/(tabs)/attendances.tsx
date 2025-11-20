@@ -4,7 +4,14 @@ import Table from "@/components/Table";
 import useDelete from "@/hooks/attendances/useDelete";
 import useFetchAll from "@/hooks/attendances/useFetchAll";
 import { Attendance } from "@/types/globals";
-import { formatDate, getDb, getTime, getTimeDifference } from "@/utils/globals";
+import {
+  formatDate,
+  formatNumber,
+  getDb,
+  getTime,
+  getTimeDifference,
+  getTotalTime,
+} from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -83,6 +90,26 @@ const AttendancesPage = () => {
       },
     },
     {
+      key: "total_am",
+      header: "Total Time",
+      width: 6,
+      render: (row: Attendance) => {
+        if (row.am_in && row.am_out && row.employee && row.employee.schedule) {
+          const difference = getTotalTime(
+            row.employee.schedule.am_in,
+            row.employee.schedule.am_out,
+            row.am_in,
+            row.am_out
+          );
+          return (
+            <Text className="text-sm text-center">
+              {formatNumber(difference)} Hours
+            </Text>
+          );
+        }
+      },
+    },
+    {
       key: "pm_in",
       header: "PM IN",
       width: 5,
@@ -122,6 +149,26 @@ const AttendancesPage = () => {
               className="text-sm text-center"
               style={{ color }}
             >{`${getTime(row.pm_out)}`}</Text>
+          );
+        }
+      },
+    },
+    {
+      key: "total_pm",
+      header: "Total Time",
+      width: 6,
+      render: (row: Attendance) => {
+        if (row.pm_in && row.pm_out && row.employee && row.employee.schedule) {
+          const difference = getTotalTime(
+            row.employee.schedule.pm_in,
+            row.employee.schedule.pm_out,
+            row.pm_in,
+            row.pm_out
+          );
+          return (
+            <Text className="text-sm text-center">
+              {formatNumber(difference)} Hours
+            </Text>
           );
         }
       },
