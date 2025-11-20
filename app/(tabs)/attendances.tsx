@@ -64,25 +64,67 @@ const AttendancesPage = () => {
       key: "am_out",
       header: "AM OUT",
       width: 5,
-      render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.am_out ? `${getTime(row.am_out)}` : ""}`}</Text>
-      ),
+      render: (row: Attendance) => {
+        if (row.am_out && row.employee && row.employee.schedule) {
+          const difference = getTimeDifference(
+            row.am_out,
+            row.employee.schedule.am_out
+          );
+
+          const color = difference < 0 ? "red" : "#3C492C";
+
+          return (
+            <Text
+              className="text-sm text-center"
+              style={{ color }}
+            >{`${getTime(row.am_out)}`}</Text>
+          );
+        }
+      },
     },
     {
       key: "pm_in",
       header: "PM IN",
       width: 5,
-      render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_in ? `${getTime(row.pm_in)}` : ""}`}</Text>
-      ),
+      render: (row: Attendance) => {
+        if (row.pm_in && row.employee && row.employee.schedule) {
+          const difference = getTimeDifference(
+            row.pm_in,
+            row.employee.schedule.pm_in
+          );
+
+          const color = difference > 0 ? "red" : "#3C492C";
+
+          return (
+            <Text
+              className="text-sm text-center"
+              style={{ color }}
+            >{`${getTime(row.pm_in)}`}</Text>
+          );
+        }
+      },
     },
     {
       key: "pm_out",
       header: "PM OUT",
       width: 5,
-      render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_out ? `${getTime(row.pm_out)}` : ""}`}</Text>
-      ),
+      render: (row: Attendance) => {
+        if (row.pm_out && row.employee && row.employee.schedule) {
+          const difference = getTimeDifference(
+            row.pm_out,
+            row.employee.schedule.pm_out
+          );
+
+          const color = difference < 0 ? "red" : "#3C492C";
+
+          return (
+            <Text
+              className="text-sm text-center"
+              style={{ color }}
+            >{`${getTime(row.pm_out)}`}</Text>
+          );
+        }
+      },
     },
     {
       key: "date",
