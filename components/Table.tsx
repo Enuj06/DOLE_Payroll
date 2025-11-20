@@ -35,10 +35,10 @@ const Table = <T extends { id: number | string }>({
   };
 
   const TableColumn = <T,>({ column }: TableColumnProps<T>) => {
-    const widthStyle = `w-[${column.width}rem]`;
     return (
       <TouchableOpacity
-        className={`items-center justify-center border-[#D9D9D9] py-2 px-3 border-[0.0625rem] ${widthStyle}`}
+        className={`items-center justify-center border-[#D9D9D9] py-2 px-3 border-[0.0625rem]`}
+        style={{ width: column.width * 16 }}
       >
         <View className="flex-row">
           <Text className="font-semibold text-sm">{column.header}</Text>
@@ -68,10 +68,10 @@ const Table = <T extends { id: number | string }>({
   };
 
   const TableCell = <T,>({ column, row }: TableCellProps<T>) => {
-    const widthStyle = `w-[${column.width}rem]`;
     return (
       <Text
-        className={`px-4 py-2 text-sm text-center text-[#3C492C] h-[2.7rem] border-[0.0625rem] border-[#F0F0F0] ${widthStyle}`}
+        className={`px-4 py-2 text-sm text-center text-[#3C492C] h-[2.7rem] border-[0.0625rem] border-[#F0F0F0]`}
+        style={{ width: column.width * 16 }}
       >
         {column.render ? column.render(row) : `${row[column.key as keyof T]}`}
       </Text>
