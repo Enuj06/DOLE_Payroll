@@ -4,7 +4,7 @@ import Table from "@/components/Table";
 import useDelete from "@/hooks/attendances/useDelete";
 import useFetchAll from "@/hooks/attendances/useFetchAll";
 import { Attendance } from "@/types/globals";
-import { formatDate, getDb, getTime } from "@/utils/globals";
+import { formatDate, getDb, getTime, getTimeDifference } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -42,16 +42,30 @@ const AttendancesPage = () => {
       key: "am_in",
       header: "AM IN",
       width: 5,
-      render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.am_in ? `${getTime(new Date(row.am_in))}` : ""}`}</Text>
-      ),
+      render: (row: Attendance) => {
+        if (row.am_in && row.employee && row.employee.schedule) {
+          const difference = getTimeDifference(
+            row.am_in,
+            row.employee.schedule.am_in
+          );
+
+          const color = difference > 0 ? "red" : "#3C492C";
+
+          return (
+            <Text
+              className="text-sm text-center"
+              style={{ color }}
+            >{`${getTime(row.am_in)}`}</Text>
+          );
+        }
+      },
     },
     {
       key: "am_out",
       header: "AM OUT",
       width: 5,
       render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.am_out ? `${getTime(new Date(row.am_out))}` : ""}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.am_out ? `${getTime(row.am_out)}` : ""}`}</Text>
       ),
     },
     {
@@ -59,7 +73,7 @@ const AttendancesPage = () => {
       header: "PM IN",
       width: 5,
       render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_in ? `${getTime(new Date(row.pm_in))}` : ""}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_in ? `${getTime(row.pm_in)}` : ""}`}</Text>
       ),
     },
     {
@@ -67,7 +81,7 @@ const AttendancesPage = () => {
       header: "PM OUT",
       width: 5,
       render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_out ? `${getTime(new Date(row.pm_out))}` : ""}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.pm_out ? `${getTime(row.pm_out)}` : ""}`}</Text>
       ),
     },
     {
@@ -75,7 +89,7 @@ const AttendancesPage = () => {
       header: "Date",
       width: 9,
       render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(new Date(row.date))}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(row.date)}`}</Text>
       ),
     },
     {

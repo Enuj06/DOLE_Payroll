@@ -25,7 +25,7 @@ const SchedulesPage = () => {
       header: "AM IN",
       width: 5,
       render: (row: Schedule) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(new Date(row.am_in))}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(row.am_in)}`}</Text>
       ),
     },
     {
@@ -33,7 +33,7 @@ const SchedulesPage = () => {
       header: "AM OUT",
       width: 5,
       render: (row: Schedule) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(new Date(row.am_out))}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(row.am_out)}`}</Text>
       ),
     },
     {
@@ -41,7 +41,7 @@ const SchedulesPage = () => {
       header: "PM IN",
       width: 5,
       render: (row: Schedule) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(new Date(row.pm_in))}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(row.pm_in)}`}</Text>
       ),
     },
     {
@@ -49,7 +49,7 @@ const SchedulesPage = () => {
       header: "PM OUT",
       width: 5,
       render: (row: Schedule) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(new Date(row.pm_out))}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${getTime(row.pm_out)}`}</Text>
       ),
     },
     {

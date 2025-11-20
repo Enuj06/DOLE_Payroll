@@ -8,9 +8,21 @@ const useFetchAll = (db: Db) => {
 
   const handleFetch = useCallback(async () => {
     try {
-      const attendances = await db.query.attendances.findMany({
+      const attendances: Attendance[] = await db.query.attendances.findMany({
         with: { employee: true },
       });
+
+      const schedules = await db.query.schedules.findMany();
+
+      attendances.forEach((attendance) => {
+        if (attendance.employee) {
+          const schedule = schedules.find((schedule) => {
+            return schedule.id === attendance.employee?.schedule_id;
+          });
+          attendance.employee.schedule = schedule;
+        }
+      });
+
       setAttendances(attendances);
     } catch (error) {
       console.error(error);

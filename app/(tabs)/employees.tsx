@@ -55,7 +55,7 @@ const EmployeesPage = () => {
       header: "Schedule",
       width: 12,
       render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.schedule ? `${getTime(new Date(row.schedule.am_in))} - ${getTime(new Date(row.schedule.am_out))} / ${getTime(new Date(row.schedule.pm_in))} - ${getTime(new Date(row.schedule.pm_out))}` : ""}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.schedule ? `${getTime(row.schedule.am_in)} - ${getTime(row.schedule.am_out)} / ${getTime(row.schedule.pm_in)} - ${getTime(row.schedule.pm_out)}` : ""}`}</Text>
       ),
     },
     {

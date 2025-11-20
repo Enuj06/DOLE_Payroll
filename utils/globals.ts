@@ -1,18 +1,22 @@
 import * as schema from "@/db/schema";
-import { format } from "date-fns";
+import { differenceInSeconds, format, set } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
+
+export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
 
 export const getDb = (sqlDb: SQLiteDatabase) => {
   return drizzle(sqlDb, { schema });
 };
 
-export const getDate = (dateTime: Date) => {
-  return dateTime.toISOString().split("T")[0];
+export const getDate = (date: Date | string) => {
+  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  return formattedDate.toISOString().split("T")[0];
 };
 
-export const getTime = (dateTime: Date) => {
-  const time = dateTime.toLocaleTimeString("en-US", {
+export const getTime = (date: Date | string) => {
+  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  const time = formattedDate.toLocaleTimeString("en-US", {
     timeZone: "Asia/Shanghai",
     hour12: false,
   });
@@ -28,8 +32,26 @@ export const formatNumber = (number: string | number) => {
 };
 
 export const formatDate = (
-  date: Date,
+  date: Date | string,
   dateFormat: string = "MMMM dd, yyyy"
 ) => {
-  return format(date, dateFormat);
+  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  return format(formattedDate, dateFormat);
+};
+
+export const getTimeDifference = (date1: string, date2: string) => {
+  const today = new Date();
+  const date1Set = set(new Date(date1), {
+    year: today.getFullYear(),
+    month: today.getMonth(),
+    date: today.getDate(),
+  });
+  const date2Set = set(new Date(date2), {
+    year: today.getFullYear(),
+    month: today.getMonth(),
+    date: today.getDate(),
+  });
+
+  const seconds = differenceInSeconds(date1Set, date2Set);
+  return seconds / 60 / 60;
 };

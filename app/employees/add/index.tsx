@@ -25,7 +25,7 @@ const AddPage = () => {
     if (schedules) {
       schedules.forEach((schedule) => {
         options.push({
-          label: `${getTime(new Date(schedule.am_in))}-${getTime(new Date(schedule.am_out))} ${getTime(new Date(schedule.pm_in))}-${getTime(new Date(schedule.pm_out))}`,
+          label: `${getTime(schedule.am_in)}-${getTime(schedule.am_out)} ${getTime(schedule.pm_in)}-${getTime(schedule.pm_out)}`,
           value: `${schedule.id}`,
         });
       });
