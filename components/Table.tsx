@@ -31,7 +31,7 @@ const Table = <T extends { id: number | string }>({
   const TableColumn = <T,>({ column }: TableColumnProps<T>) => {
     return (
       <View
-        className={`items-center justify-center border-[#D9D9D9] py-2 px-3 border-[0.0625rem]`}
+        className="items-center justify-center border-[#D9D9D9] py-2 px-3 border-[0.0625rem]"
         style={{ width: column.width * 16 }}
       >
         <Text className="font-semibold text-sm">{column.header}</Text>
