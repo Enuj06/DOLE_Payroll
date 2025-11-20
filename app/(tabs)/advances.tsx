@@ -1,4 +1,5 @@
 import DeleteAlert from "@/components/DeleteAlert";
+import Loader from "@/components/Loader";
 import Table from "@/components/Table";
 import useDelete from "@/hooks/advances/useDelete";
 import useFetchAll from "@/hooks/advances/useFetchAll";
@@ -79,6 +80,10 @@ const AdvancesPage = () => {
     },
   ];
 
+  if (!advances) {
+    return <Loader />;
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
       <View className="gap-2">
@@ -90,7 +95,7 @@ const AdvancesPage = () => {
       </View>
 
       <View className="mt-4">
-        <Table columns={columns} rows={advances || []} />
+        <Table columns={columns} rows={advances} />
       </View>
     </SafeAreaView>
   );
