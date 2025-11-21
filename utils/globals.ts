@@ -1,5 +1,6 @@
 import * as schema from "@/db/schema";
 import { differenceInSeconds, format, set } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
 
@@ -11,17 +12,13 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
 
 export const getDate = (date: Date | string) => {
   const formattedDate = typeof date === "string" ? new Date(date) : date;
-  return formattedDate.toISOString().split("T")[0];
+  return format(formattedDate, "yyyy-MM-dd");
 };
 
 export const getTime = (date: Date | string) => {
   const formattedDate = typeof date === "string" ? new Date(date) : date;
-  const time = formattedDate.toLocaleTimeString("en-US", {
-    timeZone: "Asia/Shanghai",
-    hour12: false,
-  });
-  const components = time.split(":");
-  return `${components[0]}:${components[1]}`;
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return formatInTimeZone(formattedDate, timeZone, "HH:mm");
 };
 
 export const formatNumber = (number: string | number) => {

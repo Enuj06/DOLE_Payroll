@@ -13,6 +13,7 @@ import {
   getTotalTime,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
+import { startOfDay } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React, { useMemo } from "react";
@@ -28,12 +29,10 @@ const AttendancesPage = () => {
 
   const filteredAttendances = useMemo(() => {
     if (attendances) {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const today = startOfDay(new Date());
 
       return attendances.filter((attendance) => {
-        const date = new Date(attendance.date);
-        date.setHours(0, 0, 0, 0);
+        const date = startOfDay(new Date(attendance.date));
         return today.valueOf() === date.valueOf();
       });
     }
