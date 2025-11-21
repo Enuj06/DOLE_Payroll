@@ -4,7 +4,7 @@ import useFetchAll from "@/hooks/employees/useFetchAll";
 import { Attendance, Employee, Schedule } from "@/types/globals";
 import { formatNumber, getDb, getTotalTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
-import { startOfDay } from "date-fns";
+import { lastDayOfMonth, startOfDay } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
@@ -20,7 +20,7 @@ const PayrollPage = () => {
   const getDateRange = () => {
     const today = startOfDay(new Date());
     if (today.getDate() > 15) {
-      const last = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      const last = lastDayOfMonth(today);
       return { start: today.setDate(16), end: today.setDate(last.getDate()) };
     }
     return { start: today.setDate(1), end: today.setDate(15) };
