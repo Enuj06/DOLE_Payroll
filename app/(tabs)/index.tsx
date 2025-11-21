@@ -1,8 +1,8 @@
 import Loader from "@/components/Loader";
 import Table from "@/components/Table";
 import useFetchAll from "@/hooks/employees/useFetchAll";
-import { Attendance, Employee } from "@/types/globals";
-import { formatNumber, getDb } from "@/utils/globals";
+import { Attendance, Employee, Schedule } from "@/types/globals";
+import { formatNumber, getDb, getTotalTime } from "@/utils/globals";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
@@ -43,6 +43,47 @@ const PayrollPage = () => {
     }
   }, [employees]);
 
+  const getHours = (schedule: Schedule, attendances: Attendance[]) => {
+    let hours = 0;
+    if (attendances) {
+      attendances.forEach((attendance) => {
+        if (
+          schedule &&
+          attendance.am_in &&
+          attendance.am_out &&
+          attendance.pm_in &&
+          attendance.pm_out
+        ) {
+          const differenceAM = getTotalTime(
+            schedule.am_in,
+            schedule.am_out,
+            attendance.am_in,
+            attendance.am_out
+          );
+
+          const differencePM = getTotalTime(
+            schedule.pm_in,
+            schedule.pm_out,
+            attendance.pm_in,
+            attendance.pm_out
+          );
+
+          hours += differenceAM + differencePM;
+        }
+      });
+    }
+    return hours;
+  };
+
+  const getGross = (
+    schedule: Schedule,
+    attendances: Attendance[],
+    rate: number
+  ) => {
+    const hours = schedule && attendances ? getHours(schedule, attendances) : 0;
+    return (rate / 8) * hours;
+  };
+
   const columns = [
     {
       key: "employee_id",
@@ -69,6 +110,34 @@ const PayrollPage = () => {
       render: (row: Employee) => (
         <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.rate)}`}</Text>
       ),
+    },
+    {
+      key: "hours",
+      header: "Total Hours",
+      width: 7,
+      render: (row: Employee) => {
+        const hours =
+          row.schedule && row.attendances
+            ? getHours(row.schedule, row.attendances)
+            : 0;
+        return (
+          <Text className="text-sm text-center text-[#3C492C]">{`${formatNumber(hours)} Hours`}</Text>
+        );
+      },
+    },
+    {
+      key: "gross",
+      header: "Gross Income",
+      width: 7,
+      render: (row: Employee) => {
+        const gross =
+          row.schedule && row.attendances
+            ? getGross(row.schedule, row.attendances, row.rate)
+            : 0;
+        return (
+          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross)}`}</Text>
+        );
+      },
     },
   ];
 

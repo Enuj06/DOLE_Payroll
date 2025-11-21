@@ -64,35 +64,42 @@ export const getTimeDifference = (
 };
 
 export const getTotalTime = (
-  scheduleIn: string,
-  scheduleOut: string,
-  timeIn: string,
-  timeOut: string
+  scheduleIn: Date | string,
+  scheduleOut: Date | string,
+  timeIn: Date | string,
+  timeOut: Date | string
 ) => {
-  const dateScheduleIn = new Date(scheduleIn);
-  const dateScheduleOut = new Date(scheduleOut);
-  let dateTimeIn = new Date(timeIn);
-  let dateTimeOut = new Date(timeOut);
+  const formattedScheduleIn =
+    typeof scheduleIn === "string" ? new Date(scheduleIn) : scheduleIn;
+  const formattedScheduleOut =
+    typeof scheduleOut === "string" ? new Date(scheduleOut) : scheduleOut;
 
-  const inDifference = getTimeDifference(dateTimeIn, dateScheduleIn);
+  let formattedTimeIn = typeof timeIn === "string" ? new Date(timeIn) : timeIn;
+  let formattedTimeOut =
+    typeof timeOut === "string" ? new Date(timeOut) : timeOut;
 
-  if (inDifference < 0) {
-    dateTimeIn = set(dateTimeIn, {
-      hours: dateScheduleIn.getHours(),
-      minutes: dateScheduleIn.getMinutes(),
-      seconds: dateScheduleIn.getSeconds(),
+  const differenceIn = getTimeDifference(formattedTimeIn, formattedScheduleIn);
+
+  if (differenceIn < 0) {
+    formattedTimeIn = set(formattedTimeIn, {
+      hours: formattedScheduleIn.getHours(),
+      minutes: formattedScheduleIn.getMinutes(),
+      seconds: formattedScheduleIn.getSeconds(),
     });
   }
 
-  const outDifference = getTimeDifference(dateTimeOut, dateScheduleOut);
+  const differenceOut = getTimeDifference(
+    formattedTimeOut,
+    formattedScheduleOut
+  );
 
-  if (outDifference > 0) {
-    dateTimeOut = set(dateTimeOut, {
-      hours: dateScheduleOut.getHours(),
-      minutes: dateScheduleOut.getMinutes(),
-      seconds: dateScheduleOut.getSeconds(),
+  if (differenceOut > 0) {
+    formattedTimeOut = set(formattedTimeOut, {
+      hours: formattedScheduleOut.getHours(),
+      minutes: formattedScheduleOut.getMinutes(),
+      seconds: formattedScheduleOut.getSeconds(),
     });
   }
 
-  return getTimeDifference(dateTimeOut, dateTimeIn);
+  return getTimeDifference(formattedTimeOut, formattedTimeIn);
 };

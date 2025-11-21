@@ -95,7 +95,7 @@ const AttendancesPage = () => {
       width: 6,
       render: (row: Attendance) => {
         if (row.employee && row.employee.schedule && row.am_in && row.am_out) {
-          const difference = getTotalTime(
+          const hours = getTotalTime(
             row.employee.schedule.am_in,
             row.employee.schedule.am_out,
             row.am_in,
@@ -103,7 +103,7 @@ const AttendancesPage = () => {
           );
           return (
             <Text className="text-sm text-center">
-              {formatNumber(difference)} Hours
+              {formatNumber(hours)} Hours
             </Text>
           );
         }
@@ -159,7 +159,7 @@ const AttendancesPage = () => {
       width: 6,
       render: (row: Attendance) => {
         if (row.employee && row.employee.schedule && row.pm_in && row.pm_out) {
-          const difference = getTotalTime(
+          const hours = getTotalTime(
             row.employee.schedule.pm_in,
             row.employee.schedule.pm_out,
             row.pm_in,
@@ -167,7 +167,7 @@ const AttendancesPage = () => {
           );
           return (
             <Text className="text-sm text-center">
-              {formatNumber(difference)} Hours
+              {formatNumber(hours)} Hours
             </Text>
           );
         }
