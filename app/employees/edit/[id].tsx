@@ -25,8 +25,6 @@ const EditPage = () => {
   const { employee } = useFetch(db, Number(id));
   const { schedules } = useFetchAll(db);
 
-  console.log(employee);
-
   const getOptions = () => {
     const options: { label: string; value: string }[] = [];
     if (schedules) {

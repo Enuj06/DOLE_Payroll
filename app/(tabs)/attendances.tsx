@@ -15,7 +15,7 @@ import {
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import React from "react";
+import React, { useMemo } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -25,6 +25,20 @@ const AttendancesPage = () => {
 
   const { attendances, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
+
+  const filteredAttendances = useMemo(() => {
+    if (attendances) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return attendances.filter((attendance) => {
+        const date = new Date(attendance.date);
+        date.setHours(0, 0, 0, 0);
+        return today.valueOf() === date.valueOf();
+      });
+    }
+    return attendances;
+  }, [attendances]);
 
   const columns = [
     {
@@ -210,7 +224,7 @@ const AttendancesPage = () => {
     },
   ];
 
-  if (!attendances) {
+  if (!attendances || !filteredAttendances) {
     return <Loader />;
   }
 
@@ -225,7 +239,7 @@ const AttendancesPage = () => {
       </View>
 
       <View className="mt-4">
-        <Table columns={columns} rows={attendances} />
+        <Table columns={columns} rows={filteredAttendances} />
       </View>
     </SafeAreaView>
   );
