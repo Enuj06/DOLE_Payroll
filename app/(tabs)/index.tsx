@@ -3,10 +3,11 @@ import Table from "@/components/Table";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { Attendance, Employee, Schedule } from "@/types/globals";
 import { formatNumber, getDb, getTotalTime } from "@/utils/globals";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const PayrollPage = () => {
@@ -96,7 +97,7 @@ const PayrollPage = () => {
     {
       key: "name",
       header: "Name",
-      width: 9,
+      width: 10,
       render: (row: Employee) => (
         <Text className="text-sm text-center text-[#3C492C]">
           {`${row.last_name}, ${row.first_name} ${row.middle_initial}.`}`
@@ -138,6 +139,40 @@ const PayrollPage = () => {
           <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross)}`}</Text>
         );
       },
+    },
+    {
+      key: "deductions",
+      header: "Deductions",
+      width: 7,
+      render: (row: Employee) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(0)}`}</Text>
+      ),
+    },
+    {
+      key: "net",
+      header: "Net Income",
+      width: 7,
+      render: (row: Employee) => {
+        const gross =
+          row.schedule && row.attendances
+            ? getGross(row.schedule, row.attendances, row.rate)
+            : 0;
+        return (
+          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross)}`}</Text>
+        );
+      },
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      width: 9,
+      render: (row: Employee) => (
+        <View className="flex-row gap-4 justify-center">
+          <TouchableOpacity>
+            <MaterialIcons name="remove-red-eye" size={20} color="#2196F3" />
+          </TouchableOpacity>
+        </View>
+      ),
     },
   ];
 

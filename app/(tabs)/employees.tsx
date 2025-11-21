@@ -30,7 +30,7 @@ const EmployeesPage = () => {
     {
       key: "name",
       header: "Name",
-      width: 9,
+      width: 10,
       render: (row: Employee) => (
         <Text className="text-sm text-center text-[#3C492C]">
           {`${row.last_name}, ${row.first_name} ${row.middle_initial}.`}`

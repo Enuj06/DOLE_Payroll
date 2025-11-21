@@ -30,7 +30,7 @@ const AdvancesPage = () => {
     {
       key: "name",
       header: "Name",
-      width: 9,
+      width: 10,
       render: (row: Advance) => (
         <Text className="text-sm text-center text-[#3C492C]">{`${row.employee ? `${row.employee.last_name}, ${row.employee.first_name} ${row.employee.middle_initial}.` : ""}`}</Text>
       ),
