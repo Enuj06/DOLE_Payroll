@@ -44,17 +44,26 @@ const AttendancesPage = () => {
 
   const filteredAttendances = useMemo(() => {
     if (attendances) {
+      const start = startOfDay(period.start);
+      const end = startOfDay(period.end);
+
       return attendances.filter((attendance) => {
-        const start = startOfDay(period.start);
-        const end = startOfDay(period.end);
         const date = startOfDay(new Date(attendance.date));
         return (
           date.valueOf() >= start.valueOf() && date.valueOf() <= end.valueOf()
         );
       });
     }
-    return attendances;
   }, [period, attendances]);
+
+  const handlePeriodModalToggle = (isVisible: boolean) => {
+    setIsPeriodModalVisible(isVisible);
+  };
+
+  const handlePeriodModalSubmit = async (values: Values) => {
+    setPeriod({ start: new Date(values.start), end: new Date(values.end) });
+    setIsPeriodModalVisible(false);
+  };
 
   const columns = [
     {
@@ -239,18 +248,6 @@ const AttendancesPage = () => {
       ),
     },
   ];
-
-  const handlePeriodModalToggle = (isVisible: boolean) => {
-    setIsPeriodModalVisible(isVisible);
-  };
-
-  const handlePeriodModalSubmit = async (values: Values) => {
-    setPeriod({
-      start: new Date(values.start),
-      end: new Date(values.end),
-    });
-    setIsPeriodModalVisible(false);
-  };
 
   if (!attendances || !filteredAttendances) {
     return <Loader />;
