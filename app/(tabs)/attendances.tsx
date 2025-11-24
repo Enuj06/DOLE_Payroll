@@ -9,10 +9,10 @@ import { Attendance } from "@/types/globals";
 import {
   formatDate,
   formatNumber,
+  getDayHours,
   getDb,
   getTime,
   getTimeDifference,
-  getTotalTime,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -134,7 +134,7 @@ const AttendancesPage = () => {
       width: 6,
       render: (row: Attendance) => {
         if (row.employee && row.employee.schedule && row.am_in && row.am_out) {
-          const hours = getTotalTime(
+          const hours = getDayHours(
             row.employee.schedule.am_in,
             row.employee.schedule.am_out,
             row.am_in,
@@ -198,7 +198,7 @@ const AttendancesPage = () => {
       width: 6,
       render: (row: Attendance) => {
         if (row.employee && row.employee.schedule && row.pm_in && row.pm_out) {
-          const hours = getTotalTime(
+          const hours = getDayHours(
             row.employee.schedule.pm_in,
             row.employee.schedule.pm_out,
             row.pm_in,

@@ -3,11 +3,12 @@ import PeriodModal from "@/components/PeriodModal";
 import Table from "@/components/Table";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { period as schema, Period as Values } from "@/schemas/globals";
-import { Attendance, Employee, Schedule } from "@/types/globals";
-import { formatNumber, getDb, getTotalTime } from "@/utils/globals";
+import { Attendance, Employee } from "@/types/globals";
+import { formatNumber, getDb, getGross, getPeriodHours } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { lastDayOfMonth, startOfDay } from "date-fns";
+import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -17,6 +18,7 @@ import { useImmer } from "use-immer";
 
 const PayrollPage = () => {
   const db = getDb(useSQLiteContext());
+  const router = useRouter();
   const form = useForm({ resolver: yupResolver(schema) });
 
   const getPeriod = () => {
@@ -68,47 +70,6 @@ const PayrollPage = () => {
     }
   }, [period, employees]);
 
-  const getHours = (schedule: Schedule, attendances: Attendance[]) => {
-    let hours = 0;
-    if (attendances) {
-      attendances.forEach((attendance) => {
-        if (
-          schedule &&
-          attendance.am_in &&
-          attendance.am_out &&
-          attendance.pm_in &&
-          attendance.pm_out
-        ) {
-          const differenceAM = getTotalTime(
-            schedule.am_in,
-            schedule.am_out,
-            attendance.am_in,
-            attendance.am_out
-          );
-
-          const differencePM = getTotalTime(
-            schedule.pm_in,
-            schedule.pm_out,
-            attendance.pm_in,
-            attendance.pm_out
-          );
-
-          hours += differenceAM + differencePM;
-        }
-      });
-    }
-    return hours;
-  };
-
-  const getGross = (
-    schedule: Schedule,
-    attendances: Attendance[],
-    rate: number
-  ) => {
-    const hours = schedule && attendances ? getHours(schedule, attendances) : 0;
-    return (rate / 8) * hours;
-  };
-
   const handlePeriodModalToggle = (isVisible: boolean) => {
     setIsPeriodModalVisible(isVisible);
   };
@@ -152,7 +113,7 @@ const PayrollPage = () => {
       render: (row: Employee) => {
         const hours =
           row.schedule && row.attendances
-            ? getHours(row.schedule, row.attendances)
+            ? getPeriodHours(row.schedule, row.attendances)
             : 0;
         return (
           <Text className="text-sm text-center text-[#3C492C]">{`${formatNumber(hours)} Hours`}</Text>
@@ -201,7 +162,16 @@ const PayrollPage = () => {
       width: 9,
       render: (row: Employee) => (
         <View className="flex-row gap-4 justify-center">
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              router.navigate({
+                pathname: "/payroll/view/[filters]",
+                params: {
+                  filters: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
+                },
+              })
+            }
+          >
             <MaterialIcons name="remove-red-eye" size={20} color="#2196F3" />
           </TouchableOpacity>
         </View>

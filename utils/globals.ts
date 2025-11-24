@@ -1,4 +1,5 @@
 import * as schema from "@/db/schema";
+import { Attendance, Schedule } from "@/types/globals";
 import { differenceInSeconds, format, set } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -60,7 +61,7 @@ export const getTimeDifference = (
   return seconds / 60 / 60;
 };
 
-export const getTotalTime = (
+export const getDayHours = (
   scheduleIn: Date | string,
   scheduleOut: Date | string,
   timeIn: Date | string,
@@ -99,4 +100,81 @@ export const getTotalTime = (
   }
 
   return getTimeDifference(formattedTimeOut, formattedTimeIn);
+};
+
+export const getPeriodHours = (
+  schedule: Schedule,
+  attendances: Attendance[]
+) => {
+  let hours = 0;
+
+  if (attendances) {
+    attendances.forEach((attendance) => {
+      if (
+        schedule &&
+        attendance.am_in &&
+        attendance.am_out &&
+        attendance.pm_in &&
+        attendance.pm_out
+      ) {
+        const differenceAM = getDayHours(
+          schedule.am_in,
+          schedule.am_out,
+          attendance.am_in,
+          attendance.am_out
+        );
+
+        const differencePM = getDayHours(
+          schedule.pm_in,
+          schedule.pm_out,
+          attendance.pm_in,
+          attendance.pm_out
+        );
+
+        hours += differenceAM + differencePM;
+      }
+    });
+  }
+
+  return hours;
+};
+
+export const getGross = (
+  schedule: Schedule,
+  attendances: Attendance[],
+  rate: number
+) => {
+  const hours =
+    schedule && attendances ? getPeriodHours(schedule, attendances) : 0;
+  return (rate / 8) * hours;
+};
+
+export const getSSSTable = () => {
+  const ranges = [];
+
+  let start = 0;
+  let amount = 250;
+
+  for (let index = 0; index < 61; ++index) {
+    let increase = 500;
+    if (index === 0) {
+      increase = 5250;
+    }
+
+    let end = start + increase - 0.01;
+    if (index === 60) {
+      end = Infinity;
+    }
+
+    ranges.push({ start, end, amount });
+
+    if (start < 19750) {
+      amount += 25;
+    }
+    if (index < 60) {
+      start += increase;
+    }
+  }
+
+  return ranges;
 };
