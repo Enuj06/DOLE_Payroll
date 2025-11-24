@@ -74,6 +74,16 @@ const Table = <T extends { id: number | string }>({
     );
   };
 
+  const TableEmpty = () => {
+    return (
+      <View>
+        <View className="px-4 py-2 justify-center items-center h-[2.7rem] border-[0.0625rem] border-[#F0F0F0]">
+          <Text>No Data Found</Text>
+        </View>
+      </View>
+    );
+  };
+
   return (
     <View>
       <ScrollView horizontal>
@@ -81,6 +91,7 @@ const Table = <T extends { id: number | string }>({
           data={rows}
           keyExtractor={(row) => `${row.id}`}
           ListHeaderComponent={<TableHeader columns={columns} />}
+          ListEmptyComponent={<TableEmpty />}
           renderItem={({ item: row }) => (
             <TableRow columns={columns} row={row} />
           )}
