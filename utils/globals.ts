@@ -178,3 +178,12 @@ export const getSSSTable = () => {
 
   return ranges;
 };
+
+export const getSSSContribution = (rate: number) => {
+  const ranges = getSSSTable();
+  const monthlyRate = rate * 20;
+  const range = ranges.find((range) => {
+    return monthlyRate >= range.start && monthlyRate <= range.end;
+  });
+  return range!.amount;
+};
