@@ -1,8 +1,10 @@
 import DeleteAlert from "@/components/DeleteAlert";
 import Loader from "@/components/Loader";
+import PeriodModal from "@/components/PeriodModal";
 import Table from "@/components/Table";
 import useDelete from "@/hooks/attendances/useDelete";
 import useFetchAll from "@/hooks/attendances/useFetchAll";
+import { period as schema, Period as Values } from "@/schemas/globals";
 import { Attendance } from "@/types/globals";
 import {
   formatDate,
@@ -13,31 +15,46 @@ import {
   getTotalTime,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { startOfDay } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React, { useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useImmer } from "use-immer";
 
 const AttendancesPage = () => {
   const db = getDb(useSQLiteContext());
   const router = useRouter();
+  const form = useForm({ resolver: yupResolver(schema) });
+
+  const [period, setPeriod] = useImmer<{
+    start: Date | string;
+    end: Date | string;
+  }>({
+    start: new Date(),
+    end: new Date(),
+  });
+  const [isPeriodModalVisible, setIsPeriodModalVisible] = useImmer(false);
 
   const { attendances, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
 
   const filteredAttendances = useMemo(() => {
     if (attendances) {
-      const today = startOfDay(new Date());
-
       return attendances.filter((attendance) => {
+        const start = startOfDay(period.start);
+        const end = startOfDay(period.end);
         const date = startOfDay(new Date(attendance.date));
-        return today.valueOf() === date.valueOf();
+        return (
+          date.valueOf() >= start.valueOf() && date.valueOf() <= end.valueOf()
+        );
       });
     }
     return attendances;
-  }, [attendances]);
+  }, [period, attendances]);
 
   const columns = [
     {
@@ -223,6 +240,18 @@ const AttendancesPage = () => {
     },
   ];
 
+  const handlePeriodModalToggle = (isVisible: boolean) => {
+    setIsPeriodModalVisible(isVisible);
+  };
+
+  const handlePeriodModalSubmit = async (values: Values) => {
+    setPeriod({
+      start: new Date(values.start),
+      end: new Date(values.end),
+    });
+    setIsPeriodModalVisible(false);
+  };
+
   if (!attendances || !filteredAttendances) {
     return <Loader />;
   }
@@ -235,6 +264,13 @@ const AttendancesPage = () => {
         <TouchableOpacity onPress={() => router.navigate("/attendances/add")}>
           <Text>Add</Text>
         </TouchableOpacity>
+
+        <PeriodModal
+          form={form}
+          isVisible={isPeriodModalVisible}
+          onToggle={handlePeriodModalToggle}
+          onSubmit={handlePeriodModalSubmit}
+        />
       </View>
 
       <View className="mt-4">

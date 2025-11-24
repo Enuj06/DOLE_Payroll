@@ -1,4 +1,23 @@
+import { differenceInDays } from "date-fns";
 import * as Yup from "yup";
+
+export const period = Yup.object().shape({
+  start: Yup.date()
+    .typeError("Start must be a valid date")
+    .required()
+    .label("Start"),
+  end: Yup.date()
+    .typeError("End must be a valid date")
+    .required()
+    .test(
+      "isBefore",
+      "End must be after Start",
+      (value, context) => differenceInDays(value, context.parent.start) >= 0
+    )
+    .label("End"),
+});
+
+export type Period = Yup.InferType<typeof period>;
 
 export const attendance = Yup.object().shape({
   date: Yup.date()
