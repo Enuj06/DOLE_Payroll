@@ -11,7 +11,12 @@ const useFetch = (db: Db, id: number) => {
   const handleFetch = useCallback(async () => {
     try {
       const employee = await db.query.employees.findFirst({
-        with: { schedule: true, attendances: true, advances: true },
+        with: {
+          schedule: true,
+          attendances: true,
+          claims: true,
+          advances: true,
+        },
         where: eq(employees.id, id),
       });
       setEmployee(employee);

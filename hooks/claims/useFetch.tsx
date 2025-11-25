@@ -1,22 +1,20 @@
-import { Db, Employee } from "@/types/globals";
+import { claims } from "@/db/schema";
+import { Claim, Db } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
+import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
-const useFetchAll = (db: Db) => {
-  const [employees, setEmployees] = useState<Employee[] | undefined>(undefined);
+const useFetch = (db: Db, id: number) => {
+  const [claim, setClaim] = useState<Claim | undefined>(undefined);
 
   const handleFetch = useCallback(async () => {
     try {
-      const employees = await db.query.employees.findMany({
-        with: {
-          schedule: true,
-          attendances: true,
-          claims: true,
-          advances: true,
-        },
+      const claim = await db.query.claims.findFirst({
+        with: { employee: true },
+        where: eq(claims.id, id),
       });
-      setEmployees(employees);
+      setClaim(claim);
     } catch (error) {
       console.error(error);
       Toast.show({
@@ -25,13 +23,13 @@ const useFetchAll = (db: Db) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, [setEmployees]);
+  }, [setClaim]);
 
   useEffect(() => {
     handleFetch();
   }, [handleFetch]);
 
-  return { employees, refetch: handleFetch };
+  return { claim, refetch: handleFetch };
 };
 
-export default useFetchAll;
+export default useFetch;
