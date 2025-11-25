@@ -89,6 +89,7 @@ export const schedule = Yup.object().shape({
 export type Schedule = Yup.InferType<typeof schedule>;
 
 export const advance = Yup.object().shape({
+  reason: Yup.string().trim().required().label("Reason"),
   date: Yup.date()
     .typeError("Date must be a valid date")
     .required()

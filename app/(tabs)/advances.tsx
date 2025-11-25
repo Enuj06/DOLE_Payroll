@@ -36,12 +36,9 @@ const AdvancesPage = () => {
       ),
     },
     {
-      key: "amount",
-      header: "Amount",
-      width: 7,
-      render: (row: Advance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.amount)}`}</Text>
-      ),
+      key: "reason",
+      header: "Reason",
+      width: 15,
     },
     {
       key: "date",
@@ -49,6 +46,14 @@ const AdvancesPage = () => {
       width: 9,
       render: (row: Advance) => (
         <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(row.date)}`}</Text>
+      ),
+    },
+    {
+      key: "amount",
+      header: "Amount",
+      width: 7,
+      render: (row: Advance) => (
+        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.amount)}`}</Text>
       ),
     },
     {

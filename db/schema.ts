@@ -36,6 +36,7 @@ export const schedules = sqliteTable("schedules", {
 
 export const advances = sqliteTable("advances", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+  reason: text("reason").notNull(),
   date: text("date").notNull(),
   amount: real("amount").notNull(),
   employee_id: integer()

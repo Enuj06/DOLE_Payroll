@@ -53,6 +53,7 @@ export type Schedule = {
 
 export type Advance = {
   id: number;
+  reason: string;
   date: string;
   amount: number;
   employee_id: number;

@@ -93,6 +93,28 @@ const EditPage = () => {
         <View className="my-4">
           <View className="gap-4">
             <View>
+              <Label name="Reason" />
+
+              <Controller
+                control={control}
+                name="reason"
+                defaultValue={advance.reason}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <>
+                    <TextInput
+                      placeholder="Enter reason"
+                      value={value}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                    />
+                  </>
+                )}
+              />
+
+              <ErrorMessage error={errors.reason} />
+            </View>
+
+            <View>
               <Label name="Date" />
 
               <Controller
