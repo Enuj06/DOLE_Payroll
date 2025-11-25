@@ -62,27 +62,28 @@ const ViewPage = () => {
 
   const formattedEmployee: Employee | undefined = formatEmployee(employee);
 
-  const gross =
+  let gross = 0;
+  let deductions = { sss: 0, hdmf: 0, phic: 0 };
+  let totalDeductions = 0;
+
+  if (
     formattedEmployee &&
     formattedEmployee.schedule &&
     formattedEmployee.attendances
-      ? getGross(
-          formattedEmployee.schedule,
-          formattedEmployee.attendances,
-          formattedEmployee.rate
-        )
-      : 0;
-
-  const deductions = {
-    sss: formattedEmployee ? getSSSContribution(formattedEmployee.rate) : 0,
-    hdmf: formattedEmployee ? getHDMFContribution(formattedEmployee.rate) : 0,
-    phic: formattedEmployee ? getPHICContribution(formattedEmployee.rate) : 0,
-  };
-
-  const totalDeductions = Object.values(deductions).reduce(
-    (accumulator, value) => accumulator + value,
-    0
-  );
+  ) {
+    gross = getGross(
+      formattedEmployee.schedule,
+      formattedEmployee.attendances,
+      formattedEmployee.rate
+    );
+    deductions.sss = getSSSContribution(formattedEmployee.rate);
+    deductions.hdmf = getHDMFContribution(formattedEmployee.rate);
+    deductions.phic = getPHICContribution(formattedEmployee.rate);
+    totalDeductions = Object.values(deductions).reduce(
+      (accumulator, value) => accumulator + value,
+      0
+    );
+  }
 
   if (
     !formattedEmployee ||
