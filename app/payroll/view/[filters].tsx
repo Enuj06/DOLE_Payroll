@@ -4,6 +4,7 @@ import { Attendance, Employee } from "@/types/globals";
 import {
   formatDate,
   formatNumber,
+  getDate,
   getDb,
   getGross,
   getHDMFContribution,
@@ -11,7 +12,6 @@ import {
   getPHICContribution,
   getSSSContribution,
 } from "@/utils/globals";
-import { startOfDay } from "date-fns";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Text, View } from "react-native";
@@ -29,14 +29,18 @@ const ViewPage = () => {
 
   const { employee } = useFetch(db, Number(id));
 
-  const filterAttendances = (attendances: Attendance[]) => {
+  const filterAttendances = (
+    start: string,
+    end: string,
+    attendances: Attendance[]
+  ) => {
     let filteredAttendances: Attendance[] = [];
-    const formattedStart = startOfDay(new Date(start));
-    const formattedEnd = startOfDay(new Date(end));
+    const formattedStart = new Date(getDate(start));
+    const formattedEnd = new Date(getDate(end));
 
     if (attendances) {
       filteredAttendances = attendances.filter((attendance) => {
-        const date = startOfDay(new Date(attendance.date));
+        const date = new Date(getDate(attendance.date));
         return (
           date.valueOf() >= formattedStart.valueOf() &&
           date.valueOf() <= formattedEnd.valueOf()
@@ -55,7 +59,7 @@ const ViewPage = () => {
       ...employee,
       attendances:
         employee && employee.attendances
-          ? filterAttendances(employee.attendances)
+          ? filterAttendances(start, end, employee.attendances)
           : undefined,
     };
   };

@@ -9,6 +9,7 @@ import { Attendance } from "@/types/globals";
 import {
   formatDate,
   formatNumber,
+  getDate,
   getDayHours,
   getDb,
   getTime,
@@ -16,7 +17,6 @@ import {
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { startOfDay } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import React, { useMemo } from "react";
@@ -44,11 +44,11 @@ const AttendancesPage = () => {
 
   const filteredAttendances = useMemo(() => {
     if (attendances) {
-      const start = startOfDay(period.start);
-      const end = startOfDay(period.end);
+      const start = new Date(getDate(period.start));
+      const end = new Date(getDate(period.end));
 
       return attendances.filter((attendance) => {
-        const date = startOfDay(new Date(attendance.date));
+        const date = new Date(getDate(attendance.date));
         return (
           date.valueOf() >= start.valueOf() && date.valueOf() <= end.valueOf()
         );

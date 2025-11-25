@@ -4,10 +4,16 @@ import Table from "@/components/Table";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { period as schema, Period as Values } from "@/schemas/globals";
 import { Attendance, Employee } from "@/types/globals";
-import { formatNumber, getDb, getGross, getPeriodHours } from "@/utils/globals";
+import {
+  formatNumber,
+  getDate,
+  getDb,
+  getGross,
+  getPeriodHours,
+} from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { lastDayOfMonth, startOfDay } from "date-fns";
+import { lastDayOfMonth } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
@@ -50,15 +56,15 @@ const PayrollPage = () => {
 
   const filteredEmployees = useMemo(() => {
     if (employees) {
-      const start = startOfDay(period.start);
-      const end = startOfDay(period.end);
+      const start = new Date(getDate(period.start));
+      const end = new Date(getDate(period.end));
 
       return employees.map((employee) => {
         let attendances: Attendance[] = [];
 
         if (employee.attendances) {
           attendances = employee.attendances.filter((attendance) => {
-            const date = startOfDay(new Date(attendance.date));
+            const date = new Date(getDate(attendance.date));
             return (
               date.valueOf() >= start.valueOf() &&
               date.valueOf() <= end.valueOf()

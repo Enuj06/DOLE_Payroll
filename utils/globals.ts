@@ -1,6 +1,6 @@
 import * as schema from "@/db/schema";
 import { Attendance, Schedule } from "@/types/globals";
-import { differenceInSeconds, format, set } from "date-fns";
+import { differenceInSeconds, eachDayOfInterval, format, set } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
@@ -205,4 +205,22 @@ export const getPHICContribution = (rate: number) => {
     amount = monthlyRate * 0.05;
   }
   return amount / 2;
+};
+
+export const getWorkingHours = (start: Date | string, end: Date | string) => {
+  let days = 0;
+  const formattedStart = typeof start === "string" ? new Date(start) : start;
+  const formattedEnd = typeof end === "string" ? new Date(end) : end;
+
+  const dates = eachDayOfInterval({
+    start: formattedStart,
+    end: formattedEnd,
+  });
+
+  const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  dates.forEach((date) => {
+    workDays.includes(format(date, "EEEE")) && ++days;
+  });
+
+  return days * 8;
 };
