@@ -6,7 +6,7 @@ import { attendances } from "@/db/schema";
 import useFetch from "@/hooks/attendances/useFetch";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { attendance as schema, Attendance as Values } from "@/schemas/globals";
-import { getDate, getDb, getTime } from "@/utils/globals";
+import { getDate, getDb, getTime, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -17,6 +17,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const EditPage = () => {
@@ -78,9 +79,19 @@ const EditPage = () => {
             ot_out: values.ot_out ? values.ot_out.toISOString() : null,
           })
           .where(eq(attendances.id, attendance.id));
+        Toast.show({
+          type: "success",
+          text1: "Updated Attendance",
+          visibilityTime: toastVisibilityTime,
+        });
         router.navigate("/attendances");
       } catch (error) {
         console.error(error);
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+          visibilityTime: toastVisibilityTime,
+        });
       }
     }
   };

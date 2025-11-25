@@ -5,7 +5,7 @@ import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
 
-export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
+export const toastVisibilityTime = 2000;
 
 export const getDb = (sqlDb: SQLiteDatabase) => {
   return drizzle(sqlDb, { schema });

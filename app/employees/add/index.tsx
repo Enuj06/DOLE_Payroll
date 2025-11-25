@@ -4,7 +4,7 @@ import Select from "@/components/Select";
 import * as models from "@/db/schema";
 import useFetchAll from "@/hooks/schedules/useFetchAll";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
-import { getDb, getTime } from "@/utils/globals";
+import { getDb, getTime, toastVisibilityTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { desc } from "drizzle-orm";
 import { useRouter } from "expo-router";
@@ -13,6 +13,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 const AddPage = () => {
   const db = getDb(useSQLiteContext());
@@ -56,9 +57,19 @@ const AddPage = () => {
         ...values,
         employee_id: `${++employee_id}`.padStart(8, "0"),
       });
+      Toast.show({
+        type: "success",
+        text1: "Added Employee",
+        visibilityTime: toastVisibilityTime,
+      });
       router.navigate("/employees");
     } catch (error) {
       console.error(error);
+      Toast.show({
+        type: "error",
+        text1: "An Error Has Occured. Please Try Again.",
+        visibilityTime: toastVisibilityTime,
+      });
     }
   };
 

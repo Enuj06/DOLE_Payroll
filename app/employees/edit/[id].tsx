@@ -6,7 +6,7 @@ import { employees } from "@/db/schema";
 import useFetch from "@/hooks/employees/useFetch";
 import useFetchAll from "@/hooks/schedules/useFetchAll";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
-import { getDb, getTime } from "@/utils/globals";
+import { getDb, getTime, toastVisibilityTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -15,6 +15,7 @@ import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 const EditPage = () => {
   const { id } = useLocalSearchParams();
@@ -53,9 +54,19 @@ const EditPage = () => {
           .update(employees)
           .set(values)
           .where(eq(employees.id, employee.id));
+        Toast.show({
+          type: "success",
+          text1: "Updated Employee",
+          visibilityTime: toastVisibilityTime,
+        });
         router.navigate("/employees");
       } catch (error) {
         console.error(error);
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+          visibilityTime: toastVisibilityTime,
+        });
       }
     }
   };

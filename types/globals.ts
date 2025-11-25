@@ -2,6 +2,8 @@ import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
 import { ReactNode } from "react";
 
+export type Override<T1, T2> = Omit<T1, keyof T2> & T2;
+
 export type Db = ExpoSQLiteDatabase<typeof import("@/db/schema")> & {
   $client: SQLiteDatabase;
 };

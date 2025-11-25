@@ -6,7 +6,7 @@ import { advances } from "@/db/schema";
 import useFetch from "@/hooks/advances/useFetch";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { advance as schema, Advance as Values } from "@/schemas/globals";
-import { getDate, getDb } from "@/utils/globals";
+import { getDate, getDb, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -16,6 +16,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const EditPage = () => {
@@ -63,9 +64,19 @@ const EditPage = () => {
             date: values.date.toISOString(),
           })
           .where(eq(advances.id, advance.id));
+        Toast.show({
+          type: "success",
+          text1: "Updated Cash Advance",
+          visibilityTime: toastVisibilityTime,
+        });
         router.navigate("/advances");
       } catch (error) {
         console.error(error);
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+          visibilityTime: toastVisibilityTime,
+        });
       }
     }
   };
