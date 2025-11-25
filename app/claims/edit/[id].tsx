@@ -1,14 +1,17 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
+import Loader from "@/components/Loader";
 import Select from "@/components/Select";
 import { claims } from "@/db/schema";
+import useFetch from "@/hooks/claims/useFetch";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { claim as schema, Claim as Values } from "@/schemas/globals";
 import { getDate, getDb, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useRouter } from "expo-router";
+import { eq } from "drizzle-orm";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -16,12 +19,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
-const AddPage = () => {
+const EditPage = () => {
+  const { id } = useLocalSearchParams();
+
   const db = getDb(useSQLiteContext());
   const router = useRouter();
 
   const [isDateModalVisible, setIsDateModalVisible] = useImmer(false);
 
+  const { claim } = useFetch(db, Number(id));
   const { employees } = useFetchAll(db);
 
   const getOptions = () => {
@@ -49,31 +55,40 @@ const AddPage = () => {
   });
 
   const onSubmit = async (values: Values) => {
-    try {
-      await db.insert(claims).values({
-        ...values,
-        date: values.date.toISOString(),
-      });
-      Toast.show({
-        type: "success",
-        text1: "Added Expense Claim",
-        visibilityTime: toastVisibilityTime,
-      });
-      router.navigate("/claims");
-    } catch (error) {
-      console.error(error);
-      Toast.show({
-        type: "error",
-        text1: "An Error Has Occured. Please Try Again.",
-        visibilityTime: toastVisibilityTime,
-      });
+    if (claim) {
+      try {
+        await db
+          .update(claims)
+          .set({
+            ...values,
+            date: values.date.toISOString(),
+          })
+          .where(eq(claims.id, claim.id));
+        Toast.show({
+          type: "success",
+          text1: "Updated Expense Claim",
+          visibilityTime: toastVisibilityTime,
+        });
+        router.navigate("/claims");
+      } catch (error) {
+        console.error(error);
+        Toast.show({
+          type: "error",
+          text1: "An Error Has Occured. Please Try Again.",
+          visibilityTime: toastVisibilityTime,
+        });
+      }
     }
   };
+
+  if (!claim) {
+    return <Loader />;
+  }
 
   return (
     <>
       <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-        <Text>Add Expense Claim</Text>
+        <Text>Edit Expense Claim</Text>
 
         <View className="my-4">
           <View className="gap-4">
@@ -83,6 +98,7 @@ const AddPage = () => {
               <Controller
                 control={control}
                 name="reason"
+                defaultValue={claim.reason}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
@@ -104,6 +120,7 @@ const AddPage = () => {
               <Controller
                 control={control}
                 name="date"
+                defaultValue={new Date(claim.date)}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TouchableOpacity
@@ -127,6 +144,7 @@ const AddPage = () => {
               <Controller
                 control={control}
                 name="amount"
+                defaultValue={claim.amount}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <TextInput
@@ -149,6 +167,7 @@ const AddPage = () => {
               <Controller
                 control={control}
                 name="employee_id"
+                defaultValue={claim.employee_id}
                 render={({ field: { value, onChange, onBlur } }) => (
                   <>
                     <Select
@@ -167,7 +186,7 @@ const AddPage = () => {
 
           <View className="mt-4 flex-row gap-4">
             <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-              <Text>Add</Text>
+              <Text>Update</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.back()}>
@@ -194,4 +213,4 @@ const AddPage = () => {
   );
 };
 
-export default AddPage;
+export default EditPage;
