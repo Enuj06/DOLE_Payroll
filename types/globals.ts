@@ -39,6 +39,7 @@ export type Employee = {
   schedule_id: number | null;
   schedule?: Schedule | null;
   attendances?: Attendance[];
+  claims?: Claim[];
   advances?: Advance[];
 };
 
@@ -49,6 +50,15 @@ export type Schedule = {
   pm_in: string;
   pm_out: string;
   employees?: Employee[];
+};
+
+export type Claim = {
+  id: number;
+  reason: string;
+  date: string;
+  amount: number;
+  employee_id: number;
+  employee?: Employee;
 };
 
 export type Advance = {

@@ -34,12 +34,22 @@ export const schedules = sqliteTable("schedules", {
   pm_out: text("pm_out").notNull(),
 });
 
+export const claims = sqliteTable("claims", {
+  id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+  reason: text("reason").notNull(),
+  date: text("date").notNull(),
+  amount: real("amount").notNull(),
+  employee_id: integer("employee_id")
+    .references(() => employees.id)
+    .notNull(),
+});
+
 export const advances = sqliteTable("advances", {
   id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
   reason: text("reason").notNull(),
   date: text("date").notNull(),
   amount: real("amount").notNull(),
-  employee_id: integer()
+  employee_id: integer("employee_id")
     .references(() => employees.id)
     .notNull(),
 });
@@ -61,11 +71,19 @@ export const employeesRelation = relations(employees, ({ one, many }) => ({
     references: [schedules.id],
   }),
   attendances: many(attendances),
+  claims: many(claims),
   advances: many(advances),
 }));
 
 export const schedulesRelation = relations(schedules, ({ many }) => ({
   employees: many(employees),
+}));
+
+export const claimsRelation = relations(claims, ({ one }) => ({
+  employee: one(employees, {
+    fields: [claims.employee_id],
+    references: [employees.id],
+  }),
 }));
 
 export const advancesRelation = relations(advances, ({ one }) => ({

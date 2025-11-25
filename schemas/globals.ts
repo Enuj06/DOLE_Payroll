@@ -88,6 +88,24 @@ export const schedule = Yup.object().shape({
 
 export type Schedule = Yup.InferType<typeof schedule>;
 
+export const claim = Yup.object().shape({
+  reason: Yup.string().trim().required().label("Reason"),
+  date: Yup.date()
+    .typeError("Date must be a valid date")
+    .required()
+    .label("Date"),
+  amount: Yup.number()
+    .typeError("Amount must be a number")
+    .required()
+    .label("Amount"),
+  employee_id: Yup.number()
+    .typeError("Employee ID must be a number")
+    .required()
+    .label("Employee"),
+});
+
+export type Claim = Yup.InferType<typeof claim>;
+
 export const advance = Yup.object().shape({
   reason: Yup.string().trim().required().label("Reason"),
   date: Yup.date()
