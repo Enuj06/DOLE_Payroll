@@ -43,6 +43,10 @@ export const advances = sqliteTable("advances", {
     .notNull(),
 });
 
+export const settings = sqliteTable("settings", {
+  id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+});
+
 export const attendancesRelation = relations(attendances, ({ one }) => ({
   employee: one(employees, {
     fields: [attendances.employee_id],

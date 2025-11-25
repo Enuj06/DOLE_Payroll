@@ -7,33 +7,53 @@ import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 import { Stack } from "expo-router";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
 import { Suspense } from "react";
-import "react-native-reanimated";
+import Toast, {
+  BaseToastProps,
+  ErrorToast,
+  SuccessToast,
+} from "react-native-toast-message";
 
 const name = "DOLEPayroll";
 const expoDb = openDatabaseSync(name, { useNewConnection: true });
 const db = drizzle(expoDb);
+
+const toastConfig = {
+  success: (props: BaseToastProps) => (
+    <SuccessToast
+      {...props}
+      text1Style={{ fontSize: 14, textAlign: "center" }}
+    />
+  ),
+  error: (props: BaseToastProps) => (
+    <ErrorToast {...props} text1Style={{ fontSize: 14, textAlign: "center" }} />
+  ),
+};
 
 const RootLayout = () => {
   useMigrations(db, migrations);
   useDrizzleStudio(expoDb);
 
   return (
-    <Suspense fallback={<Loader />}>
-      <SQLiteProvider
-        databaseName={name}
-        options={{ useNewConnection: true }}
-        useSuspense
-      >
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="payroll" options={{ headerShown: false }} />
-          <Stack.Screen name="attendances" options={{ headerShown: false }} />
-          <Stack.Screen name="employees" options={{ headerShown: false }} />
-          <Stack.Screen name="schedules" options={{ headerShown: false }} />
-          <Stack.Screen name="advances" options={{ headerShown: false }} />
-        </Stack>
-      </SQLiteProvider>
-    </Suspense>
+    <>
+      <Suspense fallback={<Loader />}>
+        <SQLiteProvider
+          databaseName={name}
+          options={{ useNewConnection: true }}
+          useSuspense
+        >
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="payroll" options={{ headerShown: false }} />
+            <Stack.Screen name="attendances" options={{ headerShown: false }} />
+            <Stack.Screen name="employees" options={{ headerShown: false }} />
+            <Stack.Screen name="schedules" options={{ headerShown: false }} />
+            <Stack.Screen name="advances" options={{ headerShown: false }} />
+          </Stack>
+        </SQLiteProvider>
+      </Suspense>
+
+      <Toast config={toastConfig} />
+    </>
   );
 };
 
