@@ -180,10 +180,29 @@ export const getSSSTable = () => {
 };
 
 export const getSSSContribution = (rate: number) => {
-  const ranges = getSSSTable();
   const monthlyRate = rate * 20;
+  const ranges = getSSSTable();
   const range = ranges.find((range) => {
     return monthlyRate >= range.start && monthlyRate <= range.end;
   });
   return range!.amount;
+};
+
+export const getHDMFContribution = (rate: number) => {
+  const monthlyRate = rate * 20;
+  const amount = monthlyRate < 10000 ? monthlyRate * 0.02 : 10000 * 0.02;
+  return amount;
+};
+
+export const getPHICContribution = (rate: number) => {
+  const monthlyRate = rate * 20;
+  let amount = 0;
+  if (monthlyRate < 10001) {
+    amount = 500;
+  } else if (monthlyRate > 99999) {
+    amount = 5000;
+  } else {
+    amount = monthlyRate * 0.05;
+  }
+  return amount / 2;
 };

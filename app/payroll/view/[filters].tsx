@@ -1,12 +1,15 @@
 import Loader from "@/components/Loader";
 import useFetch from "@/hooks/employees/useFetch";
-import { Attendance } from "@/types/globals";
+import { Attendance, Employee } from "@/types/globals";
 import {
   formatDate,
   formatNumber,
   getDb,
   getGross,
+  getHDMFContribution,
   getPeriodHours,
+  getPHICContribution,
+  getSSSContribution,
 } from "@/utils/globals";
 import { startOfDay } from "date-fns";
 import { useLocalSearchParams } from "expo-router";
@@ -43,15 +46,27 @@ const ViewPage = () => {
     return filteredAttendances;
   };
 
-  const formattedEmployee = {
-    ...employee,
-    attendances:
-      employee && employee.attendances
-        ? filterAttendances(employee.attendances)
-        : undefined,
+  const formatEmployee = (employee: Employee | undefined) => {
+    if (!employee) {
+      return undefined;
+    }
+
+    return {
+      ...employee,
+      attendances:
+        employee && employee.attendances
+          ? filterAttendances(employee.attendances)
+          : undefined,
+    };
   };
 
-  if (!employee || !employee.schedule || !employee.attendances) {
+  const formattedEmployee: Employee | undefined = formatEmployee(employee);
+
+  if (
+    !formattedEmployee ||
+    !formattedEmployee.schedule ||
+    !formattedEmployee.attendances
+  ) {
     return <Loader />;
   }
 
@@ -67,27 +82,30 @@ const ViewPage = () => {
 
         <View>
           <Text>Employee ID</Text>
-          <Text>{employee.employee_id}</Text>
+          <Text>{formattedEmployee.employee_id}</Text>
         </View>
 
         <View>
           <Text>Employee Name</Text>
           <Text>
-            {employee.last_name}, {employee.first_name}{" "}
-            {employee.middle_initial}.
+            {formattedEmployee.last_name}, {formattedEmployee.first_name}{" "}
+            {formattedEmployee.middle_initial}.
           </Text>
         </View>
 
         <View>
           <Text>Rate</Text>
-          <Text>Php {formatNumber(employee.rate)}</Text>
+          <Text>Php {formatNumber(formattedEmployee.rate)}</Text>
         </View>
 
         <View>
           <Text>Hours</Text>
           <Text>
             {formatNumber(
-              getPeriodHours(employee.schedule, employee.attendances)
+              getPeriodHours(
+                formattedEmployee.schedule,
+                formattedEmployee.attendances
+              )
             )}{" "}
             Hours
           </Text>
@@ -98,9 +116,51 @@ const ViewPage = () => {
           <Text>
             Php{" "}
             {formatNumber(
-              getGross(employee.schedule, employee.attendances, employee.rate)
+              getGross(
+                formattedEmployee.schedule,
+                formattedEmployee.attendances,
+                formattedEmployee.rate
+              )
             )}
           </Text>
+        </View>
+
+        <Text className="font-bold">Deductions</Text>
+
+        <View>
+          <Text>SSS Contribution</Text>
+          <Text>
+            Php {formatNumber(getSSSContribution(formattedEmployee.rate))}
+          </Text>
+        </View>
+
+        <View>
+          <Text>HDMF Contribution</Text>
+          <Text>
+            Php {formatNumber(getHDMFContribution(formattedEmployee.rate))}
+          </Text>
+        </View>
+
+        <View>
+          <Text>PHIC Contribution</Text>
+          <Text>
+            Php {formatNumber(getPHICContribution(formattedEmployee.rate))}
+          </Text>
+        </View>
+
+        <View>
+          <Text>SSS Loan</Text>
+          <Text>Php 0.00</Text>
+        </View>
+
+        <View>
+          <Text>HDMF Loan</Text>
+          <Text>Php 0.00</Text>
+        </View>
+
+        <View>
+          <Text>Adjustment</Text>
+          <Text>Php 0.00</Text>
         </View>
       </View>
     </SafeAreaView>
