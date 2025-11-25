@@ -62,6 +62,28 @@ const ViewPage = () => {
 
   const formattedEmployee: Employee | undefined = formatEmployee(employee);
 
+  const gross =
+    formattedEmployee &&
+    formattedEmployee.schedule &&
+    formattedEmployee.attendances
+      ? getGross(
+          formattedEmployee.schedule,
+          formattedEmployee.attendances,
+          formattedEmployee.rate
+        )
+      : 0;
+
+  const deductions = {
+    sss: formattedEmployee ? getSSSContribution(formattedEmployee.rate) : 0,
+    hdmf: formattedEmployee ? getHDMFContribution(formattedEmployee.rate) : 0,
+    phic: formattedEmployee ? getPHICContribution(formattedEmployee.rate) : 0,
+  };
+
+  const totalDeductions = Object.values(deductions).reduce(
+    (accumulator, value) => accumulator + value,
+    0
+  );
+
   if (
     !formattedEmployee ||
     !formattedEmployee.schedule ||
@@ -112,55 +134,30 @@ const ViewPage = () => {
         </View>
 
         <View>
-          <Text>Gross Income</Text>
-          <Text>
-            Php{" "}
-            {formatNumber(
-              getGross(
-                formattedEmployee.schedule,
-                formattedEmployee.attendances,
-                formattedEmployee.rate
-              )
-            )}
-          </Text>
+          <Text className="font-bold">Gross Income</Text>
+          <Text>Php {formatNumber(gross)}</Text>
         </View>
 
         <Text className="font-bold">Deductions</Text>
 
         <View>
           <Text>SSS Contribution</Text>
-          <Text>
-            Php {formatNumber(getSSSContribution(formattedEmployee.rate))}
-          </Text>
+          <Text>Php {formatNumber(deductions.sss)}</Text>
         </View>
 
         <View>
           <Text>HDMF Contribution</Text>
-          <Text>
-            Php {formatNumber(getHDMFContribution(formattedEmployee.rate))}
-          </Text>
+          <Text>Php {formatNumber(deductions.hdmf)}</Text>
         </View>
 
         <View>
           <Text>PHIC Contribution</Text>
-          <Text>
-            Php {formatNumber(getPHICContribution(formattedEmployee.rate))}
-          </Text>
+          <Text>Php {formatNumber(deductions.phic)}</Text>
         </View>
 
         <View>
-          <Text>SSS Loan</Text>
-          <Text>Php 0.00</Text>
-        </View>
-
-        <View>
-          <Text>HDMF Loan</Text>
-          <Text>Php 0.00</Text>
-        </View>
-
-        <View>
-          <Text>Adjustment</Text>
-          <Text>Php 0.00</Text>
+          <Text className="font-bold">Net Income</Text>
+          <Text>Php {formatNumber(gross - totalDeductions)}</Text>
         </View>
       </View>
     </SafeAreaView>
