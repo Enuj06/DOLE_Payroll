@@ -23,7 +23,7 @@ const useFetch = (db: Db, id: number) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, [setAdvance]);
+  }, [id, setAdvance]);
 
   useEffect(() => {
     handleFetch();

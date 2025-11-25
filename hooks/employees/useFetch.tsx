@@ -28,7 +28,7 @@ const useFetch = (db: Db, id: number) => {
         visibilityTime: toastVisibilityTime,
       });
     }
-  }, [setEmployee]);
+  }, [id, setEmployee]);
 
   useEffect(() => {
     handleFetch();
