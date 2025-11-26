@@ -37,27 +37,25 @@ export const formatDate = (
   return format(formattedDate, dateFormat);
 };
 
+export const getParamValue = (pair: string) => {
+  return pair.split("=")[1];
+};
+
+export const startOfDate = (date: Date | string) => {
+  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  formattedDate.setFullYear(1970);
+  formattedDate.setMonth(0);
+  formattedDate.setDate(1);
+  return formattedDate;
+};
+
 export const getTimeDifference = (
   date1: Date | string,
   date2: Date | string
 ) => {
-  const today = new Date();
-
   const formattedDate1 = typeof date1 === "string" ? new Date(date1) : date1;
-  const date1Set = set(formattedDate1, {
-    year: today.getFullYear(),
-    month: today.getMonth(),
-    date: today.getDate(),
-  });
-
   const formattedDate2 = typeof date2 === "string" ? new Date(date2) : date2;
-  const date2Set = set(formattedDate2, {
-    year: today.getFullYear(),
-    month: today.getMonth(),
-    date: today.getDate(),
-  });
-
-  const seconds = differenceInSeconds(date1Set, date2Set);
+  const seconds = differenceInSeconds(formattedDate1, formattedDate2);
   return seconds / 60 / 60;
 };
 
@@ -139,6 +137,24 @@ export const getPeriodHours = (
   return hours;
 };
 
+export const getWorkingHours = (start: Date | string, end: Date | string) => {
+  let days = 0;
+  const formattedStart = typeof start === "string" ? new Date(start) : start;
+  const formattedEnd = typeof end === "string" ? new Date(end) : end;
+
+  const dates = eachDayOfInterval({
+    start: formattedStart,
+    end: formattedEnd,
+  });
+
+  const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  dates.forEach((date) => {
+    workDays.includes(format(date, "EEEE")) && ++days;
+  });
+
+  return days * 8;
+};
+
 export const getGross = (
   schedule: Schedule,
   attendances: Attendance[],
@@ -205,30 +221,4 @@ export const getPHICContribution = (rate: number) => {
     amount = monthlyRate * 0.05;
   }
   return amount / 2;
-};
-
-export const getWorkingHours = (start: Date | string, end: Date | string) => {
-  let days = 0;
-  const formattedStart = typeof start === "string" ? new Date(start) : start;
-  const formattedEnd = typeof end === "string" ? new Date(end) : end;
-
-  const dates = eachDayOfInterval({
-    start: formattedStart,
-    end: formattedEnd,
-  });
-
-  const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  dates.forEach((date) => {
-    workDays.includes(format(date, "EEEE")) && ++days;
-  });
-
-  return days * 8;
-};
-
-export const startOfDate = (date: Date | string) => {
-  const formattedDate = typeof date === "string" ? new Date(date) : date;
-  formattedDate.setFullYear(1970);
-  formattedDate.setMonth(0);
-  formattedDate.setDate(1);
-  return formattedDate;
 };

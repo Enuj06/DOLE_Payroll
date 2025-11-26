@@ -172,7 +172,7 @@ const PayrollPage = () => {
           <TouchableOpacity
             onPress={() =>
               router.navigate({
-                pathname: "/payroll/view/[filters]",
+                pathname: "/payroll/view/[params]",
                 params: {
                   filters: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
                 },

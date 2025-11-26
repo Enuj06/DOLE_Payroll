@@ -8,6 +8,7 @@ import {
   getDb,
   getGross,
   getHDMFContribution,
+  getParamValue,
   getPeriodHours,
   getPHICContribution,
   getSSSContribution,
@@ -18,12 +19,12 @@ import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ViewPage = () => {
-  const { filters }: { filters: string } = useLocalSearchParams();
+  const { params }: { params: string } = useLocalSearchParams();
 
-  const pairs = filters.split("&");
-  const id = pairs[0].split("=")[1];
-  const start = pairs[1].split("=")[1];
-  const end = pairs[2].split("=")[1];
+  const pairs = params.split("&");
+  const id = getParamValue(pairs[0]);
+  const start = getParamValue(pairs[1]);
+  const end = getParamValue(pairs[2]);
 
   const db = getDb(useSQLiteContext());
 
