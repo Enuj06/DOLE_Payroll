@@ -50,15 +50,20 @@ const AddPage = () => {
 
   const onSubmit = async (values: Values) => {
     try {
+      const date = values.date;
+      date.setUTCHours(0, 0, 0, 0);
+
       await db.insert(advances).values({
         ...values,
-        date: values.date.toISOString(),
+        date: date.toISOString(),
       });
+
       Toast.show({
         type: "success",
         text1: "Added Cash Advance",
         visibilityTime: toastVisibilityTime,
       });
+
       router.navigate("/advances");
     } catch (error) {
       console.error(error);

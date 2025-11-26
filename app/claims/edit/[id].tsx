@@ -57,18 +57,23 @@ const EditPage = () => {
   const onSubmit = async (values: Values) => {
     if (claim) {
       try {
+        const date = values.date;
+        date.setUTCHours(0, 0, 0, 0);
+
         await db
           .update(claims)
           .set({
             ...values,
-            date: values.date.toISOString(),
+            date: date.toISOString(),
           })
           .where(eq(claims.id, claim.id));
+
         Toast.show({
           type: "success",
           text1: "Updated Expense Claim",
           visibilityTime: toastVisibilityTime,
         });
+
         router.navigate("/claims");
       } catch (error) {
         console.error(error);

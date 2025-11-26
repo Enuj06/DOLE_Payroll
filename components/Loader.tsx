@@ -6,7 +6,7 @@ type Props = {
 
 const Loader = ({ title = "Loading" }: Props) => {
   return (
-    <View className="flex-1 justify-center gap-1">
+    <View className="flex-1 justify-center gap-1 bg-white">
       <ActivityIndicator size="large" />
       <Text className="font-b text-center text-xl">{title}</Text>
     </View>

@@ -57,18 +57,23 @@ const EditPage = () => {
   const onSubmit = async (values: Values) => {
     if (advance) {
       try {
+        const date = values.date;
+        date.setUTCHours(0, 0, 0, 0);
+
         await db
           .update(advances)
           .set({
             ...values,
-            date: values.date.toISOString(),
+            date: date.toISOString(),
           })
           .where(eq(advances.id, advance.id));
+
         Toast.show({
           type: "success",
           text1: "Updated Cash Advance",
           visibilityTime: toastVisibilityTime,
         });
+
         router.navigate("/advances");
       } catch (error) {
         console.error(error);

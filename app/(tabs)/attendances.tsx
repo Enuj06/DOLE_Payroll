@@ -61,7 +61,7 @@ const AttendancesPage = () => {
   };
 
   const handlePeriodModalSubmit = async (values: Values) => {
-    setPeriod({ start: new Date(values.start), end: new Date(values.end) });
+    setPeriod(values);
     setIsPeriodModalVisible(false);
   };
 

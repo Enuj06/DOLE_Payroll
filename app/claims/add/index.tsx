@@ -50,15 +50,20 @@ const AddPage = () => {
 
   const onSubmit = async (values: Values) => {
     try {
+      const date = values.date;
+      date.setUTCHours(0, 0, 0, 0);
+
       await db.insert(claims).values({
         ...values,
-        date: values.date.toISOString(),
+        date: date.toISOString(),
       });
+
       Toast.show({
         type: "success",
         text1: "Added Expense Claim",
         visibilityTime: toastVisibilityTime,
       });
+
       router.navigate("/claims");
     } catch (error) {
       console.error(error);

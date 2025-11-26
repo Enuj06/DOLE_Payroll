@@ -59,9 +59,12 @@ const AddPage = () => {
 
   const onSubmit = async (values: Values) => {
     try {
+      const date = values.date;
+      date.setUTCHours(0, 0, 0, 0);
+
       await db.insert(attendances).values({
         ...values,
-        date: values.date.toISOString(),
+        date: date.toISOString(),
         am_in: values.am_in ? values.am_in.toISOString() : null,
         am_out: values.am_out ? values.am_out.toISOString() : null,
         pm_in: values.pm_in ? values.pm_in.toISOString() : null,
@@ -69,11 +72,13 @@ const AddPage = () => {
         ot_in: values.ot_in ? values.ot_in.toISOString() : null,
         ot_out: values.ot_out ? values.ot_out.toISOString() : null,
       });
+
       Toast.show({
         type: "success",
         text1: "Added Attendance",
         visibilityTime: toastVisibilityTime,
       });
+
       router.navigate("/attendances");
     } catch (error) {
       console.error(error);

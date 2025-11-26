@@ -66,11 +66,14 @@ const EditPage = () => {
   const onSubmit = async (values: Values) => {
     if (attendance) {
       try {
+        const date = values.date;
+        date.setUTCHours(0, 0, 0, 0);
+
         await db
           .update(attendances)
           .set({
             ...values,
-            date: values.date.toISOString(),
+            date: date.toISOString(),
             am_in: values.am_in ? values.am_in.toISOString() : null,
             am_out: values.am_out ? values.am_out.toISOString() : null,
             pm_in: values.pm_in ? values.pm_in.toISOString() : null,
@@ -79,11 +82,13 @@ const EditPage = () => {
             ot_out: values.ot_out ? values.ot_out.toISOString() : null,
           })
           .where(eq(attendances.id, attendance.id));
+
         Toast.show({
           type: "success",
           text1: "Updated Attendance",
           visibilityTime: toastVisibilityTime,
         });
+
         router.navigate("/attendances");
       } catch (error) {
         console.error(error);
