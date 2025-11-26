@@ -1,5 +1,5 @@
 import * as schema from "@/db/schema";
-import { Attendance, Schedule } from "@/types/globals";
+import { Advance, Attendance, Employee, Schedule } from "@/types/globals";
 import { differenceInSeconds, eachDayOfInterval, format, set } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -221,4 +221,41 @@ export const getPHICContribution = (rate: number) => {
     amount = monthlyRate * 0.05;
   }
   return amount / 2;
+};
+
+export const getAdvances = (
+  start: string,
+  end: string,
+  advances: Advance[]
+) => {
+  let amount = 0;
+  const formattedStart = new Date(getDate(start));
+  const formattedEnd = new Date(getDate(end));
+
+  advances.forEach((advance) => {
+    const date = new Date(getDate(advance.date));
+    if (
+      date.valueOf() >= formattedStart.valueOf() &&
+      date.valueOf() <= formattedEnd.valueOf()
+    ) {
+      amount += advance.amount;
+    }
+  });
+
+  return amount;
+};
+
+export const getDeductions = (
+  start: string,
+  end: string,
+  employee: Employee
+) => {
+  let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
+
+  deductions.advances = getAdvances(start, end, employee.advances || []);
+  deductions.sss = getSSSContribution(employee.rate);
+  deductions.hdmf = getHDMFContribution(employee.rate);
+  deductions.phic = getPHICContribution(employee.rate);
+
+  return deductions;
 };

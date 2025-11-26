@@ -6,12 +6,11 @@ import {
   formatNumber,
   getDate,
   getDb,
+  getDeductions,
   getGross,
-  getHDMFContribution,
   getParamValue,
   getPeriodHours,
-  getPHICContribution,
-  getSSSContribution,
+  getWorkingHours,
 } from "@/utils/globals";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -39,22 +38,18 @@ const ViewPage = () => {
     const formattedStart = new Date(getDate(start));
     const formattedEnd = new Date(getDate(end));
 
-    if (attendances) {
-      filteredAttendances = attendances.filter((attendance) => {
-        const date = new Date(getDate(attendance.date));
-        return (
-          date.valueOf() >= formattedStart.valueOf() &&
-          date.valueOf() <= formattedEnd.valueOf()
-        );
-      });
-    }
+    filteredAttendances = attendances.filter((attendance) => {
+      const date = new Date(getDate(attendance.date));
+      return (
+        date.valueOf() >= formattedStart.valueOf() &&
+        date.valueOf() <= formattedEnd.valueOf()
+      );
+    });
     return filteredAttendances;
   };
 
   const formatEmployee = (employee: Employee | undefined) => {
-    if (!employee) {
-      return undefined;
-    }
+    if (!employee) return undefined;
 
     return {
       ...employee,
@@ -68,7 +63,7 @@ const ViewPage = () => {
   const formattedEmployee: Employee | undefined = formatEmployee(employee);
 
   let gross = 0;
-  let deductions = { sss: 0, hdmf: 0, phic: 0 };
+  let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
   let totalDeductions = 0;
 
   if (
@@ -81,9 +76,9 @@ const ViewPage = () => {
       formattedEmployee.attendances,
       formattedEmployee.rate
     );
-    deductions.sss = getSSSContribution(formattedEmployee.rate);
-    deductions.hdmf = getHDMFContribution(formattedEmployee.rate);
-    deductions.phic = getPHICContribution(formattedEmployee.rate);
+
+    deductions = getDeductions(start, end, formattedEmployee);
+
     totalDeductions = Object.values(deductions).reduce(
       (accumulator, value) => accumulator + value,
       0
@@ -104,7 +99,8 @@ const ViewPage = () => {
         <View>
           <Text>Payroll Period</Text>
           <Text>
-            {formatDate(start)} - {formatDate(end)}
+            {formatDate(start)} - {formatDate(end)} (
+            {getWorkingHours(start, end)} Hours)
           </Text>
         </View>
 
@@ -160,6 +156,13 @@ const ViewPage = () => {
           <Text>PHIC Contribution</Text>
           <Text>Php {formatNumber(deductions.phic)}</Text>
         </View>
+
+        {deductions.advances > 0 && (
+          <View>
+            <Text>Cash Advance</Text>
+            <Text>Php {formatNumber(deductions.advances)}</Text>
+          </View>
+        )}
 
         <View>
           <Text className="font-bold">Net Income</Text>

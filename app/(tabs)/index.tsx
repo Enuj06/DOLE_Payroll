@@ -174,7 +174,7 @@ const PayrollPage = () => {
               router.navigate({
                 pathname: "/payroll/view/[params]",
                 params: {
-                  filters: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
+                  params: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
                 },
               })
             }
