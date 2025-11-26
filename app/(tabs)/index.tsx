@@ -8,6 +8,7 @@ import {
   formatNumber,
   getDate,
   getDb,
+  getDeductions,
   getGross,
   getPeriodHours,
 } from "@/utils/globals";
@@ -82,7 +83,13 @@ const PayrollPage = () => {
   };
 
   const handlePeriodModalSubmit = async (values: Values) => {
-    setPeriod(values);
+    const start = values.start;
+    const end = values.end;
+
+    start.setUTCHours(0, 0, 0, 0);
+    end.setUTCHours(0, 0, 0, 0);
+
+    setPeriod({ start, end });
     setIsPeriodModalVisible(false);
   };
 
@@ -145,9 +152,25 @@ const PayrollPage = () => {
       key: "deductions",
       header: "Deductions",
       width: 7,
-      render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(0)}`}</Text>
-      ),
+      render: (row: Employee) => {
+        let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
+        let totalDeductions = 0;
+
+        deductions = getDeductions(
+          period.start.toISOString(),
+          period.end.toISOString(),
+          row
+        );
+
+        totalDeductions = Object.values(deductions).reduce(
+          (accumulator, value) => accumulator + value,
+          0
+        );
+
+        return (
+          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalDeductions)}`}</Text>
+        );
+      },
     },
     {
       key: "net",
@@ -158,8 +181,23 @@ const PayrollPage = () => {
           row.schedule && row.attendances
             ? getGross(row.schedule, row.attendances, row.rate)
             : 0;
+
+        let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
+        let totalDeductions = 0;
+
+        deductions = getDeductions(
+          period.start.toISOString(),
+          period.end.toISOString(),
+          row
+        );
+
+        totalDeductions = Object.values(deductions).reduce(
+          (accumulator, value) => accumulator + value,
+          0
+        );
+
         return (
-          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross)}`}</Text>
+          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross - totalDeductions)}`}</Text>
         );
       },
     },
@@ -172,9 +210,9 @@ const PayrollPage = () => {
           <TouchableOpacity
             onPress={() =>
               router.navigate({
-                pathname: "/payroll/view/[params]",
+                pathname: "/payroll/view/[filters]",
                 params: {
-                  params: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
+                  filters: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
                 },
               })
             }

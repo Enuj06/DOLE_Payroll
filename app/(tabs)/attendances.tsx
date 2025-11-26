@@ -61,7 +61,13 @@ const AttendancesPage = () => {
   };
 
   const handlePeriodModalSubmit = async (values: Values) => {
-    setPeriod(values);
+    const start = values.start;
+    const end = values.end;
+
+    start.setUTCHours(0, 0, 0, 0);
+    end.setUTCHours(0, 0, 0, 0);
+
+    setPeriod({ start, end });
     setIsPeriodModalVisible(false);
   };
 

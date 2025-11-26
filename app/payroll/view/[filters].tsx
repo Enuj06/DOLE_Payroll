@@ -18,9 +18,9 @@ import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const ViewPage = () => {
-  const { params }: { params: string } = useLocalSearchParams();
+  const { filters }: { filters: string } = useLocalSearchParams();
 
-  const pairs = params.split("&");
+  const pairs = filters.split("&");
   const id = getParamValue(pairs[0]);
   const start = getParamValue(pairs[1]);
   const end = getParamValue(pairs[2]);
