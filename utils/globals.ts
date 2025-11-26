@@ -224,3 +224,11 @@ export const getWorkingHours = (start: Date | string, end: Date | string) => {
 
   return days * 8;
 };
+
+export const startOfDate = (date: Date | string) => {
+  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  formattedDate.setFullYear(1970);
+  formattedDate.setMonth(0);
+  formattedDate.setDate(1);
+  return formattedDate;
+};

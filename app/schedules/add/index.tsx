@@ -2,7 +2,12 @@ import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
 import { schedules } from "@/db/schema";
 import { schedule as schema, Schedule as Values } from "@/schemas/globals";
-import { getDb, getTime, toastVisibilityTime } from "@/utils/globals";
+import {
+  getDb,
+  getTime,
+  startOfDate,
+  toastVisibilityTime,
+} from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -41,10 +46,10 @@ const AddPage = () => {
     try {
       await db.insert(schedules).values({
         ...values,
-        am_in: values.am_in.toISOString(),
-        am_out: values.am_out.toISOString(),
-        pm_in: values.pm_in.toISOString(),
-        pm_out: values.pm_out.toISOString(),
+        am_in: startOfDate(values.am_in).toISOString(),
+        am_out: startOfDate(values.am_out).toISOString(),
+        pm_in: startOfDate(values.pm_in).toISOString(),
+        pm_out: startOfDate(values.pm_out).toISOString(),
       });
       Toast.show({
         type: "success",

@@ -4,7 +4,13 @@ import Select from "@/components/Select";
 import { attendances } from "@/db/schema";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { attendance as schema, Attendance as Values } from "@/schemas/globals";
-import { getDate, getDb, getTime, toastVisibilityTime } from "@/utils/globals";
+import {
+  getDate,
+  getDb,
+  getTime,
+  startOfDate,
+  toastVisibilityTime,
+} from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -65,12 +71,12 @@ const AddPage = () => {
       await db.insert(attendances).values({
         ...values,
         date: date.toISOString(),
-        am_in: values.am_in ? values.am_in.toISOString() : null,
-        am_out: values.am_out ? values.am_out.toISOString() : null,
-        pm_in: values.pm_in ? values.pm_in.toISOString() : null,
-        pm_out: values.pm_out ? values.pm_out.toISOString() : null,
-        ot_in: values.ot_in ? values.ot_in.toISOString() : null,
-        ot_out: values.ot_out ? values.ot_out.toISOString() : null,
+        am_in: values.am_in ? startOfDate(values.am_in).toISOString() : null,
+        am_out: values.am_out ? startOfDate(values.am_out).toISOString() : null,
+        pm_in: values.pm_in ? startOfDate(values.pm_in).toISOString() : null,
+        pm_out: values.pm_out ? startOfDate(values.pm_out).toISOString() : null,
+        ot_in: values.ot_in ? startOfDate(values.ot_in).toISOString() : null,
+        ot_out: values.ot_out ? startOfDate(values.ot_out).toISOString() : null,
       });
 
       Toast.show({
