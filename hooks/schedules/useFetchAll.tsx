@@ -11,9 +11,11 @@ const useFetchAll = (db: Db) => {
       const schedules = await db.query.schedules.findMany({
         with: { employees: true },
       });
+
       setSchedules(schedules);
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

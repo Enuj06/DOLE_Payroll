@@ -54,14 +54,17 @@ const EditPage = () => {
           .update(employees)
           .set(values)
           .where(eq(employees.id, employee.id));
+
         Toast.show({
           type: "success",
           text1: "Updated Employee",
           visibilityTime: toastVisibilityTime,
         });
+
         router.navigate("/employees");
       } catch (error) {
         console.error(error);
+
         Toast.show({
           type: "error",
           text1: "An Error Has Occured. Please Try Again.",

@@ -11,9 +11,11 @@ const useFetchAll = (db: Db) => {
       const advances = await db.query.advances.findMany({
         with: { employee: true },
       });
+
       setAdvances(advances);
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

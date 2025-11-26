@@ -9,6 +9,7 @@ const useDelete = (db: Db, refetch: () => void) => {
     try {
       await db.delete(advances).where(eq(advances.id, id));
       refetch();
+
       Toast.show({
         type: "success",
         text1: "Deleted Cash Advance",
@@ -16,6 +17,7 @@ const useDelete = (db: Db, refetch: () => void) => {
       });
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

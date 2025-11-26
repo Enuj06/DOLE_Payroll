@@ -57,14 +57,17 @@ const AddPage = () => {
         ...values,
         employee_id: `${++employee_id}`.padStart(8, "0"),
       });
+
       Toast.show({
         type: "success",
         text1: "Added Employee",
         visibilityTime: toastVisibilityTime,
       });
+
       router.navigate("/employees");
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

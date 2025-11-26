@@ -14,9 +14,11 @@ const useFetch = (db: Db, id: number) => {
         with: { employees: true },
         where: eq(attendances.id, id),
       });
+
       setSchedule(schedule);
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

@@ -19,9 +19,11 @@ const useFetch = (db: Db, id: number) => {
         },
         where: eq(employees.id, id),
       });
+
       setEmployee(employee);
     } catch (error) {
       console.error(error);
+
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",

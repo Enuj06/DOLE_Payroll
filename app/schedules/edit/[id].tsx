@@ -62,14 +62,17 @@ const EditPage = () => {
             pm_out: startOfDate(values.pm_out).toISOString(),
           })
           .where(eq(schedules.id, schedule.id));
+
         Toast.show({
           type: "success",
           text1: "Updated Schedule",
           visibilityTime: toastVisibilityTime,
         });
+
         router.navigate("/schedules");
       } catch (error) {
         console.error(error);
+
         Toast.show({
           type: "error",
           text1: "An Error Has Occured. Please Try Again.",
