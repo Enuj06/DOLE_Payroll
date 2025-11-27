@@ -31,8 +31,8 @@ const AttendancesPage = () => {
   const form = useForm({ resolver: yupResolver(schema) });
 
   const [period, setPeriod] = useImmer<{
-    start: Date | string;
-    end: Date | string;
+    start: Date;
+    end: Date;
   }>({
     start: new Date(),
     end: new Date(),
@@ -238,6 +238,21 @@ const AttendancesPage = () => {
         if (row.ot_out) {
           return (
             <Text className="text-sm text-center">{`${getTime(row.ot_out)}`}</Text>
+          );
+        }
+      },
+    },
+    {
+      key: "total_ot",
+      header: "Total Time",
+      width: 6,
+      render: (row: Attendance) => {
+        if (row.ot_in && row.ot_out) {
+          const hours = getTimeDifference(row.ot_out, row.ot_in);
+          return (
+            <Text className="text-sm text-center">
+              {formatNumber(hours)} Hours
+            </Text>
           );
         }
       },

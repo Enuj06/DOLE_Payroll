@@ -18,14 +18,18 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
 };
 
 export const getDate = (date: Date | string) => {
-  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  const formattedDate = parseDate(date);
   return format(formattedDate, "yyyy-MM-dd");
 };
 
 export const getTime = (date: Date | string) => {
-  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  const formattedDate = parseDate(date);
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return formatInTimeZone(formattedDate, timeZone, "HH:mm");
+};
+
+export const parseDate = (date: Date | string) => {
+  return typeof date === "string" ? new Date(date) : date;
 };
 
 export const formatNumber = (number: string | number) => {
@@ -39,7 +43,7 @@ export const formatDate = (
   date: Date | string,
   dateFormat: string = "MMMM dd, yyyy"
 ) => {
-  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  const formattedDate = parseDate(date);
   return format(formattedDate, dateFormat);
 };
 
@@ -52,7 +56,7 @@ export const getObjectTotal = (object: { [key: string]: number }) => {
 };
 
 export const startOfDate = (date: Date | string) => {
-  const formattedDate = typeof date === "string" ? new Date(date) : date;
+  const formattedDate = parseDate(date);
   formattedDate.setFullYear(1970);
   formattedDate.setMonth(0);
   formattedDate.setDate(1);
@@ -63,8 +67,9 @@ export const getTimeDifference = (
   date1: Date | string,
   date2: Date | string
 ) => {
-  const formattedDate1 = typeof date1 === "string" ? new Date(date1) : date1;
-  const formattedDate2 = typeof date2 === "string" ? new Date(date2) : date2;
+  const formattedDate1 = parseDate(date1);
+  const formattedDate2 = parseDate(date2);
+
   const seconds = differenceInSeconds(formattedDate1, formattedDate2);
   return seconds / 60 / 60;
 };
@@ -75,14 +80,11 @@ export const getDayHours = (
   timeIn: Date | string,
   timeOut: Date | string
 ) => {
-  const formattedScheduleIn =
-    typeof scheduleIn === "string" ? new Date(scheduleIn) : scheduleIn;
-  const formattedScheduleOut =
-    typeof scheduleOut === "string" ? new Date(scheduleOut) : scheduleOut;
+  const formattedScheduleIn = parseDate(scheduleIn);
+  const formattedScheduleOut = parseDate(scheduleOut);
 
-  let formattedTimeIn = typeof timeIn === "string" ? new Date(timeIn) : timeIn;
-  let formattedTimeOut =
-    typeof timeOut === "string" ? new Date(timeOut) : timeOut;
+  let formattedTimeIn = parseDate(timeIn);
+  let formattedTimeOut = parseDate(timeOut);
 
   const differenceIn = getTimeDifference(formattedTimeIn, formattedScheduleIn);
 
@@ -149,8 +151,8 @@ export const getPeriodHours = (
 
 export const getWorkingHours = (start: Date | string, end: Date | string) => {
   let days = 0;
-  const formattedStart = typeof start === "string" ? new Date(start) : start;
-  const formattedEnd = typeof end === "string" ? new Date(end) : end;
+  const formattedStart = parseDate(start);
+  const formattedEnd = parseDate(end);
 
   const dates = eachDayOfInterval({
     start: formattedStart,
