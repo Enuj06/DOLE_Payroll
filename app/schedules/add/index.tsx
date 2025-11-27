@@ -3,8 +3,8 @@ import Label from "@/components/Label";
 import { schedules } from "@/db/schema";
 import { schedule as schema, Schedule as Values } from "@/schemas/globals";
 import {
+  formatTime,
   getDb,
-  getTime,
   startOfDate,
   toastVisibilityTime,
 } from "@/utils/globals";
@@ -93,7 +93,7 @@ const AddPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -120,7 +120,7 @@ const AddPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -147,7 +147,7 @@ const AddPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -174,7 +174,7 @@ const AddPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>

@@ -5,8 +5,8 @@ import useFetchAll from "@/hooks/employees/useFetchAll";
 import { period as schema, Period as Values } from "@/schemas/globals";
 import { Attendance, Employee } from "@/types/globals";
 import {
+  formatDate,
   formatNumber,
-  getDate,
   getDb,
   getDeductions,
   getEarnings,
@@ -58,15 +58,15 @@ const PayrollPage = () => {
 
   const filteredEmployees = useMemo(() => {
     if (employees) {
-      const start = new Date(getDate(period.start));
-      const end = new Date(getDate(period.end));
+      const start = new Date(formatDate(period.start));
+      const end = new Date(formatDate(period.end));
 
       return employees.map((employee) => {
         let attendances: Attendance[] = [];
 
         if (employee.attendances) {
           attendances = employee.attendances.filter((attendance) => {
-            const date = new Date(getDate(attendance.date));
+            const date = new Date(formatDate(attendance.date));
             return (
               date.valueOf() >= start.valueOf() &&
               date.valueOf() <= end.valueOf()

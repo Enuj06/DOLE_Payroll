@@ -4,7 +4,7 @@ import Table from "@/components/Table";
 import useDelete from "@/hooks/employees/useDelete";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { Employee } from "@/types/globals";
-import { formatNumber, getDb, getTime } from "@/utils/globals";
+import { formatNumber, formatTime, getDb } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -55,7 +55,7 @@ const EmployeesPage = () => {
       header: "Schedule",
       width: 12,
       render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.schedule ? `${getTime(row.schedule.am_in)} - ${getTime(row.schedule.am_out)} / ${getTime(row.schedule.pm_in)} - ${getTime(row.schedule.pm_out)}` : ""}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.schedule ? `${formatTime(row.schedule.am_in)} - ${formatTime(row.schedule.am_out)} / ${formatTime(row.schedule.pm_in)} - ${formatTime(row.schedule.pm_out)}` : ""}`}</Text>
       ),
     },
     {

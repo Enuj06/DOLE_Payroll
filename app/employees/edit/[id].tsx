@@ -6,7 +6,7 @@ import { employees } from "@/db/schema";
 import useFetch from "@/hooks/employees/useFetch";
 import useFetchAll from "@/hooks/schedules/useFetchAll";
 import { employee as schema, Employee as Values } from "@/schemas/globals";
-import { getDb, getTime, toastVisibilityTime } from "@/utils/globals";
+import { formatTime, getDb, toastVisibilityTime } from "@/utils/globals";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { eq } from "drizzle-orm";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -31,7 +31,7 @@ const EditPage = () => {
     if (schedules) {
       schedules.forEach((schedule) => {
         options.push({
-          label: `${getTime(schedule.am_in)}-${getTime(schedule.am_out)} ${getTime(schedule.pm_in)}-${getTime(schedule.pm_out)}`,
+          label: `${formatTime(schedule.am_in)}-${formatTime(schedule.am_out)} ${formatTime(schedule.pm_in)}-${formatTime(schedule.pm_out)}`,
           value: `${schedule.id}`,
         });
       });

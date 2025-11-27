@@ -4,7 +4,6 @@ import { Attendance, Employee } from "@/types/globals";
 import {
   formatDate,
   formatNumber,
-  getDate,
   getDb,
   getDeductions,
   getEarnings,
@@ -36,11 +35,11 @@ const ViewPage = () => {
     attendances: Attendance[]
   ) => {
     let filteredAttendances: Attendance[] = [];
-    const formattedStart = new Date(getDate(start));
-    const formattedEnd = new Date(getDate(end));
+    const formattedStart = new Date(formatDate(start));
+    const formattedEnd = new Date(formatDate(end));
 
     filteredAttendances = attendances.filter((attendance) => {
-      const date = new Date(getDate(attendance.date));
+      const date = new Date(formatDate(attendance.date));
       return (
         date.valueOf() >= formattedStart.valueOf() &&
         date.valueOf() <= formattedEnd.valueOf()

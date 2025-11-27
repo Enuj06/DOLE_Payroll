@@ -1,7 +1,7 @@
 import ErrorMessage from "@/components/ErrorMessage";
 import Label from "@/components/Label";
 import { Period as Values } from "@/schemas/globals";
-import { getDate } from "@/utils/globals";
+import { formatDate } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Controller, UseFormReturn } from "react-hook-form";
@@ -65,7 +65,9 @@ const PeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                             })
                           }
                         >
-                          <Text>{value ? getDate(value) : "Select date"}</Text>
+                          <Text>
+                            {value ? formatDate(value) : "Select date"}
+                          </Text>
 
                           <MaterialIcons
                             name="date-range"
@@ -96,7 +98,9 @@ const PeriodModal = ({ form, isVisible, onToggle, onSubmit }: Props) => {
                             })
                           }
                         >
-                          <Text>{value ? getDate(value) : "Select date"}</Text>
+                          <Text>
+                            {value ? formatDate(value) : "Select date"}
+                          </Text>
 
                           <MaterialIcons
                             name="date-range"

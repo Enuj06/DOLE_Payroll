@@ -17,10 +17,6 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
   return drizzle(sqlDb, { schema });
 };
 
-export const parseDate = (date: Date | string) => {
-  return typeof date === "string" ? new Date(date) : date;
-};
-
 export const formatDate = (
   date: Date | string,
   dateFormat: string = "yyyy-MM-dd"
@@ -29,10 +25,13 @@ export const formatDate = (
   return format(formattedDate, dateFormat);
 };
 
-export const formatTime = (date: Date | string) => {
+export const formatTime = (
+  date: Date | string,
+  timeFormat: string = "HH:mm"
+) => {
   const formattedDate = parseDate(date);
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  return formatInTimeZone(formattedDate, timeZone, "HH:mm");
+  return formatInTimeZone(formattedDate, timeZone, timeFormat);
 };
 
 export const formatNumber = (number: string | number) => {
@@ -40,6 +39,10 @@ export const formatNumber = (number: string | number) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+};
+
+export const parseDate = (date: Date | string) => {
+  return typeof date === "string" ? new Date(date) : date;
 };
 
 export const getParamValue = (pair: string) => {

@@ -9,10 +9,9 @@ import { Attendance } from "@/types/globals";
 import {
   formatDate,
   formatNumber,
-  getDate,
+  formatTime,
   getDayHours,
   getDb,
-  getTime,
   getTimeDifference,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -44,11 +43,11 @@ const AttendancesPage = () => {
 
   const filteredAttendances = useMemo(() => {
     if (attendances) {
-      const start = new Date(getDate(period.start));
-      const end = new Date(getDate(period.end));
+      const start = new Date(formatDate(period.start));
+      const end = new Date(formatDate(period.end));
 
       return attendances.filter((attendance) => {
-        const date = new Date(getDate(attendance.date));
+        const date = new Date(formatDate(attendance.date));
         return (
           date.valueOf() >= start.valueOf() && date.valueOf() <= end.valueOf()
         );
@@ -107,7 +106,7 @@ const AttendancesPage = () => {
             <Text
               className="text-sm text-center"
               style={{ color }}
-            >{`${getTime(row.am_in)}`}</Text>
+            >{`${formatTime(row.am_in)}`}</Text>
           );
         }
       },
@@ -129,7 +128,7 @@ const AttendancesPage = () => {
             <Text
               className="text-sm text-center"
               style={{ color }}
-            >{`${getTime(row.am_out)}`}</Text>
+            >{`${formatTime(row.am_out)}`}</Text>
           );
         }
       },
@@ -171,7 +170,7 @@ const AttendancesPage = () => {
             <Text
               className="text-sm text-center"
               style={{ color }}
-            >{`${getTime(row.pm_in)}`}</Text>
+            >{`${formatTime(row.pm_in)}`}</Text>
           );
         }
       },
@@ -193,7 +192,7 @@ const AttendancesPage = () => {
             <Text
               className="text-sm text-center"
               style={{ color }}
-            >{`${getTime(row.pm_out)}`}</Text>
+            >{`${formatTime(row.pm_out)}`}</Text>
           );
         }
       },
@@ -225,7 +224,7 @@ const AttendancesPage = () => {
       render: (row: Attendance) => {
         if (row.ot_in) {
           return (
-            <Text className="text-sm text-center">{`${getTime(row.ot_in)}`}</Text>
+            <Text className="text-sm text-center">{`${formatTime(row.ot_in)}`}</Text>
           );
         }
       },
@@ -237,7 +236,7 @@ const AttendancesPage = () => {
       render: (row: Attendance) => {
         if (row.ot_out) {
           return (
-            <Text className="text-sm text-center">{`${getTime(row.ot_out)}`}</Text>
+            <Text className="text-sm text-center">{`${formatTime(row.ot_out)}`}</Text>
           );
         }
       },

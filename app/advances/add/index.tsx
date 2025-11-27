@@ -4,7 +4,7 @@ import Select from "@/components/Select";
 import { advances } from "@/db/schema";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { advance as schema, Advance as Values } from "@/schemas/globals";
-import { getDate, getDb, toastVisibilityTime } from "@/utils/globals";
+import { formatDate, getDb, toastVisibilityTime } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -116,7 +116,7 @@ const AddPage = () => {
                       className="flex-row items-center justify-between "
                       onPress={() => setIsDateModalVisible(true)}
                     >
-                      <Text>{value ? getDate(value) : "Select date"}</Text>
+                      <Text>{value ? formatDate(value) : "Select date"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>

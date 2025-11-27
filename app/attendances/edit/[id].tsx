@@ -7,9 +7,9 @@ import useFetch from "@/hooks/attendances/useFetch";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { attendance as schema, Attendance as Values } from "@/schemas/globals";
 import {
-  getDate,
+  formatDate,
+  formatTime,
   getDb,
-  getTime,
   startOfDate,
   toastVisibilityTime,
 } from "@/utils/globals";
@@ -148,7 +148,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getDate(value) : "Select date"}</Text>
+                      <Text>{value ? formatDate(value) : "Select date"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -178,7 +178,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -208,7 +208,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -238,7 +238,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -268,7 +268,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -298,7 +298,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
@@ -328,7 +328,7 @@ const EditPage = () => {
                         })
                       }
                     >
-                      <Text>{value ? getTime(value) : "Select time"}</Text>
+                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
                       <MaterialIcons name="date-range" size={20} color="#555" />
                     </TouchableOpacity>
