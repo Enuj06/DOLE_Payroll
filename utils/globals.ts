@@ -6,7 +6,14 @@ import {
   Employee,
   Schedule,
 } from "@/types/globals";
-import { differenceInSeconds, eachDayOfInterval, format, set } from "date-fns";
+import holidaysJSON from "@/utils/holidays.json";
+import {
+  differenceInSeconds,
+  eachDayOfInterval,
+  format,
+  getYear,
+  set,
+} from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { SQLiteDatabase } from "expo-sqlite";
@@ -45,6 +52,14 @@ export const parseDate = (date: Date | string) => {
   return typeof date === "string" ? new Date(date) : date;
 };
 
+export const startOfDate = (date: Date | string) => {
+  const formattedDate = parseDate(date);
+  formattedDate.setFullYear(1970);
+  formattedDate.setMonth(0);
+  formattedDate.setDate(1);
+  return formattedDate;
+};
+
 export const getParamValue = (pair: string) => {
   return pair.split("=")[1];
 };
@@ -53,12 +68,39 @@ export const getObjectTotal = (object: { [key: string]: number }) => {
   return Object.values(object).reduce((acc, value) => acc + value, 0);
 };
 
-export const startOfDate = (date: Date | string) => {
-  const formattedDate = parseDate(date);
-  formattedDate.setFullYear(1970);
-  formattedDate.setMonth(0);
-  formattedDate.setDate(1);
-  return formattedDate;
+export const getEstimates = (start: Date | string, end: Date | string) => {
+  let days = { working: 0, rest: 0, special: 0, holiday: 0 };
+
+  const formattedStart = new Date(formatDate(start));
+  const formattedEnd = new Date(formatDate(end));
+  const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+  const dates = eachDayOfInterval({
+    start: formattedStart,
+    end: formattedEnd,
+  });
+
+  dates.forEach((date) => {
+    const formattedDate = new Date(formatDate(date));
+    const year = getYear(formattedDate);
+    const yearHolidays = holidaysJSON[`${year}` as keyof typeof holidaysJSON];
+
+    workDays.includes(format(formattedDate, "EEEE")) && ++days.working;
+
+    if (yearHolidays) {
+      const holiday = yearHolidays.find((holiday) => {
+        const holidayDate = new Date(holiday.date);
+        return formattedDate.valueOf() === holidayDate.valueOf();
+      });
+
+      if (holiday) {
+        holiday.type === "Special (Non-Working) Holiday" && ++days.special;
+        holiday.type === "Regular Holiday" && ++days.holiday;
+      }
+    }
+  });
+
+  return days;
 };
 
 export const getTimeDifference = (
