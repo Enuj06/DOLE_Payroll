@@ -312,3 +312,8 @@ export const getDeductions = (
 
   return deductions;
 };
+
+export const getOvertimePay = (rate: number, hours: number) => {
+  const amount = (rate / 8) * 0.25 * hours;
+  return amount;
+};

@@ -11,7 +11,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const ClaimsPage = () => {
+const IndexPage = () => {
   const db = getDb(useSQLiteContext());
   const router = useRouter();
 
@@ -106,4 +106,4 @@ const ClaimsPage = () => {
   );
 };
 
-export default ClaimsPage;
+export default IndexPage;

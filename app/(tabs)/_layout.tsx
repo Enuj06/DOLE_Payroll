@@ -52,26 +52,6 @@ const Layout = () => {
       />
 
       <Tabs.Screen
-        name="claims"
-        options={{
-          title: "Expense Claims",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="question-mark" color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="advances"
-        options={{
-          title: "Cash Advances",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons size={28} name="question-mark" color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",

@@ -224,6 +224,14 @@ const PayrollPage = () => {
           onToggle={handlePeriodModalToggle}
           onSubmit={handlePeriodModalSubmit}
         />
+
+        <TouchableOpacity onPress={() => router.navigate("/claims")}>
+          <Text>Expense Claims</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => router.navigate("/advances")}>
+          <Text>Cash Advances</Text>
+        </TouchableOpacity>
       </View>
 
       <View className="mt-4">
