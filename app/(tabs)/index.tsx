@@ -9,7 +9,8 @@ import {
   getDate,
   getDb,
   getDeductions,
-  getGross,
+  getEarnings,
+  getObjectTotal,
   getPeriodHours,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -139,12 +140,14 @@ const PayrollPage = () => {
       header: "Gross Income",
       width: 7,
       render: (row: Employee) => {
-        const gross =
-          row.schedule && row.attendances
-            ? getGross(row.schedule, row.attendances, row.rate)
-            : 0;
+        const start = period.start.toISOString();
+        const end = period.end.toISOString();
+
+        const earnings = getEarnings(start, end, row);
+        const totalEarnings = getObjectTotal(earnings);
+
         return (
-          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross)}`}</Text>
+          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalEarnings)}`}</Text>
         );
       },
     },
@@ -153,19 +156,11 @@ const PayrollPage = () => {
       header: "Deductions",
       width: 7,
       render: (row: Employee) => {
-        let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
-        let totalDeductions = 0;
+        const start = period.start.toISOString();
+        const end = period.end.toISOString();
 
-        deductions = getDeductions(
-          period.start.toISOString(),
-          period.end.toISOString(),
-          row
-        );
-
-        totalDeductions = Object.values(deductions).reduce(
-          (accumulator, value) => accumulator + value,
-          0
-        );
+        const deductions = getDeductions(start, end, row);
+        const totalDeductions = getObjectTotal(deductions);
 
         return (
           <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalDeductions)}`}</Text>
@@ -177,27 +172,17 @@ const PayrollPage = () => {
       header: "Net Income",
       width: 7,
       render: (row: Employee) => {
-        const gross =
-          row.schedule && row.attendances
-            ? getGross(row.schedule, row.attendances, row.rate)
-            : 0;
+        const start = period.start.toISOString();
+        const end = period.end.toISOString();
 
-        let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
-        let totalDeductions = 0;
+        const earnings = getEarnings(start, end, row);
+        const totalEarnings = getObjectTotal(earnings);
 
-        deductions = getDeductions(
-          period.start.toISOString(),
-          period.end.toISOString(),
-          row
-        );
-
-        totalDeductions = Object.values(deductions).reduce(
-          (accumulator, value) => accumulator + value,
-          0
-        );
+        const deductions = getDeductions(start, end, row);
+        const totalDeductions = getObjectTotal(deductions);
 
         return (
-          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(gross - totalDeductions)}`}</Text>
+          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalEarnings - totalDeductions)}`}</Text>
         );
       },
     },

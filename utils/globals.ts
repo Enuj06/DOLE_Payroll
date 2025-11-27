@@ -1,5 +1,11 @@
 import * as schema from "@/db/schema";
-import { Advance, Attendance, Employee, Schedule } from "@/types/globals";
+import {
+  Advance,
+  Attendance,
+  Claim,
+  Employee,
+  Schedule,
+} from "@/types/globals";
 import { differenceInSeconds, eachDayOfInterval, format, set } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -39,6 +45,10 @@ export const formatDate = (
 
 export const getParamValue = (pair: string) => {
   return pair.split("=")[1];
+};
+
+export const getObjectTotal = (object: { [key: string]: number }) => {
+  return Object.values(object).reduce((acc, value) => acc + value, 0);
 };
 
 export const startOfDate = (date: Date | string) => {
@@ -155,14 +165,47 @@ export const getWorkingHours = (start: Date | string, end: Date | string) => {
   return days * 8;
 };
 
-export const getGross = (
+export const getBasicPay = (
+  rate: number,
   schedule: Schedule,
-  attendances: Attendance[],
-  rate: number
+  attendances: Attendance[]
 ) => {
   const hours =
     schedule && attendances ? getPeriodHours(schedule, attendances) : 0;
   return (rate / 8) * hours;
+};
+
+export const getClaims = (start: string, end: string, claims: Claim[]) => {
+  let amount = 0;
+  const formattedStart = new Date(getDate(start));
+  const formattedEnd = new Date(getDate(end));
+
+  claims.forEach((claim) => {
+    const date = new Date(getDate(claim.date));
+    if (
+      date.valueOf() >= formattedStart.valueOf() &&
+      date.valueOf() <= formattedEnd.valueOf()
+    ) {
+      amount += claim.amount;
+    }
+  });
+
+  return amount;
+};
+
+export const getEarnings = (start: string, end: string, employee: Employee) => {
+  let earnings = { basicPay: 0, claims: 0 };
+
+  earnings.basicPay =
+    employee.schedule && employee.attendances
+      ? getBasicPay(employee.rate, employee.schedule, employee.attendances)
+      : 0;
+
+  earnings.claims = employee.claims
+    ? getClaims(start, end, employee.claims)
+    : 0;
+
+  return earnings;
 };
 
 export const getSSSTable = () => {
@@ -252,10 +295,12 @@ export const getDeductions = (
 ) => {
   let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
 
-  deductions.advances = getAdvances(start, end, employee.advances || []);
   deductions.sss = getSSSContribution(employee.rate);
   deductions.hdmf = getHDMFContribution(employee.rate);
   deductions.phic = getPHICContribution(employee.rate);
+  deductions.advances = employee.advances
+    ? getAdvances(start, end, employee.advances)
+    : 0;
 
   return deductions;
 };

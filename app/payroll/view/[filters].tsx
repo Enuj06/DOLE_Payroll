@@ -7,7 +7,8 @@ import {
   getDate,
   getDb,
   getDeductions,
-  getGross,
+  getEarnings,
+  getObjectTotal,
   getParamValue,
   getPeriodHours,
   getWorkingHours,
@@ -62,27 +63,18 @@ const ViewPage = () => {
 
   const formattedEmployee: Employee | undefined = formatEmployee(employee);
 
-  let gross = 0;
+  let earnings = { basicPay: 0, claims: 0 };
+  let totalEarnings = 0;
+
   let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
   let totalDeductions = 0;
 
-  if (
-    formattedEmployee &&
-    formattedEmployee.schedule &&
-    formattedEmployee.attendances
-  ) {
-    gross = getGross(
-      formattedEmployee.schedule,
-      formattedEmployee.attendances,
-      formattedEmployee.rate
-    );
+  if (formattedEmployee) {
+    earnings = getEarnings(start, end, formattedEmployee);
+    totalEarnings = getObjectTotal(earnings);
 
     deductions = getDeductions(start, end, formattedEmployee);
-
-    totalDeductions = Object.values(deductions).reduce(
-      (accumulator, value) => accumulator + value,
-      0
-    );
+    totalDeductions = getObjectTotal(deductions);
   }
 
   if (
@@ -135,9 +127,21 @@ const ViewPage = () => {
           </Text>
         </View>
 
+        <Text className="font-bold">Earnings</Text>
+
+        <View>
+          <Text>Basic Pay</Text>
+          <Text>Php {formatNumber(earnings.basicPay)}</Text>
+        </View>
+
+        <View>
+          <Text>Expense Claims</Text>
+          <Text>Php {formatNumber(earnings.claims)}</Text>
+        </View>
+
         <View>
           <Text className="font-bold">Gross Income</Text>
-          <Text>Php {formatNumber(gross)}</Text>
+          <Text>Php {formatNumber(totalEarnings)}</Text>
         </View>
 
         <Text className="font-bold">Deductions</Text>
@@ -159,14 +163,14 @@ const ViewPage = () => {
 
         {deductions.advances > 0 && (
           <View>
-            <Text>Cash Advance</Text>
+            <Text>Cash Advances</Text>
             <Text>Php {formatNumber(deductions.advances)}</Text>
           </View>
         )}
 
         <View>
           <Text className="font-bold">Net Income</Text>
-          <Text>Php {formatNumber(gross - totalDeductions)}</Text>
+          <Text>Php {formatNumber(totalEarnings - totalDeductions)}</Text>
         </View>
       </View>
     </SafeAreaView>
