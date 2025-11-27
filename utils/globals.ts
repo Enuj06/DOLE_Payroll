@@ -17,19 +17,22 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
   return drizzle(sqlDb, { schema });
 };
 
-export const getDate = (date: Date | string) => {
-  const formattedDate = parseDate(date);
-  return format(formattedDate, "yyyy-MM-dd");
+export const parseDate = (date: Date | string) => {
+  return typeof date === "string" ? new Date(date) : date;
 };
 
-export const getTime = (date: Date | string) => {
+export const formatDate = (
+  date: Date | string,
+  dateFormat: string = "yyyy-MM-dd"
+) => {
+  const formattedDate = parseDate(date);
+  return format(formattedDate, dateFormat);
+};
+
+export const formatTime = (date: Date | string) => {
   const formattedDate = parseDate(date);
   const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return formatInTimeZone(formattedDate, timeZone, "HH:mm");
-};
-
-export const parseDate = (date: Date | string) => {
-  return typeof date === "string" ? new Date(date) : date;
 };
 
 export const formatNumber = (number: string | number) => {
@@ -37,14 +40,6 @@ export const formatNumber = (number: string | number) => {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
-};
-
-export const formatDate = (
-  date: Date | string,
-  dateFormat: string = "MMMM dd, yyyy"
-) => {
-  const formattedDate = parseDate(date);
-  return format(formattedDate, dateFormat);
 };
 
 export const getParamValue = (pair: string) => {
@@ -183,11 +178,11 @@ export const getClaims = (
   claims: Claim[]
 ) => {
   let amount = 0;
-  const formattedStart = new Date(getDate(start));
-  const formattedEnd = new Date(getDate(end));
+  const formattedStart = new Date(formatDate(start));
+  const formattedEnd = new Date(formatDate(end));
 
   claims.forEach((claim) => {
-    const date = new Date(getDate(claim.date));
+    const date = new Date(formatDate(claim.date));
     if (
       date.valueOf() >= formattedStart.valueOf() &&
       date.valueOf() <= formattedEnd.valueOf()
@@ -282,11 +277,11 @@ export const getAdvances = (
   advances: Advance[]
 ) => {
   let amount = 0;
-  const formattedStart = new Date(getDate(start));
-  const formattedEnd = new Date(getDate(end));
+  const formattedStart = new Date(formatDate(start));
+  const formattedEnd = new Date(formatDate(end));
 
   advances.forEach((advance) => {
-    const date = new Date(getDate(advance.date));
+    const date = new Date(formatDate(advance.date));
     if (
       date.valueOf() >= formattedStart.valueOf() &&
       date.valueOf() <= formattedEnd.valueOf()

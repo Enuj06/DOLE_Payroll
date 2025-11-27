@@ -45,7 +45,7 @@ const IndexPage = () => {
       header: "Date",
       width: 9,
       render: (row: Advance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(row.date)}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(row.date, "MMMM dd, yyyy")}`}</Text>
       ),
     },
     {

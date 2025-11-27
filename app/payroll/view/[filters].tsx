@@ -91,8 +91,9 @@ const ViewPage = () => {
         <View>
           <Text>Payroll Period</Text>
           <Text>
-            {formatDate(start)} - {formatDate(end)} (
-            {getWorkingHours(start, end)} Hours)
+            {formatDate(start, "MMMM dd, yyyy")} -{" "}
+            {formatDate(end, "MMMM dd, yyyy")} ({getWorkingHours(start, end)}{" "}
+            Hours)
           </Text>
         </View>
 

@@ -262,7 +262,7 @@ const AttendancesPage = () => {
       header: "Date",
       width: 9,
       render: (row: Attendance) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(row.date)}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${formatDate(row.date, "MMMM dd, yyyy")}`}</Text>
       ),
     },
     {
