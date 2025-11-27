@@ -31,8 +31,8 @@ const ViewPage = () => {
   const { employee } = useFetch(db, Number(id));
 
   const filterAttendances = (
-    start: string,
-    end: string,
+    start: Date | string,
+    end: Date | string,
     attendances: Attendance[]
   ) => {
     let filteredAttendances: Attendance[] = [];

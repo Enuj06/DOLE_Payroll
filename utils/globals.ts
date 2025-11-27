@@ -175,7 +175,11 @@ export const getBasicPay = (
   return (rate / 8) * hours;
 };
 
-export const getClaims = (start: string, end: string, claims: Claim[]) => {
+export const getClaims = (
+  start: Date | string,
+  end: Date | string,
+  claims: Claim[]
+) => {
   let amount = 0;
   const formattedStart = new Date(getDate(start));
   const formattedEnd = new Date(getDate(end));
@@ -193,7 +197,11 @@ export const getClaims = (start: string, end: string, claims: Claim[]) => {
   return amount;
 };
 
-export const getEarnings = (start: string, end: string, employee: Employee) => {
+export const getEarnings = (
+  start: Date | string,
+  end: Date | string,
+  employee: Employee
+) => {
   let earnings = { basicPay: 0, claims: 0 };
 
   earnings.basicPay =
@@ -267,8 +275,8 @@ export const getPHICContribution = (rate: number) => {
 };
 
 export const getAdvances = (
-  start: string,
-  end: string,
+  start: Date | string,
+  end: Date | string,
   advances: Advance[]
 ) => {
   let amount = 0;
@@ -289,8 +297,8 @@ export const getAdvances = (
 };
 
 export const getDeductions = (
-  start: string,
-  end: string,
+  start: Date | string,
+  end: Date | string,
   employee: Employee
 ) => {
   let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
