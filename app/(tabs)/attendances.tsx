@@ -219,6 +219,30 @@ const AttendancesPage = () => {
       },
     },
     {
+      key: "ot_in",
+      header: "OT IN",
+      width: 5,
+      render: (row: Attendance) => {
+        if (row.ot_in) {
+          return (
+            <Text className="text-sm text-center">{`${getTime(row.ot_in)}`}</Text>
+          );
+        }
+      },
+    },
+    {
+      key: "ot_out",
+      header: "OT OUT",
+      width: 5,
+      render: (row: Attendance) => {
+        if (row.ot_out) {
+          return (
+            <Text className="text-sm text-center">{`${getTime(row.ot_out)}`}</Text>
+          );
+        }
+      },
+    },
+    {
       key: "date",
       header: "Date",
       width: 9,
