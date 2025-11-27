@@ -62,7 +62,7 @@ const ViewPage = () => {
 
   const formattedEmployee: Employee | undefined = formatEmployee(employee);
 
-  let earnings = { basicPay: 0, claims: 0 };
+  let earnings = { basic: 0, claims: 0, ot: 0 };
   let totalEarnings = 0;
 
   let deductions = { sss: 0, hdmf: 0, phic: 0, advances: 0 };
@@ -131,7 +131,12 @@ const ViewPage = () => {
 
         <View>
           <Text>Basic Pay</Text>
-          <Text>Php {formatNumber(earnings.basicPay)}</Text>
+          <Text>Php {formatNumber(earnings.basic)}</Text>
+        </View>
+
+        <View>
+          <Text>Overtime Pay</Text>
+          <Text>Php {formatNumber(earnings.ot)}</Text>
         </View>
 
         <View>

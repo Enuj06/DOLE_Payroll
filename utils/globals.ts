@@ -197,21 +197,59 @@ export const getClaims = (
   return amount;
 };
 
+export const getOTHours = (
+  start: Date | string,
+  end: Date | string,
+  attendances: Attendance[]
+) => {
+  let hours = 0;
+  const formattedStart = new Date(formatDate(start));
+  const formattedEnd = new Date(formatDate(end));
+
+  attendances.forEach((attendance) => {
+    const date = new Date(formatDate(attendance.date));
+
+    if (
+      attendance.ot_in &&
+      attendance.ot_out &&
+      date.valueOf() >= formattedStart.valueOf() &&
+      date.valueOf() <= formattedEnd.valueOf()
+    ) {
+      hours += getTimeDifference(attendance.ot_out, attendance.ot_in);
+    }
+  });
+
+  return hours;
+};
+
+export const getOTPay = (rate: number, hours: number) => {
+  const amount = (rate / 8) * 0.25 * hours;
+  return amount;
+};
+
 export const getEarnings = (
   start: Date | string,
   end: Date | string,
   employee: Employee
 ) => {
-  let earnings = { basicPay: 0, claims: 0 };
+  let earnings = { basic: 0, claims: 0, ot: 0 };
 
-  earnings.basicPay =
-    employee.schedule && employee.attendances
-      ? getBasicPay(employee.rate, employee.schedule, employee.attendances)
-      : 0;
+  if (employee.schedule && employee.attendances) {
+    earnings.basic = getBasicPay(
+      employee.rate,
+      employee.schedule,
+      employee.attendances
+    );
+  }
 
-  earnings.claims = employee.claims
-    ? getClaims(start, end, employee.claims)
-    : 0;
+  if (employee.claims) {
+    earnings.claims = getClaims(start, end, employee.claims);
+  }
+
+  if (employee.attendances) {
+    const otHours = getOTHours(start, end, employee.attendances);
+    earnings.ot = getOTPay(employee.rate, otHours);
+  }
 
   return earnings;
 };
@@ -311,9 +349,4 @@ export const getDeductions = (
     : 0;
 
   return deductions;
-};
-
-export const getOvertimePay = (rate: number, hours: number) => {
-  const amount = (rate / 8) * 0.25 * hours;
-  return amount;
 };
