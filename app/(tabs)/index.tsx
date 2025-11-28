@@ -12,6 +12,8 @@ import {
   getEarnings,
   getObjectTotal,
   getPeriodHours,
+  seeder,
+  toastVisibilityTime,
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,6 +24,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const PayrollPage = () => {
@@ -209,6 +212,15 @@ const PayrollPage = () => {
     },
   ];
 
+  const runSeeder = async () => {
+    await seeder(db);
+    Toast.show({
+      type: "success",
+      text1: "Done Seeding",
+      visibilityTime: toastVisibilityTime,
+    });
+  };
+
   if (!employees || !filteredEmployees) {
     return <Loader />;
   }
@@ -231,6 +243,10 @@ const PayrollPage = () => {
 
         <TouchableOpacity onPress={() => router.navigate("/advances")}>
           <Text>Cash Advances</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={async () => await runSeeder()}>
+          <Text>Seeder</Text>
         </TouchableOpacity>
       </View>
 
