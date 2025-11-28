@@ -73,133 +73,156 @@ const AddPage = () => {
   return (
     <>
       <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-        <Text className="text-2xl font-bold text-[#3C492C] mb-4">Add Schedule</Text>
+  <Text className="text-3xl font-extrabold text-[#3C492C] mb-6">
+    Add Schedule
+  </Text>
 
-        <View className="my-4">
-          <View className="gap-4">
-            <View>
-              <Label
-            name="AM IN"
-            className="bg-[#EEF4EB]  px-4 py-1 rounded-full font-semibold"
-          />
+  <View className="bg-white rounded-2xl shadow-md p-5 border border-gray-200">
+    <View>
 
-              <Controller
-                control={control}
-                name="am_in"
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.am_in = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
 
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
+  <Label
+    name="AM IN"
+    className="text-center text-[#3C492C] text-base bg-[#a5bfe8] px-3 py-1 rounded-full font-semibold"
+  />
 
-              <ErrorMessage error={errors.am_in} />
-            </View>
+  <Controller
+    control={control}
+    name="am_in"
+    render={({ field: { value, onChange } }) => (
+      <TouchableOpacity
+        className="flex-row items-center justify-between bg-gray-100 rounded-xl px-4 py-3 mt-2 border border-gray-300"
+        onPress={() =>
+          setModalVisibility((draft) => {
+            draft.am_in = true;
+          })
+        }
+      >
+        <Text className="text-gray-700 text-base">
+          {value ? formatTime(value) : "Select time"}
+        </Text>
 
-            <View>
-              <Label name="AM Out" />
+        <MaterialIcons name="schedule" size={22} color="#3C492C" />
+      </TouchableOpacity>
+    )}
+  />
 
-              <Controller
-                control={control}
-                name="am_out"
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.am_out = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
+  <ErrorMessage error={errors.am_in} />
+</View>
 
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
 
-              <ErrorMessage error={errors.am_out} />
-            </View>
+<View>
+  <Label
+    name="AM OUT"
+    className="text-center text-[#3C492C] text-base bg-[#a5bfe8] px-3 py-1 rounded-full font-semibold mt-4"
+  />
 
-            <View>
-              <Label name="PM In" />
+  <Controller
+    control={control}
+    name="am_out"
+    render={({ field: { value, onChange } }) => (
+      <TouchableOpacity
+        className="flex-row items-center justify-between bg-gray-100 rounded-xl px-4 py-3 mt-2 border border-gray-300"
+        onPress={() =>
+          setModalVisibility((draft) => {
+            draft.am_out = true;
+          })
+        }
+      >
+        <Text className="text-gray-700 text-base">
+          {value ? formatTime(value) : "Select time"}
+        </Text>
 
-              <Controller
-                control={control}
-                name="pm_in"
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.pm_in = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
+        <MaterialIcons name="schedule" size={22} color="#3C492C" />
+      </TouchableOpacity>
+    )}
+  />
 
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
+  <ErrorMessage error={errors.am_out} />
+</View>
 
-              <ErrorMessage error={errors.pm_in} />
-            </View>
+      <View>
+  <Label
+    name="PM IN"
+    className="text-center text-[#3C492C] text-base bg-[#a5bfe8] px-3 py-1 rounded-full font-semibold mt-4"
+  />
 
-            <View>
-              <Label name="PM Out" />
+  <Controller
+    control={control}
+    name="pm_in"
+    render={({ field: { value, onChange } }) => (
+      <TouchableOpacity
+        className="flex-row items-center justify-between bg-gray-100 rounded-xl px-4 py-3 mt-2 border border-gray-300"
+        onPress={() =>
+          setModalVisibility((draft) => {
+            draft.pm_in = true;
+          })
+        }
+      >
+        <Text className="text-gray-700 text-base">
+          {value ? formatTime(value) : "Select time"}
+        </Text>
 
-              <Controller
-                control={control}
-                name="pm_out"
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.pm_out = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
+        <MaterialIcons name="schedule" size={22} color="#3C492C" />
+      </TouchableOpacity>
+    )}
+  />
 
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
+  <ErrorMessage error={errors.pm_in} />
+</View>
 
-              <ErrorMessage error={errors.pm_out} />
-            </View>
-          </View>
+           <View>
+  <Label
+    name="PM OUT"
+    className="text-center text-[#3C492C] text-base bg-[#a5bfe8] px-3 py-1 rounded-full font-semibold mt-4"
+  />
 
-          <View className="mt-4 flex-row gap-4">
-            <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-              <Text>Add</Text>
-            </TouchableOpacity>
+  <Controller
+    control={control}
+    name="pm_out"
+    render={({ field: { value, onChange } }) => (
+      <TouchableOpacity
+        className="flex-row items-center justify-between bg-gray-100 rounded-xl px-4 py-3 mt-2 border border-gray-300"
+        onPress={() =>
+          setModalVisibility((draft) => {
+            draft.pm_out = true;
+          })
+        }
+      >
+        <Text className="text-gray-700 text-base">
+          {value ? formatTime(value) : "Select time"}
+        </Text>
 
-            <TouchableOpacity onPress={() => router.back()}>
-              <Text>Back</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </SafeAreaView>
+        <MaterialIcons name="schedule" size={22} color="#3C492C" />
+      </TouchableOpacity>
+    )}
+  />
+
+  <ErrorMessage error={errors.pm_out} />
+</View>
+
+    <View className="mt-8 flex-row justify-between">
+      <TouchableOpacity
+        onPress={handleSubmit(onSubmit)}
+        className="bg-[#3c6ebd] flex-1 py-3 rounded-xl mr-3"
+      >
+        <Text className="text-center text-white font-semibold text-base">
+          Add Schedule
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => router.back()}
+        className="bg-gray-300 flex-1 py-3 rounded-xl"
+      >
+        <Text className="text-center text-[#333] font-semibold text-base">
+          Back
+        </Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</SafeAreaView>
+
 
       {modalVisibility.am_in && (
         <DateTimePicker

@@ -25,7 +25,6 @@ import { useImmer } from "use-immer";
 
 const EditPage = () => {
   const { id } = useLocalSearchParams();
-
   const db = getDb(useSQLiteContext());
   const router = useRouter();
 
@@ -72,215 +71,109 @@ const EditPage = () => {
         router.navigate("/schedules");
       } catch (error) {
         console.error(error);
-
         Toast.show({
           type: "error",
-          text1: "An Error Has Occured. Please Try Again.",
+          text1: "An Error Has Occurred. Please Try Again.",
           visibilityTime: toastVisibilityTime,
         });
       }
     }
   };
 
-  if (!schedule) {
-    return <Loader />;
-  }
+  if (!schedule) return <Loader />;
 
   return (
     <>
       <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-        <Text>Edit Schedule</Text>
+        <Text className="text-3xl font-extrabold text-[#2C3C49] mb-6">
+          Edit Schedule
+        </Text>
 
-        <View className="my-4">
-          <View className="gap-4">
-            <View>
-              <Label name="AM In" />
+        <View className="bg-white rounded-2xl shadow-md p-5 border border-gray-200">
+          <View className="gap-6">
+            {["am_in", "am_out", "pm_in", "pm_out"].map((field) => {
+              const labelName = field
+                .replace("_", " ")
+                .toUpperCase()
+                .replace("AM", "AM")
+                .replace("PM", "PM");
 
-              <Controller
-                control={control}
-                name="am_in"
-                defaultValue={new Date(schedule.am_in)}
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.am_in = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
+              return (
+                <View key={field}>
+                  <Label
+                    name={labelName}
+                    className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-full font-semibold"
+                  />
 
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
+                  <Controller
+                    control={control}
+                    name={field as any}
+                    defaultValue={new Date(schedule[field as keyof Values] as any)}
+                    render={({ field: { value, onChange } }) => (
+                      <TouchableOpacity
+                        className="flex-row items-center justify-between bg-gray-100 rounded-xl px-4 py-3 mt-2 border border-gray-300"
+                        onPress={() =>
+                          setModalVisibility((draft) => {
+                            draft[field as keyof typeof draft] = true;
+                          })
+                        }
+                      >
+                        <Text className="text-gray-700 text-base">
+                          {value ? formatTime(value) : "Select time"}
+                        </Text>
+                        <MaterialIcons name="schedule" size={22} color="#2C3C49" />
+                      </TouchableOpacity>
+                    )}
+                  />
 
-              <ErrorMessage error={errors.am_in} />
-            </View>
-
-            <View>
-              <Label name="AM Out" />
-
-              <Controller
-                control={control}
-                name="am_out"
-                defaultValue={new Date(schedule.am_out)}
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.am_out = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
-
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
-
-              <ErrorMessage error={errors.am_out} />
-            </View>
-
-            <View>
-              <Label name="PM In" />
-
-              <Controller
-                control={control}
-                name="pm_in"
-                defaultValue={new Date(schedule.pm_in)}
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.pm_in = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
-
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
-
-              <ErrorMessage error={errors.pm_in} />
-            </View>
-
-            <View>
-              <Label name="PM Out" />
-
-              <Controller
-                control={control}
-                name="pm_out"
-                defaultValue={new Date(schedule.pm_out)}
-                render={({ field: { value, onChange, onBlur } }) => (
-                  <>
-                    <TouchableOpacity
-                      className="flex-row items-center justify-between "
-                      onPress={() =>
-                        setModalVisibility((draft) => {
-                          draft.pm_out = true;
-                        })
-                      }
-                    >
-                      <Text>{value ? formatTime(value) : "Select time"}</Text>
-
-                      <MaterialIcons name="date-range" size={20} color="#555" />
-                    </TouchableOpacity>
-                  </>
-                )}
-              />
-
-              <ErrorMessage error={errors.pm_out} />
-            </View>
+                  <ErrorMessage error={errors[field as keyof Values]} />
+                </View>
+              );
+            })}
           </View>
 
-          <View className="mt-4 flex-row gap-4">
-            <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-              <Text>Update</Text>
+          <View className="mt-8 flex-row justify-between">
+            <TouchableOpacity
+              onPress={handleSubmit(onSubmit)}
+              className="bg-[#3C6EBD] flex-1 py-3 rounded-xl mr-3"
+            >
+              <Text className="text-center text-white font-semibold text-base">
+                Update Schedule
+              </Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => router.back()}>
-              <Text>Back</Text>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              className="bg-gray-300 flex-1 py-3 rounded-xl"
+            >
+              <Text className="text-center text-[#333] font-semibold text-base">
+                Back
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
 
-      {modalVisibility.am_in && (
-        <DateTimePicker
-          value={getValues("am_in") || new Date()}
-          mode="time"
-          onChange={async (event, value) => {
-            if (event.type === "set" && value) {
-              setValue("am_in", value);
-              await trigger("am_in");
-            }
-            setModalVisibility((draft) => {
-              draft.am_in = false;
-            });
-          }}
-        />
-      )}
-
-      {modalVisibility.am_out && (
-        <DateTimePicker
-          value={getValues("am_out") || new Date()}
-          mode="time"
-          onChange={async (event, value) => {
-            if (event.type === "set" && value) {
-              setValue("am_out", value);
-              await trigger("am_out");
-            }
-            setModalVisibility((draft) => {
-              draft.am_out = false;
-            });
-          }}
-        />
-      )}
-
-      {modalVisibility.pm_in && (
-        <DateTimePicker
-          value={getValues("pm_in") || new Date()}
-          mode="time"
-          onChange={async (event, value) => {
-            if (event.type === "set" && value) {
-              setValue("pm_in", value);
-              await trigger("pm_in");
-            }
-            setModalVisibility((draft) => {
-              draft.pm_in = false;
-            });
-          }}
-        />
-      )}
-
-      {modalVisibility.pm_out && (
-        <DateTimePicker
-          value={getValues("pm_out") || new Date()}
-          mode="time"
-          onChange={async (event, value) => {
-            if (event.type === "set" && value) {
-              setValue("pm_out", value);
-              await trigger("pm_out");
-            }
-            setModalVisibility((draft) => {
-              draft.pm_out = false;
-            });
-          }}
-        />
-      )}
+      {/* DateTimePickers */}
+      {Object.entries(modalVisibility).map(([key, visible]) => {
+        if (!visible) return null;
+        return (
+          <DateTimePicker
+            key={key}
+            value={getValues(key as keyof Values) || new Date()}
+            mode="time"
+            onChange={async (event, value) => {
+              if (event.type === "set" && value) {
+                setValue(key as keyof Values, value);
+                await trigger(key as keyof Values);
+              }
+              setModalVisibility((draft) => {
+                draft[key as keyof typeof draft] = false;
+              });
+            }}
+          />
+        );
+      })}
     </>
   );
 };
