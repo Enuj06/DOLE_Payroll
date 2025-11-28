@@ -12,6 +12,7 @@ import {
   eachDayOfInterval,
   format,
   getYear,
+  parseISO,
   set,
 } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
@@ -49,7 +50,7 @@ export const formatNumber = (number: string | number) => {
 };
 
 export const parseDate = (date: Date | string) => {
-  return typeof date === "string" ? new Date(date) : date;
+  return typeof date === "string" ? parseISO(date) : date;
 };
 
 export const startOfDate = (date: Date | string) => {
