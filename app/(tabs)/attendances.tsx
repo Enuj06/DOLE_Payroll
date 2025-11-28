@@ -300,11 +300,6 @@ const AttendancesPage = () => {
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
       <View className="gap-2">
-        <Text>Attendances</Text>
-
-        <TouchableOpacity onPress={() => router.navigate("/attendances/add")}>
-          <Text>Add</Text>
-        </TouchableOpacity>
 
         <PeriodModal
           form={form}

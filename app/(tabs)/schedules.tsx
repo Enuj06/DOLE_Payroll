@@ -86,16 +86,19 @@ const SchedulesPage = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-      <View className="gap-2">
-        <Text>Schedules</Text>
-
-        <TouchableOpacity onPress={() => router.navigate("/schedules/add")}>
-          <Text>Add</Text>
+    <SafeAreaView className="flex-1 bg-[#f5f7fb]">
+      <View className="px-4 pt-4 pb-3 bg-white border-b border-gray-200">
+        <Text className="text-2xl font-bold text-[#3C492C] mb-4">Schedules</Text>
+        <TouchableOpacity
+          onPress={() => router.navigate("/schedules/add")}
+          className="bg-[#3c6ebd] rounded-lg py-3 px-4 flex-row items-center justify-center gap-2"
+        >
+          <MaterialIcons name="add" size={20} color="white" />
+          <Text className="text-white font-semibold">Add Schedule</Text>
         </TouchableOpacity>
       </View>
 
-      <View className="mt-4">
+      <View className="mt-4 p-4">
         <Table columns={columns} rows={schedules} />
       </View>
     </SafeAreaView>

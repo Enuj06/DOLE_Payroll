@@ -73,12 +73,15 @@ const AddPage = () => {
   return (
     <>
       <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-        <Text>Add Schedule</Text>
+        <Text className="text-2xl font-bold text-[#3C492C] mb-4">Add Schedule</Text>
 
         <View className="my-4">
           <View className="gap-4">
             <View>
-              <Label name="AM In" />
+              <Label
+            name="AM IN"
+            className="bg-[#EEF4EB]  px-4 py-1 rounded-full font-semibold"
+          />
 
               <Controller
                 control={control}

@@ -24,7 +24,7 @@ const EmployeesPage = () => {
       header: "Employee ID",
       width: 6,
       render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${`${row.employee_id}`}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">{`${row.employee_id}`}</Text>
       ),
     },
     {
@@ -33,7 +33,7 @@ const EmployeesPage = () => {
       width: 10,
       render: (row: Employee) => (
         <Text className="text-sm text-center text-[#3C492C]">
-          {`${row.last_name}, ${row.first_name} ${row.middle_initial}.`}`
+          {`${row.last_name}, ${row.first_name} ${row.middle_initial}.`}
         </Text>
       ),
     },
@@ -55,7 +55,11 @@ const EmployeesPage = () => {
       header: "Schedule",
       width: 12,
       render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.schedule ? `${formatTime(row.schedule.am_in)} - ${formatTime(row.schedule.am_out)} / ${formatTime(row.schedule.pm_in)} - ${formatTime(row.schedule.pm_out)}` : ""}`}</Text>
+        <Text className="text-sm text-center text-[#3C492C]">
+          {row.schedule
+            ? `${formatTime(row.schedule.am_in)} - ${formatTime(row.schedule.am_out)} / ${formatTime(row.schedule.pm_in)} - ${formatTime(row.schedule.pm_out)}`
+            : ""}
+        </Text>
       ),
     },
     {
@@ -74,7 +78,6 @@ const EmployeesPage = () => {
           >
             <MaterialIcons name="edit" size={20} color="#2196F3" />
           </TouchableOpacity>
-
           <TouchableOpacity
             onPress={() => {
               DeleteAlert(row.id, "Employee", handleDelete);
@@ -92,16 +95,19 @@ const EmployeesPage = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-      <View className="gap-2">
-        <Text>Employees</Text>
-
-        <TouchableOpacity onPress={() => router.navigate("/employees/add")}>
-          <Text>Add</Text>
+    <SafeAreaView className="flex-1 bg-[#f5f7fb]">
+      <View className="px-4 pt-4 pb-3 bg-white border-b border-gray-200">
+        <Text className="text-2xl font-bold text-[#3C492C] mb-4">Employees</Text>
+        <TouchableOpacity
+          onPress={() => router.navigate("/employees/add")}
+          className="bg-[#3c6ebd] rounded-lg py-3 px-4 flex-row items-center justify-center gap-2"
+        >
+          <MaterialIcons name="add" size={20} color="white" />
+          <Text className="text-white font-semibold">Add Employee</Text>
         </TouchableOpacity>
       </View>
 
-      <View className="mt-4">
+      <View className="mt-4 px-4 flex-1">
         <Table columns={columns} rows={employees} />
       </View>
     </SafeAreaView>
