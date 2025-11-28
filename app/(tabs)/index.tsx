@@ -15,7 +15,7 @@ import {
 } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { lastDayOfMonth } from "date-fns";
+import { getDate, lastDayOfMonth, set } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
@@ -34,13 +34,13 @@ const PayrollPage = () => {
     let start = new Date();
     let end = new Date();
 
-    start.setDate(1);
-    end.setDate(15);
+    start = set(start, { date: 1 });
+    end = set(end, { date: 15 });
 
-    if (today.getDate() > 15) {
+    if (getDate(today) > 15) {
       const last = lastDayOfMonth(today);
-      start.setDate(16);
-      end.setDate(last.getDate());
+      start = set(start, { date: 16 });
+      end = set(end, { date: getDate(last) });
     }
     return { start, end };
   };

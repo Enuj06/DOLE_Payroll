@@ -53,10 +53,8 @@ export const parseDate = (date: Date | string) => {
 };
 
 export const startOfDate = (date: Date | string) => {
-  const formattedDate = parseDate(date);
-  formattedDate.setFullYear(1970);
-  formattedDate.setMonth(0);
-  formattedDate.setDate(1);
+  let formattedDate = parseDate(date);
+  formattedDate = set(formattedDate, { year: 1970, month: 0, date: 1 });
   return formattedDate;
 };
 
@@ -86,6 +84,7 @@ export const getEstimates = (start: Date | string, end: Date | string) => {
     const yearHolidays = holidaysJSON[`${year}` as keyof typeof holidaysJSON];
 
     workDays.includes(format(formattedDate, "EEEE")) && ++days.working;
+    days.rest = dates.length - days.working;
 
     if (yearHolidays) {
       const holiday = yearHolidays.find((holiday) => {
