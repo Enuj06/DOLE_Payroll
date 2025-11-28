@@ -1,6 +1,5 @@
 import DeleteAlert from "@/components/DeleteAlert";
 import Loader from "@/components/Loader";
-import Table from "@/components/Table";
 import useDelete from "@/hooks/employees/useDelete";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { Employee } from "@/types/globals";
@@ -8,7 +7,8 @@ import { formatNumber, formatTime, getDb } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Text, TouchableOpacity, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const EmployeesPage = () => {
@@ -18,98 +18,81 @@ const EmployeesPage = () => {
   const { employees, refetch } = useFetchAll(db);
   const { handleDelete } = useDelete(db, refetch);
 
-  const columns = [
-    {
-      key: "employee_id",
-      header: "Employee ID",
-      width: 6,
-      render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`${row.employee_id}`}</Text>
-      ),
-    },
-    {
-      key: "name",
-      header: "Name",
-      width: 10,
-      render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">
-          {`${row.last_name}, ${row.first_name} ${row.middle_initial}.`}
-        </Text>
-      ),
-    },
-    {
-      key: "position",
-      header: "Position",
-      width: 6,
-    },
-    {
-      key: "rate",
-      header: "Rate",
-      width: 7,
-      render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.rate)}`}</Text>
-      ),
-    },
-    {
-      key: "schedule",
-      header: "Schedule",
-      width: 12,
-      render: (row: Employee) => (
-        <Text className="text-sm text-center text-[#3C492C]">
-          {row.schedule
-            ? `${formatTime(row.schedule.am_in)} - ${formatTime(row.schedule.am_out)} / ${formatTime(row.schedule.pm_in)} - ${formatTime(row.schedule.pm_out)}`
-            : ""}
-        </Text>
-      ),
-    },
-    {
-      key: "actions",
-      header: "Actions",
-      width: 9,
-      render: (row: Employee) => (
-        <View className="flex-row gap-4 justify-center">
-          <TouchableOpacity
-            onPress={() =>
-              router.navigate({
-                pathname: "/employees/edit/[id]",
-                params: { id: row.id },
-              })
-            }
-          >
-            <MaterialIcons name="edit" size={20} color="#2196F3" />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              DeleteAlert(row.id, "Employee", handleDelete);
-            }}
-          >
-            <MaterialIcons name="delete" size={20} color="#E53935" />
-          </TouchableOpacity>
-        </View>
-      ),
-    },
-  ];
-
-  if (!employees) {
-    return <Loader />;
-  }
+  if (!employees) return <Loader />;
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb]">
-      <View className="px-4 pt-4 pb-3 bg-white border-b border-gray-200">
-        <Text className="text-2xl font-bold text-[#3C492C] mb-4">Employees</Text>
+      <View className="px-4 pt-4 pb-3">
+        <Text className="text-3xl font-extrabold text-[#3C492C] mb-4">Employees</Text>
         <TouchableOpacity
-          onPress={() => router.navigate("/employees/add")}
-          className="bg-[#3c6ebd] rounded-lg py-3 px-4 flex-row items-center justify-center gap-2"
+          onPress={() => router.push("/employees/add")}
+          className="bg-[#3c6ebd] rounded-2xl py-3 px-4 flex-row items-center justify-center gap-2 shadow-md"
         >
-          <MaterialIcons name="add" size={20} color="white" />
-          <Text className="text-white font-semibold">Add Employee</Text>
+          <MaterialIcons name="add" size={22} color="white" />
+          <Text className="text-white font-semibold text-base">Add Employee</Text>
         </TouchableOpacity>
       </View>
 
-      <View className="mt-4 px-4 flex-1">
-        <Table columns={columns} rows={employees} />
-      </View>
+      <ScrollView className="px-4">
+        {employees.map((employee: Employee) => (
+          <View
+            key={employee.id}
+            className="bg-white rounded-2xl shadow-md p-4 border border-gray-200"
+          >
+            <View className="flex-row justify-between mb-2">
+              <View className="flex-1 items-center">
+                <Text className="text-sm text-gray-500">Employee ID</Text>
+                <Text className="text-[#3C492C] font-semibold">{employee.employee_id}</Text>
+              </View>
+              <View className="flex-1 items-center">
+                <Text className="text-sm text-gray-500">Position</Text>
+                <Text className="text-[#3C492C] font-semibold">{employee.position}</Text>
+              </View>
+            </View>
+
+            <View className="flex-row justify-between mb-2">
+                            <View className="flex-1 items-center">
+                <Text className="text-sm text-gray-500">Name</Text>
+                <Text className="text-[#3C492C] font-semibold text-center">
+                  {`${employee.last_name}, ${employee.first_name} ${employee.middle_initial}.`}
+                </Text>
+              </View>
+
+              <View className="flex-1 items-center">
+                <Text className="text-sm text-gray-500">Rate</Text>
+                <Text className="text-[#3C492C] font-semibold">Php{formatNumber(employee.rate)}</Text>
+              </View>
+            </View>
+
+            <View className="flex-row justify-between mb-2">
+              <View className="flex-1 items-center">
+                <Text className="text-sm text-gray-500">Schedule</Text>
+                <Text className="text-[#3C492C] font-semibold text-center">
+                  {employee.schedule
+                    ? `${formatTime(employee.schedule.am_in)} - ${formatTime(employee.schedule.am_out)} / ${formatTime(employee.schedule.pm_in)} - ${formatTime(employee.schedule.pm_out)}`
+                    : "-"}
+                </Text>
+              </View>
+            </View>
+
+            <View className="flex-row justify-center gap-4 mt-1">
+              <TouchableOpacity
+                onPress={() => router.push(`/employees/edit/${employee.id}`)}
+                className="p-2 bg-[#3c6ebd] rounded-lg"
+              >
+                <MaterialIcons name="edit" size={20} color="white" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={() => DeleteAlert(employee.id, "Employee", handleDelete)}
+                className="p-2 bg-[#E53935] rounded-lg"
+              >
+                <MaterialIcons name="delete" size={20} color="white" />
+              </TouchableOpacity>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
     </SafeAreaView>
   );
 };

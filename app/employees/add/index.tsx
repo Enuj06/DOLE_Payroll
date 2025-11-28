@@ -18,7 +18,6 @@ import Toast from "react-native-toast-message";
 const AddPage = () => {
   const db = getDb(useSQLiteContext());
   const router = useRouter();
-
   const { schedules } = useFetchAll(db);
 
   const getOptions = () => {
@@ -67,7 +66,6 @@ const AddPage = () => {
       router.navigate("/employees");
     } catch (error) {
       console.error(error);
-
       Toast.show({
         type: "error",
         text1: "An Error Has Occured. Please Try Again.",
@@ -78,145 +76,162 @@ const AddPage = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-      <Text>Add Employee</Text>
+      <Text className="text-3xl font-extrabold text-[#2C3C49] mb-6">
+        Add Employee
+      </Text>
 
-      <View className="my-4">
-        <View className="gap-4">
-          <View>
-            <Label name="Last Name" />
-
-            <Controller
-              control={control}
-              name="last_name"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+      <View className="bg-white rounded-2xl shadow-md p-5 border border-gray-200">
+        <View className="flex-row gap-4">
+          {/* Left Column */}
+          <View className="flex-1 gap-6">
+            <View>
+              <Label
+                name="LAST NAME"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="last_name"
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
                     placeholder="Enter last name"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
+                )}
+              />
+              <ErrorMessage error={errors.last_name} />
+            </View>
 
-            <ErrorMessage error={errors.last_name} />
+            <View>
+              <Label
+                name="MIDDLE INITIAL"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="middle_initial"
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
+                    placeholder="Enter Middle Initial"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              <ErrorMessage error={errors.middle_initial} />
+            </View>
           </View>
 
-          <View>
-            <Label name="First Name" />
-
-            <Controller
-              control={control}
-              name="first_name"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+          {/* Right Column */}
+          <View className="flex-1 gap-6">
+            <View>
+              <Label
+                name="FIRST NAME"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="first_name"
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
                     placeholder="Enter first name"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
+                )}
+              />
+              <ErrorMessage error={errors.first_name} />
+            </View>
 
-            <ErrorMessage error={errors.first_name} />
-          </View>
-
-          <View>
-            <Label name="Middle Initial" />
-
-            <Controller
-              control={control}
-              name="middle_initial"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+            <View>
+              <Label
+                name="POSITION"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="position"
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
-                    placeholder="Enter middle initial"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                </>
-              )}
-            />
-
-            <ErrorMessage error={errors.first_name} />
-          </View>
-
-          <View>
-            <Label name="Position" />
-
-            <Controller
-              control={control}
-              name="position"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
-                  <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
                     placeholder="Enter position"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
-
-            <ErrorMessage error={errors.position} />
+                )}
+              />
+              <ErrorMessage error={errors.position} />
+            </View>
           </View>
-
-          <View>
-            <Label name="Rate" />
-
-            <Controller
-              control={control}
-              name="rate"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+        </View>
+                    <View className="justify-center">
+              <Label
+                name="RATE"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 mt-4 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="rate"
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
-                    keyboardType="numeric"
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300 text-center"
                     placeholder="Enter rate"
+                    keyboardType="numeric"
                     value={value ? `${value}` : ""}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
-
-            <ErrorMessage error={errors.rate} />
-          </View>
-
+                )}
+              />
+              <ErrorMessage error={errors.rate} />
+            </View>
+        <View>
+          <Label
+            name="SCHEDULE"
+            className="text-center text-[#2C3C49] text-base mx-2 mt-4 bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+          />
           <View>
-            <Label name="Schedule" />
-
             <Controller
               control={control}
               name="schedule_id"
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
-                  <Select
-                    value={`${value}`}
-                    options={getOptions()}
-                    placeholder="Select Schedule"
-                    onChange={onChange}
-                  />
-                </>
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  value={`${value ?? -1}`}
+                  options={getOptions()}
+                  placeholder="Select Schedule"
+                  onChange={onChange}
+                />
               )}
             />
-
-            <ErrorMessage error={errors.schedule_id} />
           </View>
+          <ErrorMessage error={errors.schedule_id} />
         </View>
 
-        <View className="mt-4 flex-row gap-4">
-          <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-            <Text>Add</Text>
+        <View className="mt-8 flex-row justify-between">
+          <TouchableOpacity
+            onPress={handleSubmit(onSubmit)}
+            className="bg-[#3C6EBD] flex-1 py-3 rounded-xl mr-3"
+          >
+            <Text className="text-center text-white font-semibold text-base">
+              Add Employee
+            </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text>Back</Text>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="bg-gray-300 flex-1 py-3 rounded-xl"
+          >
+            <Text className="text-center text-[#333] font-semibold text-base">
+              Back
+            </Text>
           </TouchableOpacity>
         </View>
       </View>

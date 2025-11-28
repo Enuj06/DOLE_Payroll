@@ -33,7 +33,7 @@ const SchedulesPage = () => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="p-4 space-y-4">
+      <ScrollView className="px-4 space-y-4">
         {schedules.map((schedule: Schedule) => (
           <View
             key={schedule.id}

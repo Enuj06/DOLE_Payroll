@@ -16,10 +16,10 @@ import { Controller, useForm } from "react-hook-form";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const EditPage = () => {
   const { id } = useLocalSearchParams();
-
   const db = getDb(useSQLiteContext());
   const router = useRouter();
 
@@ -31,7 +31,9 @@ const EditPage = () => {
     if (schedules) {
       schedules.forEach((schedule) => {
         options.push({
-          label: `${formatTime(schedule.am_in)}-${formatTime(schedule.am_out)} ${formatTime(schedule.pm_in)}-${formatTime(schedule.pm_out)}`,
+          label: `${formatTime(schedule.am_in)}-${formatTime(
+            schedule.am_out
+          )}  ${formatTime(schedule.pm_in)}-${formatTime(schedule.pm_out)}`,
           value: `${schedule.id}`,
         });
       });
@@ -67,164 +69,190 @@ const EditPage = () => {
 
         Toast.show({
           type: "error",
-          text1: "An Error Has Occured. Please Try Again.",
+          text1: "An Error Has Occurred. Please Try Again.",
           visibilityTime: toastVisibilityTime,
         });
       }
     }
   };
 
-  if (!employee) {
-    return <Loader />;
-  }
+  if (!employee) return <Loader />;
 
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
-      <Text>Edit Employee</Text>
+      <Text className="text-3xl font-extrabold text-[#2C3C49] mb-6">
+        Edit Employee
+      </Text>
 
-      <View className="my-4">
-        <View>
-          <View>
-            <Label name="Last Name" />
+      <View className="bg-white rounded-2xl shadow-md p-5 border border-gray-200">
+        <View className="flex-row gap-4">
+          <View className="flex-1 gap-6">
 
-            <Controller
-              control={control}
-              name="last_name"
-              defaultValue={employee.last_name}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+            {/* LAST NAME */}
+            <View>
+              <Label
+                name="LAST NAME"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="last_name"
+                defaultValue={employee.last_name}
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
                     placeholder="Enter last name"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
+                )}
+              />
+              <ErrorMessage error={errors.last_name} />
+            </View>
 
-            <ErrorMessage error={errors.last_name} />
-          </View>
-
-          <View>
-            <Label name="First Name" />
-
-            <Controller
-              control={control}
-              name="first_name"
-              defaultValue={employee.first_name}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+            <View>
+              <Label
+                name="MIDDLE INITIAL"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="middle_initial"
+                defaultValue={employee.middle_initial}
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
-                    placeholder="Enter first name"
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                </>
-              )}
-            />
-
-            <ErrorMessage error={errors.first_name} />
-          </View>
-
-          <View>
-            <Label name="Middle Initial" />
-
-            <Controller
-              control={control}
-              name="middle_initial"
-              defaultValue={employee.middle_initial}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
-                  <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
                     placeholder="Enter middle initial"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
+                )}
+              />
+              <ErrorMessage error={errors.middle_initial} />
+            </View>
 
-            <ErrorMessage error={errors.first_name} />
+            
           </View>
 
-          <View>
-            <Label name="Position" />
+          {/* RIGHT COLUMN */}
+          <View className="flex-1 gap-6">
 
-            <Controller
-              control={control}
-              name="position"
-              defaultValue={employee.position}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
+            {/* FIRST NAME */}
+            <View>
+              <Label
+                name="FIRST NAME"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="first_name"
+                defaultValue={employee.first_name}
+                render={({ field: { value, onChange, onBlur } }) => (
                   <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
+                    placeholder="Enter first name"
+                    value={value}
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                  />
+                )}
+              />
+              <ErrorMessage error={errors.first_name} />
+            </View>
+
+            {/* POSITION */}
+            <View>
+              <Label
+                name="POSITION"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl font-semibold"
+              />
+              <Controller
+                control={control}
+                name="position"
+                defaultValue={employee.position}
+                render={({ field: { value, onChange, onBlur } }) => (
+                  <TextInput
+                    className="bg-gray-100 mt-2 px-4 py-3 rounded-xl border border-gray-300"
                     placeholder="Enter position"
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
                   />
-                </>
-              )}
-            />
+                )}
+              />
+              <ErrorMessage error={errors.position} />
+            </View>
 
-            <ErrorMessage error={errors.position} />
           </View>
+        </View>
 
-          <View>
-            <Label name="Rate" />
-
+<View>
+              <Label
+                name="RATE"
+                className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-3 py-1 rounded-xl mt-4 font-semibold"
+              />
             <Controller
               control={control}
               name="rate"
               defaultValue={employee.rate}
               render={({ field: { value, onChange, onBlur } }) => (
-                <>
-                  <TextInput
-                    keyboardType="numeric"
-                    placeholder="Enter rate"
-                    value={value ? `${value}` : ""}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                  />
-                </>
+                <TextInput
+                  keyboardType="numeric"
+                  placeholder="Enter rate"
+                  className="bg-gray-100 rounded-xl px-4 py-3 mt-2  border text-center border-gray-300"
+                  value={value ? `${value}` : ""}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                />
               )}
             />
+              <ErrorMessage error={errors.rate} />
+            </View>
+        {/* ====================== SCHEDULE SECTION (CENTER) ====================== */}
+        <View className="mt-4 items-center">
+          <Label
+            name="SCHEDULE"
+            className="text-center text-[#2C3C49] text-base bg-[#a5bfe8] px-32 py-1 rounded-xl font-semibold"
+          />
 
-            <ErrorMessage error={errors.rate} />
-          </View>
-
-          <View>
-            <Label name="Schedule" />
-
+          <View className="w-full">
             <Controller
               control={control}
               name="schedule_id"
-              defaultValue={employee.schedule_id ? employee.schedule_id : -1}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <>
-                  <Select
-                    value={`${value}`}
-                    options={getOptions()}
-                    placeholder="Select Schedule"
-                    onChange={onChange}
-                  />
-                </>
+              defaultValue={employee.schedule_id ?? -1}
+              render={({ field: { value, onChange } }) => (
+                <Select
+                  value={`${value}`}
+                  options={getOptions()}
+                  placeholder="Select Schedule"
+                  onChange={onChange}
+                />
               )}
             />
-
             <ErrorMessage error={errors.schedule_id} />
           </View>
         </View>
 
-        <View className="mt-4 flex-row gap-4">
-          <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-            <Text>Update</Text>
+        {/* BUTTONS */}
+        <View className="mt-2 flex-row justify-between">
+          <TouchableOpacity
+            onPress={handleSubmit(onSubmit)}
+            className="bg-[#3C6EBD] flex-1 py-3 rounded-xl mr-3"
+          >
+            <Text className="text-center text-white font-semibold text-base">
+              Update Employee
+            </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.back()}>
-            <Text>Back</Text>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            className="bg-gray-300 flex-1 py-3 rounded-xl"
+          >
+            <Text className="text-center text-[#333] font-semibold text-base">
+              Back
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
