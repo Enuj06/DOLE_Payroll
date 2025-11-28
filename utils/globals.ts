@@ -71,23 +71,26 @@ export const seeder = async (db: Db) => {
 
     if (workDays.includes(format(formattedDate, "EEEE"))) {
       await db.insert(schema.attendances).values({
-        date: toISOString(formattedDate),
-        am_in: toISOString(set(resettedDate, { hours: 7, minutes: 30 })),
-        am_out: toISOString(set(resettedDate, { hours: 12, minutes: 5 })),
-        pm_in: toISOString(set(resettedDate, { hours: 12, minutes: 30 })),
-        pm_out: toISOString(set(resettedDate, { hours: 17, minutes: 5 })),
-        ot_in: toISOString(set(resettedDate, { hours: 17, minutes: 5 })),
-        ot_out: toISOString(set(resettedDate, { hours: 20, minutes: 30 })),
+        date: formatDateTime(formattedDate),
+        am_in: formatDateTime(set(resettedDate, { hours: 7, minutes: 30 })),
+        am_out: formatDateTime(set(resettedDate, { hours: 12, minutes: 5 })),
+        pm_in: formatDateTime(set(resettedDate, { hours: 12, minutes: 30 })),
+        pm_out: formatDateTime(set(resettedDate, { hours: 17, minutes: 5 })),
+        ot_in: formatDateTime(set(resettedDate, { hours: 17, minutes: 5 })),
+        ot_out: formatDateTime(set(resettedDate, { hours: 20, minutes: 30 })),
         employee_id: employee.id,
       });
     }
   }
 };
 
-export const toISOString = (date: Date | string) => {
+export const formatDateTime = (
+  date: Date | string,
+  timeZone: string = "Etc/UTC",
+  dateTimeFormat: string = "yyyy-MM-dd\'T\'HH:mm:ss.SSSXX"
+) => {
   const formattedDate = parseDate(date);
-  const ISOFormat = "yyyy-MM-dd\'T\'HH:mm:ss.SSSXX";
-  return formatInTimeZone(formattedDate, "Etc/UTC", ISOFormat);
+  return formatInTimeZone(formattedDate, timeZone, dateTimeFormat);
 };
 
 export const formatDate = (
@@ -100,10 +103,10 @@ export const formatDate = (
 
 export const formatTime = (
   date: Date | string,
+  timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone,
   timeFormat: string = "HH:mm"
 ) => {
   const formattedDate = parseDate(date);
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return formatInTimeZone(formattedDate, timeZone, timeFormat);
 };
 
