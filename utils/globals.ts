@@ -3,6 +3,7 @@ import {
   Advance,
   Attendance,
   Claim,
+  Db,
   Employee,
   Schedule,
 } from "@/types/globals";
@@ -11,7 +12,10 @@ import {
   differenceInSeconds,
   eachDayOfInterval,
   format,
+  getDate,
   getYear,
+  lastDayOfMonth,
+  parseISO,
   set,
 } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
@@ -24,6 +28,71 @@ export const getDb = (sqlDb: SQLiteDatabase) => {
   return drizzle(sqlDb, { schema });
 };
 
+export const seeder = async (db: Db) => {
+  const schedulesRows = await db
+    .insert(schema.schedules)
+    .values({
+      am_in: "1970-01-01T00:00:00.000Z",
+      am_out: "1970-01-01T04:00:00.000Z",
+      pm_in: "1970-01-01T05:00:00.000Z",
+      pm_out: "1970-01-01T09:00:00.000Z",
+    })
+    .returning();
+  const schedule = schedulesRows[0];
+
+  const employeesRows = await db
+    .insert(schema.employees)
+    .values({
+      employee_id: "00000000",
+      last_name: "Doe",
+      first_name: "John",
+      middle_initial: "I",
+      position: "Intern",
+      rate: 500,
+      schedule_id: schedule.id,
+    })
+    .returning();
+  const employee = employeesRows[0];
+
+  const today = new Date();
+  let start = new Date();
+  let end = new Date();
+
+  const last = lastDayOfMonth(today);
+  start = set(start, { date: 1 });
+  end = set(end, { date: getDate(last) });
+
+  const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const dates = eachDayOfInterval({ start, end });
+
+  for (const date of dates) {
+    const formattedDate = new Date(formatDate(date));
+    const resettedDate = startOfDate(formattedDate);
+
+    if (workDays.includes(format(formattedDate, "EEEE"))) {
+      await db.insert(schema.attendances).values({
+        date: formatDateTime(formattedDate),
+        am_in: formatDateTime(set(resettedDate, { hours: 7, minutes: 30 })),
+        am_out: formatDateTime(set(resettedDate, { hours: 12, minutes: 5 })),
+        pm_in: formatDateTime(set(resettedDate, { hours: 12, minutes: 30 })),
+        pm_out: formatDateTime(set(resettedDate, { hours: 17, minutes: 5 })),
+        ot_in: formatDateTime(set(resettedDate, { hours: 17, minutes: 5 })),
+        ot_out: formatDateTime(set(resettedDate, { hours: 20, minutes: 30 })),
+        employee_id: employee.id,
+      });
+    }
+  }
+};
+
+export const formatDateTime = (
+  date: Date | string,
+  timeZone: string = "Etc/UTC",
+  dateTimeFormat: string = "yyyy-MM-dd\'T\'HH:mm:ss.SSSXX"
+) => {
+  const formattedDate = parseDate(date);
+  return formatInTimeZone(formattedDate, timeZone, dateTimeFormat);
+};
+
 export const formatDate = (
   date: Date | string,
   dateFormat: string = "yyyy-MM-dd"
@@ -34,10 +103,10 @@ export const formatDate = (
 
 export const formatTime = (
   date: Date | string,
+  timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone,
   timeFormat: string = "HH:mm"
 ) => {
   const formattedDate = parseDate(date);
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return formatInTimeZone(formattedDate, timeZone, timeFormat);
 };
 
@@ -49,7 +118,7 @@ export const formatNumber = (number: string | number) => {
 };
 
 export const parseDate = (date: Date | string) => {
-  return typeof date === "string" ? new Date(date) : date;
+  return typeof date === "string" ? parseISO(date) : date;
 };
 
 export const startOfDate = (date: Date | string) => {
@@ -73,10 +142,7 @@ export const getEstimates = (start: Date | string, end: Date | string) => {
   const formattedEnd = new Date(formatDate(end));
   const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-  const dates = eachDayOfInterval({
-    start: formattedStart,
-    end: formattedEnd,
-  });
+  const dates = eachDayOfInterval({ start: formattedStart, end: formattedEnd });
 
   dates.forEach((date) => {
     const formattedDate = new Date(formatDate(date));
@@ -193,10 +259,7 @@ export const getWorkingHours = (start: Date | string, end: Date | string) => {
   const formattedStart = parseDate(start);
   const formattedEnd = parseDate(end);
 
-  const dates = eachDayOfInterval({
-    start: formattedStart,
-    end: formattedEnd,
-  });
+  const dates = eachDayOfInterval({ start: formattedStart, end: formattedEnd });
 
   const workDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
   dates.forEach((date) => {
