@@ -53,10 +53,8 @@ export const parseDate = (date: Date | string) => {
 };
 
 export const startOfDate = (date: Date | string) => {
-  const formattedDate = parseDate(date);
-  formattedDate.setFullYear(1970);
-  formattedDate.setMonth(0);
-  formattedDate.setDate(1);
+  let formattedDate = parseDate(date);
+  formattedDate = set(formattedDate, { year: 1970, month: 0, date: 1 });
   return formattedDate;
 };
 
