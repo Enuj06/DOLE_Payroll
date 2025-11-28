@@ -86,6 +86,7 @@ export const getEstimates = (start: Date | string, end: Date | string) => {
     const yearHolidays = holidaysJSON[`${year}` as keyof typeof holidaysJSON];
 
     workDays.includes(format(formattedDate, "EEEE")) && ++days.working;
+    days.rest = dates.length - days.working;
 
     if (yearHolidays) {
       const holiday = yearHolidays.find((holiday) => {
