@@ -40,10 +40,6 @@ export const employee = Yup.object().shape({
     .typeError("Rate must be a number")
     .required()
     .label("Rate"),
-  schedule_id: Yup.number()
-    .typeError("Schedule ID must be a number")
-    .required()
-    .label("Schedule"),
 });
 
 export type Employee = Yup.InferType<typeof employee>;

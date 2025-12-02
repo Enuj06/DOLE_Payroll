@@ -41,9 +41,7 @@ const RootLayout = () => {
           options={{ useNewConnection: true }}
           useSuspense
         >
-          <Stack>
-            <Stack.Screen name="employees" options={{ headerShown: false }} />
-          </Stack>
+          <Stack screenOptions={{ headerShown: false }} />
         </SQLiteProvider>
       </Suspense>
 
