@@ -45,7 +45,7 @@ const EditPage = () => {
           visibilityTime: toastVisibilityTime,
         });
 
-        router.navigate("/employees");
+        router.navigate("/");
       } catch (error) {
         console.error(error);
 

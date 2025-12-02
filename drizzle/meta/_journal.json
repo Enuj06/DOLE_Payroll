@@ -64,6 +64,13 @@
       "when": 1764056633717,
       "tag": "0008_kind_champions",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1764637640556,
+      "tag": "0009_late_betty_ross",
+      "breakpoints": true
     }
   ]
 }

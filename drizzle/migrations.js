@@ -10,6 +10,7 @@ import m0005 from './0005_slimy_mole_man.sql';
 import m0006 from './0006_orange_korg.sql';
 import m0007 from './0007_skinny_the_watchers.sql';
 import m0008 from './0008_kind_champions.sql';
+import m0009 from './0009_late_betty_ross.sql';
 
   export default {
     journal,
@@ -22,7 +23,8 @@ m0004,
 m0005,
 m0006,
 m0007,
-m0008
+m0008,
+m0009
     }
   }
   

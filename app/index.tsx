@@ -1,66 +1,22 @@
+import DeleteAlert from "@/components/DeleteAlert";
 import Loader from "@/components/Loader";
-import PeriodModal from "@/components/PeriodModal";
 import Table from "@/components/Table";
+import useDelete from "@/hooks/employees/useDelete";
 import useFetchAll from "@/hooks/employees/useFetchAll";
-import { period as schema, Period as Values } from "@/schemas/globals";
 import { Employee } from "@/types/globals";
 import { formatNumber, getDb } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { getDate, lastDayOfMonth, set } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useImmer } from "use-immer";
 
-const PayrollPage = () => {
+const EmployeesPage = () => {
   const db = getDb(useSQLiteContext());
   const router = useRouter();
-  const form = useForm({ resolver: yupResolver(schema) });
 
-  const getPeriod = () => {
-    const today = new Date();
-    let start = new Date();
-    let end = new Date();
-
-    start = set(start, { date: 1 });
-    end = set(end, { date: 15 });
-
-    if (getDate(today) > 15) {
-      const last = lastDayOfMonth(today);
-      start = set(start, { date: 16 });
-      end = set(end, { date: getDate(last) });
-    }
-    return { start, end };
-  };
-
-  const [period, setPeriod] = useImmer<{
-    start: Date;
-    end: Date;
-  }>({
-    start: getPeriod().start,
-    end: getPeriod().end,
-  });
-  const [isPeriodModalVisible, setIsPeriodModalVisible] = useImmer(false);
-
-  const { employees } = useFetchAll(db);
-
-  const handlePeriodModalToggle = (isVisible: boolean) => {
-    setIsPeriodModalVisible(isVisible);
-  };
-
-  const handlePeriodModalSubmit = async (values: Values) => {
-    const start = values.start;
-    const end = values.end;
-
-    start.setUTCHours(0, 0, 0, 0);
-    end.setUTCHours(0, 0, 0, 0);
-
-    setPeriod({ start, end });
-    setIsPeriodModalVisible(false);
-  };
+  const { employees, refetch } = useFetchAll(db);
+  const { handleDelete } = useDelete(db, refetch);
 
   const columns = [
     {
@@ -84,7 +40,7 @@ const PayrollPage = () => {
     {
       key: "position",
       header: "Position",
-      width: 7,
+      width: 6,
     },
     {
       key: "rate",
@@ -103,14 +59,20 @@ const PayrollPage = () => {
           <TouchableOpacity
             onPress={() =>
               router.navigate({
-                pathname: "/payroll/view/[filters]",
-                params: {
-                  filters: `id=${row.id}&start=${period.start.toISOString()}&end=${period.end.toISOString()}`,
-                },
+                pathname: "/employees/edit/[id]",
+                params: { id: row.id },
               })
             }
           >
-            <MaterialIcons name="remove-red-eye" size={20} color="#2196F3" />
+            <MaterialIcons name="edit" size={20} color="#2196F3" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              DeleteAlert(row.id, "Employee", handleDelete);
+            }}
+          >
+            <MaterialIcons name="delete" size={20} color="#E53935" />
           </TouchableOpacity>
         </View>
       ),
@@ -124,21 +86,10 @@ const PayrollPage = () => {
   return (
     <SafeAreaView className="flex-1 bg-[#f5f7fb] p-4">
       <View className="gap-2">
-        <Text>Payroll</Text>
+        <Text>Employees</Text>
 
-        <PeriodModal
-          form={form}
-          isVisible={isPeriodModalVisible}
-          onToggle={handlePeriodModalToggle}
-          onSubmit={handlePeriodModalSubmit}
-        />
-
-        <TouchableOpacity onPress={() => router.navigate("/claims")}>
-          <Text>Expense Claims</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.navigate("/advances")}>
-          <Text>Cash Advances</Text>
+        <TouchableOpacity onPress={() => router.navigate("/employees/add")}>
+          <Text>Add</Text>
         </TouchableOpacity>
       </View>
 
@@ -149,4 +100,4 @@ const PayrollPage = () => {
   );
 };
 
-export default PayrollPage;
+export default EmployeesPage;
