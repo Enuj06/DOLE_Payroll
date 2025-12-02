@@ -98,6 +98,7 @@ export default function WorkHoursCalculator() {
       schedAM.end - schedAM.start + (schedPM.end - schedPM.start);
 
     const salaryPerSecond = salNum / totalSchedSec;
+    const salaryPerMinute = salaryPerSecond * 60;
 
     const logAM = {
       start: formatToSeconds(logs.am_in),
@@ -109,26 +110,21 @@ export default function WorkHoursCalculator() {
       end: formatToSeconds(logs.pm_out),
     };
 
-    // ---- COMPUTE REGULAR WORKED HOURS (within schedule) ----
-    const regularSeconds = calculateWorkedSeconds(schedule, logs);
+    const workedSeconds = calculateWorkedSeconds(schedule, logs);
 
-    // ---- COMPUTE OVERTIME SECONDS ----
     let overtimeSec = 0;
 
-    // AM OT
     if (logAM.end > schedAM.end) {
       overtimeSec += logAM.end - schedAM.end;
     }
 
-    // PM OT
     if (logPM.end > schedPM.end) {
       overtimeSec += logPM.end - schedPM.end;
     }
 
-    // Prevent negative
     overtimeSec = Math.max(0, overtimeSec);
 
-    const regularPay = regularSeconds * salaryPerSecond;
+    const regularPay = workedSeconds * salaryPerSecond;
 
     let overtimePay = 0;
     if (category === "regular") {
@@ -139,8 +135,10 @@ export default function WorkHoursCalculator() {
 
     return {
       salaryPerSecond,
+      salaryPerMinute,
       salaryPerHour: salaryPerSecond * 3600,
-      regularSeconds,
+      workedSeconds,
+      workedMinutes: workedSeconds / 60,
       overtimeSec,
       regularPay,
       overtimePay,
@@ -183,6 +181,12 @@ export default function WorkHoursCalculator() {
             </Text>
           </Text>
 
+          <Text className="text-gray-700 mb-1">
+            Salary per Minute:{" "}
+            <Text className="font-bold">
+              ₱{computed.salaryPerMinute.toFixed(4)}
+            </Text>
+          </Text>
           <Text className="text-gray-700">
             Salary per Second:{" "}
             <Text className="font-bold">
@@ -274,7 +278,12 @@ export default function WorkHoursCalculator() {
             Total Worked Seconds:{" "}
             <Text className="font-bold">{computed.workedSeconds}s</Text>
           </Text>
-
+          <Text className="text-gray-700 mb-1">
+            Total Worked Minutes:{" "}
+            <Text className="font-bold">
+              {computed.workedMinutes.toFixed(2)} mins
+            </Text>
+          </Text>
           <Text className="text-gray-700 mb-1">
             Total Worked Hours:{" "}
             <Text className="font-bold">
