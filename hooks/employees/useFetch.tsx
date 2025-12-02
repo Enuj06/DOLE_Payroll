@@ -1,7 +1,5 @@
-import { employees } from "@/db/schema";
 import { Db, Employee } from "@/types/globals";
 import { toastVisibilityTime } from "@/utils/globals";
-import { eq } from "drizzle-orm";
 import { useCallback, useEffect, useState } from "react";
 import Toast from "react-native-toast-message";
 
@@ -10,15 +8,7 @@ const useFetch = (db: Db, id: number) => {
 
   const handleFetch = useCallback(async () => {
     try {
-      const employee = await db.query.employees.findFirst({
-        with: {
-          schedule: true,
-          attendances: true,
-          claims: true,
-          advances: true,
-        },
-        where: eq(employees.id, id),
-      });
+      const employee = await db.query.employees.findFirst();
 
       setEmployee(employee);
     } catch (error) {

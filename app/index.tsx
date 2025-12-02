@@ -3,28 +3,16 @@ import PeriodModal from "@/components/PeriodModal";
 import Table from "@/components/Table";
 import useFetchAll from "@/hooks/employees/useFetchAll";
 import { period as schema, Period as Values } from "@/schemas/globals";
-import { Attendance, Employee } from "@/types/globals";
-import {
-  formatDate,
-  formatNumber,
-  getDb,
-  getDeductions,
-  getEarnings,
-  getObjectTotal,
-  getPeriodHours,
-  seeder,
-  toastVisibilityTime,
-} from "@/utils/globals";
+import { Employee } from "@/types/globals";
+import { formatNumber, getDb } from "@/utils/globals";
 import { MaterialIcons } from "@expo/vector-icons";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getDate, lastDayOfMonth, set } from "date-fns";
 import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Toast from "react-native-toast-message";
 import { useImmer } from "use-immer";
 
 const PayrollPage = () => {
@@ -58,29 +46,6 @@ const PayrollPage = () => {
   const [isPeriodModalVisible, setIsPeriodModalVisible] = useImmer(false);
 
   const { employees } = useFetchAll(db);
-
-  const filteredEmployees = useMemo(() => {
-    if (employees) {
-      const start = new Date(formatDate(period.start));
-      const end = new Date(formatDate(period.end));
-
-      return employees.map((employee) => {
-        let attendances: Attendance[] = [];
-
-        if (employee.attendances) {
-          attendances = employee.attendances.filter((attendance) => {
-            const date = new Date(formatDate(attendance.date));
-            return (
-              date.valueOf() >= start.valueOf() &&
-              date.valueOf() <= end.valueOf()
-            );
-          });
-        }
-
-        return { ...employee, attendances };
-      });
-    }
-  }, [period, employees]);
 
   const handlePeriodModalToggle = (isVisible: boolean) => {
     setIsPeriodModalVisible(isVisible);
@@ -117,77 +82,17 @@ const PayrollPage = () => {
       ),
     },
     {
+      key: "position",
+      header: "Position",
+      width: 7,
+    },
+    {
       key: "rate",
       header: "Rate",
       width: 7,
       render: (row: Employee) => (
         <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(row.rate)}`}</Text>
       ),
-    },
-    {
-      key: "hours",
-      header: "Total Hours",
-      width: 7,
-      render: (row: Employee) => {
-        const hours =
-          row.schedule && row.attendances
-            ? getPeriodHours(row.schedule, row.attendances)
-            : 0;
-        return (
-          <Text className="text-sm text-center text-[#3C492C]">{`${formatNumber(hours)} Hours`}</Text>
-        );
-      },
-    },
-    {
-      key: "gross",
-      header: "Gross Income",
-      width: 7,
-      render: (row: Employee) => {
-        const start = period.start.toISOString();
-        const end = period.end.toISOString();
-
-        const earnings = getEarnings(start, end, row);
-        const totalEarnings = getObjectTotal(earnings);
-
-        return (
-          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalEarnings)}`}</Text>
-        );
-      },
-    },
-    {
-      key: "deductions",
-      header: "Deductions",
-      width: 7,
-      render: (row: Employee) => {
-        const start = period.start.toISOString();
-        const end = period.end.toISOString();
-
-        const deductions = getDeductions(start, end, row);
-        const totalDeductions = getObjectTotal(deductions);
-
-        return (
-          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalDeductions)}`}</Text>
-        );
-      },
-    },
-    {
-      key: "net",
-      header: "Net Income",
-      width: 7,
-      render: (row: Employee) => {
-        const start = period.start.toISOString();
-        const end = period.end.toISOString();
-
-        const earnings = getEarnings(start, end, row);
-        const totalEarnings = getObjectTotal(earnings);
-
-        const deductions = getDeductions(start, end, row);
-        const totalDeductions = getObjectTotal(deductions);
-
-        return (
-          <Text className="text-sm text-center text-[#3C492C]">{`Php${formatNumber(totalEarnings - totalDeductions)}`}</Text>
-        );
-      },
     },
     {
       key: "actions",
@@ -212,16 +117,7 @@ const PayrollPage = () => {
     },
   ];
 
-  const runSeeder = async () => {
-    await seeder(db);
-    Toast.show({
-      type: "success",
-      text1: "Done Seeding",
-      visibilityTime: toastVisibilityTime,
-    });
-  };
-
-  if (!employees || !filteredEmployees) {
+  if (!employees) {
     return <Loader />;
   }
 
@@ -244,14 +140,10 @@ const PayrollPage = () => {
         <TouchableOpacity onPress={() => router.navigate("/advances")}>
           <Text>Cash Advances</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity onPress={async () => await runSeeder()}>
-          <Text>Seeder</Text>
-        </TouchableOpacity>
       </View>
 
       <View className="mt-4">
-        <Table columns={columns} rows={filteredEmployees} />
+        <Table columns={columns} rows={employees} />
       </View>
     </SafeAreaView>
   );

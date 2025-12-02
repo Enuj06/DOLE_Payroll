@@ -15,19 +15,6 @@ export type Column<T> = {
   render?: (row: T) => ReactNode;
 };
 
-export type Attendance = {
-  id: number;
-  date: string;
-  am_in: string | null;
-  am_out: string | null;
-  pm_in: string | null;
-  pm_out: string | null;
-  ot_in: string | null;
-  ot_out: string | null;
-  employee_id: number;
-  employee?: Employee;
-};
-
 export type Employee = {
   id: number;
   employee_id: string;
@@ -36,36 +23,4 @@ export type Employee = {
   middle_initial: string;
   position: string;
   rate: number;
-  schedule_id: number | null;
-  schedule?: Schedule | null;
-  attendances?: Attendance[];
-  claims?: Claim[];
-  advances?: Advance[];
-};
-
-export type Schedule = {
-  id: number;
-  am_in: string;
-  am_out: string;
-  pm_in: string;
-  pm_out: string;
-  employees?: Employee[];
-};
-
-export type Claim = {
-  id: number;
-  reason: string;
-  date: string;
-  amount: number;
-  employee_id: number;
-  employee?: Employee;
-};
-
-export type Advance = {
-  id: number;
-  reason: string;
-  date: string;
-  amount: number;
-  employee_id: number;
-  employee?: Employee;
 };
