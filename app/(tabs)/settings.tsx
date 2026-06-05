@@ -61,10 +61,10 @@ const calculateWorkedSeconds = (schedule: Schedule, logs: Logs): number => {
 
   return total;
 };
-
+ 
 export default function WorkHoursCalculator() {
   const [salary, setSalary] = useState<string>("430");
-
+  const [multiplier, setMultiplier] = useState<string>("1");
   const [schedule, setSchedule] = useState<Schedule>({
     am_in: "08:00",
     am_out: "12:00",
@@ -127,11 +127,13 @@ export default function WorkHoursCalculator() {
     const regularPay = workedSeconds * salaryPerSecond;
 
     let overtimePay = 0;
+    let dayMultiplier = multiplier ? parseFloat(multiplier) : 1;
     if (category === "regular") {
       overtimePay = overtimeSec * (salaryPerSecond * 1.25);
     }
 
     const finalPay = regularPay + overtimePay;
+    const finalPayWithMultiplier = finalPay * dayMultiplier;
 
     return {
       salaryPerSecond,
@@ -143,6 +145,7 @@ export default function WorkHoursCalculator() {
       regularPay,
       overtimePay,
       finalPay,
+      finalPayWithMultiplier,
     };
   }, [salary, schedule, logs, category]);
 
@@ -226,6 +229,14 @@ export default function WorkHoursCalculator() {
               onChange={(v) => setSchedule({ ...schedule, pm_out: v })}
             />
           </View>
+
+          <Text className="font-semibold text-gray-700 mb-1 mt-2 text-center">Days</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={multiplier}
+            onChangeText={(t) => setMultiplier(t)}
+            className="border px-3 py-2 rounded-lg bg-white mb-3 text-center"
+          />
         </View>
 
         <View className="bg-white p-4 rounded-2xl shadow mb-5">
@@ -305,7 +316,10 @@ export default function WorkHoursCalculator() {
           </Text>
 
           <Text className="text-gray-900 text-xl font-bold mt-3">
-            Final Salary: ₱{computed.finalPay.toFixed(2)}
+            Salary per Day: ₱{computed.finalPay.toFixed(2)}
+          </Text>
+          <Text className="text-gray-900 text-xl font-bold mt-3">
+            Final Salary based on Day(s): ₱{computed.finalPayWithMultiplier.toFixed(2)}
           </Text>
         </View>
       </ScrollView>
